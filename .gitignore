@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-
-mysite/questionaires/.formwidget.py.swp
-
-mysite/questionaires/formwidget.pyc
-
+.DS_Store
 *.pyc
-=======
 *.log
 *.pot
 *.pyc
 local_settings.py
 *.swp
->>>>>>> 002bc1d79c8bd53d01835b0ab5a5f0f55eced279
