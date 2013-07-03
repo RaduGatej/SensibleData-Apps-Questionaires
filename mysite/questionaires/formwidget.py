@@ -1,9 +1,86 @@
 import re
 
-class Formwidget:
-	def __init__(self, mtype, primary_content, secondary_content, additional_content, \
+
+
+#### Utility methods
+def debug(widgets):
+	f = open('dummy.html','w')
+	f.write('<html><body><form>')
+	for w in widgets:
+		f.write(w.to_html() + '\n')
+	f.write('</form></body></html>')
+	f.close()
+
+def parsefile(filename):
+	widgets = [];
+	idx = 0;
+	for line in open(filename):
+		if idx == 0:
+			idx +=1
+			continue
+		print line
+
+		widget = parseline(line);
+		if widget is None:
+			print 'Error in line: ' + str(idx)
+			return
+		idx +=1;
+		if isinstance(widget, SubQuestion):
+			widgets[-1].add_subquestion(widget)
+		else:
+			widgets.append(widget);
+	if idx == 1:
+		# excel did not append new lines at the end
+		f = open(filename + '.tmp','w')
+		for line in open(filename):
+			f.write(line.replace('\r','\r\n'))
+		f.close();
+		widgets = parsefile(filename + '.tmp')
+	return widgets
+				
+
+
+
+def parseline(string):
+	parts = string.strip().split('\t');
+	print (parts)
+	if len(parts) < 9:
+		parts += ['' for e in xrange(9-len(parts))]
+	if parts[0] == 'header':
+		return Header(parts[1])
+	elif parts[0] == 'question':
+		return makequestion(parts[1], parts[2], parts[3], \
+							parts[4], parts[5], parts[6], parts[7], parts[8])
+	elif parts[0] == 'subquestion':
+		return SubQuestion(parts[1], parts[2], parts[3], \
+                            parts[4], parts[5], parts[6], parts[7], parts[8])
+	else:
+		return None
+		
+
+def makequestion(primary_content, secondary_content, additional_content,\
 				inclusion_condition, answer_type, variable_name, answers, extra_param):
-		self.mtype = mtype;
+	if answer_type == 'radio':
+		return RadioQuestion(primary_content, secondary_content, additional_content,\
+                inclusion_condition, answer_type, variable_name, answers, extra_param);
+	elif answer_type == 'number':
+		return NumberQuestion(primary_content, secondary_content, additional_content,\
+                inclusion_condition, answer_type, variable_name, answers, extra_param);
+	elif answer_type == 'dropdown':
+		return ListQuestion(primary_content, secondary_content, additional_content,\
+                inclusion_condition, answer_type, variable_name, answers, extra_param);
+	elif answer_type == 'grid':
+		return GridQuestion(primary_content, secondary_content, additional_content,\
+                inclusion_condition, answer_type, variable_name, answers, extra_param);
+	else:
+		return None
+
+def htmlize(string):
+    return re.sub('[^a-z_]','',string.strip().lower().replace(' ','_'));
+#### Class definitions
+class Formwidget:
+	def __init__(self, primary_content, secondary_content, additional_content, \
+				inclusion_condition, answer_type, variable_name, answers, extra_param):
 		self.primary_content = primary_content;
 		self.secondary_content = secondary_content;
 		self.additional_content = additional_content;
@@ -22,8 +99,6 @@ class Formwidget:
 	def to_html(self):
 		return '<div class="formwidget">\n' + self.render() + '\n</div>';
 
-def htmlize(string):
-	return re.sub('[^a-z_]','',string.strip().lower().replace(' ','_'));
 		
 class Question(Formwidget):
 	def prerender(self):
@@ -39,6 +114,9 @@ class Question(Formwidget):
 
 
 class Header(Formwidget):
+	def __init__(self, primary_content):
+		self.primary_content = primary_content;
+
 	def render(self):
 		return '<div class="formheader">' + self.primary_content + "</div>\n"
 
@@ -53,12 +131,16 @@ class RadioQuestion(Question):
 class ListQuestion(Question):
 	def render(self):
 		resp = self.prerender() + '\n<select>\n';
+		# add empty answer as default
+		resp += '\t<option value=""></option>\n';
 		for answer in self.answers:
 	 		resp += '\t<option value="' + htmlize(answer) + '">' + answer + '</option>\n'
 		resp += '<select>\n';
+
+		return resp
 		
 class NumberQuestion(Formwidget):
-	def render(self):
+	def __render(self):
 		resp = self.prerender() + '\n<input type="number" name="' + htmlize(self.variable_name) + '" />'
 
 class SubQuestion(Formwidget):
