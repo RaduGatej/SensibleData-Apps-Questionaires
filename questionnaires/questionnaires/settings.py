@@ -141,6 +141,7 @@ INSTALLED_APPS = (
     'render',
     'backend',
     'utils',
+    'bootstrap_toolkit',
 )
 
 # A sample logging configuration. The only tangible logging
