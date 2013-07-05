@@ -5,5 +5,5 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(r'^', 'render.views.home'),
+    url(r'^', 'render.views.home', name='home'),
 )
