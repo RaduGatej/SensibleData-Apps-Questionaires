@@ -21,6 +21,21 @@ DATABASES = {
     }
 }
 
+
+LOGIN_URL = '/openid/login/'
+LOGIN_REDIRECT_URL = '/'
+#OPENID_SSO_SERVER_URL = 'http://166.78.249.214:8081/openid/xrds/'
+OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
+OPENID_USE_EMAIL_FOR_USERNAME = False
+AUTHENTICATION_BACKENDS = (
+            'django_openid_auth.auth.OpenIDBackend',
+            'django.contrib.auth.backends.ModelBackend',
+        )
+
+OPENID_CREATE_USERS = True
+OPENID_UPDATE_DETAILS_FROM_SREG = False
+
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -121,6 +136,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django_openid_auth',
     'render',
     'backend',
     'utils',

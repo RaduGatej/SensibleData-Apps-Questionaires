@@ -4,10 +4,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'questionnaires.views.home', name='home'),
-    # url(r'^questionnaires/', include('questionnaires.foo.urls')),
 
-
+    url(r'^openid/', include('django_openid_auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('render.urls')),
 )
