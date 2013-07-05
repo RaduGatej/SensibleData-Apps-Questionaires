@@ -154,3 +154,6 @@ LOGGING = {
         },
     }
 }
+
+import hashlib
+SESSION_COOKIE_NAME = str(hashlib.sha1(SECRET_KEY).hexdigest())
