@@ -24,8 +24,8 @@ DATABASES = {
 
 LOGIN_URL = '/openid/login/'
 LOGIN_REDIRECT_URL = '/'
-#OPENID_SSO_SERVER_URL = 'http://166.78.249.214:8081/openid/xrds/'
-OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
+OPENID_SSO_SERVER_URL = 'http://166.78.249.214:8081/openid/xrds/'
+#OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
 OPENID_USE_EMAIL_FOR_USERNAME = False
 AUTHENTICATION_BACKENDS = (
             'django_openid_auth.auth.OpenIDBackend',
