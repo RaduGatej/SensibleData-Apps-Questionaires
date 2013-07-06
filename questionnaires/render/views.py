@@ -1,18 +1,24 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from utils import authorizations
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 import formwidget
+from django.template import RequestContext
+
+def home(request):
+	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 @login_required
-def home(request):
-	user = request.user
-	auth = authorizations.getUserAuthorization(user)
+def form(request):
+	auth = authorizations.getUserAuthorization(request.user)
 	if auth == None:
 		#show user site to authorize the form
-		return render_to_response('start_auth.html', {'username': request.user.email})
-	
-	#TODO: check which questions has been answered already and do not include them
-	return render_to_response('form.html', {'username': request.user.email})
-	#return HttpResponse(formwidget.parsefile('/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/render/data/sample_new.txt')[0].render())
-		
+		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	return render_to_response('form.html', {}, context_instance=RequestContext(request))
+
+@login_required
+def login(request):
+	return redirect('home')
+
+def logout_success(request):
+	return render_to_response('logout_success.html', {}, context_instance=RequestContext(request))
