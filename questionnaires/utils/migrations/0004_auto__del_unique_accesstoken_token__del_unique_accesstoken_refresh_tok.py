@@ -8,53 +8,19 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Scope'
-        db.create_table(u'utils_scope', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('scope', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100, db_index=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-        ))
-        db.send_create_signal(u'utils', ['Scope'])
+        # Removing unique constraint on 'AccessToken', fields ['refresh_token']
+        db.delete_unique(u'utils_accesstoken', ['refresh_token'])
 
-        # Adding model 'AccessToken'
-        db.create_table(u'utils_accesstoken', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('token', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100, db_index=True)),
-            ('refresh_token', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=100, unique=True, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'utils', ['AccessToken'])
-
-        # Adding M2M table for field scope on 'AccessToken'
-        m2m_table_name = db.shorten_name(u'utils_accesstoken_scope')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('accesstoken', models.ForeignKey(orm[u'utils.accesstoken'], null=False)),
-            ('scope', models.ForeignKey(orm[u'utils.scope'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['accesstoken_id', 'scope_id'])
-
-        # Adding model 'State'
-        db.create_table(u'utils_state', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('nonce', self.gf('django.db.models.fields.CharField')(default='e031df5f60bbef5', unique=True, max_length=100, db_index=True)),
-        ))
-        db.send_create_signal(u'utils', ['State'])
+        # Removing unique constraint on 'AccessToken', fields ['token']
+        db.delete_unique(u'utils_accesstoken', ['token'])
 
 
     def backwards(self, orm):
-        # Deleting model 'Scope'
-        db.delete_table(u'utils_scope')
+        # Adding unique constraint on 'AccessToken', fields ['token']
+        db.create_unique(u'utils_accesstoken', ['token'])
 
-        # Deleting model 'AccessToken'
-        db.delete_table(u'utils_accesstoken')
-
-        # Removing M2M table for field scope on 'AccessToken'
-        db.delete_table(db.shorten_name(u'utils_accesstoken_scope'))
-
-        # Deleting model 'State'
-        db.delete_table(u'utils_state')
+        # Adding unique constraint on 'AccessToken', fields ['refresh_token']
+        db.create_unique(u'utils_accesstoken', ['refresh_token'])
 
 
     models = {
@@ -97,22 +63,34 @@ class Migration(SchemaMigration):
         u'utils.accesstoken': {
             'Meta': {'object_name': 'AccessToken'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'refresh_token': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '100', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'refresh_token': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'scope': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['utils.Scope']", 'symmetrical': 'False'}),
-            'token': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
+            'token': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'utils.attribute': {
+            'Meta': {'object_name': 'Attribute'},
+            'attribute': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'scope': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['utils.Scope']"})
         },
         u'utils.scope': {
             'Meta': {'object_name': 'Scope'},
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'scope': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100', 'db_index': 'True'})
+            'scope': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
+            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['utils.Type']", 'null': 'True', 'blank': 'True'})
         },
         u'utils.state': {
             'Meta': {'object_name': 'State'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'nonce': ('django.db.models.fields.CharField', [], {'default': "'df34d4a310f98ee'", 'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
+            'nonce': ('django.db.models.fields.CharField', [], {'default': "'297beb32a55f68d'", 'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'utils.type': {
+            'Meta': {'object_name': 'Type'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'type': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_index': 'True'})
         }
     }
 
