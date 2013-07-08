@@ -18,19 +18,32 @@ class KeyGenerator(object):
     def __call__(self):
         return sha512(uuid4().hex).hexdigest()[0:self.length]
 
+class Type(models.Model):
+        type = models.CharField(max_length=100, db_index=True)
+	def __unicode__(self):
+		return self.type
 
 class Scope(models.Model):
         scope = models.CharField(unique=True, max_length=100, db_index=True)
         description = models.TextField(blank=True)
+	type = models.ForeignKey(Type, blank=True, null=True)
         def __unicode__(self):
                 return self.scope
 
 class AccessToken(models.Model):
 	user = models.ForeignKey(User)
-	token = models.CharField(unique=True, max_length=100, db_index=True)
-    	refresh_token = models.CharField(unique=True, blank=True, null=True, max_length=100, db_index=True)
+	token = models.CharField(max_length=100, db_index=True)
+    	refresh_token = models.CharField(blank=True, null=True, max_length=100, db_index=True)
 	scope = models.ManyToManyField(Scope)
 
 class State(models.Model):
 	user = models.ForeignKey(User)
 	nonce = models.CharField(unique=True, max_length=100, db_index=True, default=KeyGenerator(15))
+
+class Attribute(models.Model):
+	scope = models.ForeignKey(Scope)
+	attribute = models.CharField(unique=True, max_length=100, db_index=True)
+	
+class FirstLogin(models.Model):
+    user = models.OneToOneField(User)
+    firstLogin = models.BooleanField(default=True)
