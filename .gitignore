@@ -6,3 +6,5 @@
 local_settings.py
 *.swp
 SECURE_*
+
+questionnaires/utils/migrations/0001_initial.py
