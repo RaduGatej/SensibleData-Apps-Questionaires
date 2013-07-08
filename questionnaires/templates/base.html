@@ -31,7 +31,12 @@
 	<ul class="nav pull-right action">
 	{% if user.is_authenticated %}
 		  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+		<i class="icon-user icon-white"></i>
+			{% if user.first_name != '' %}
+		    {{ user.first_name }}
+			{% else %}
 		    {{ user.username }}
+			{% endif %}
 		    <span class="caret"></span>
 		  </a>
 		  <ul class="dropdown-menu">
