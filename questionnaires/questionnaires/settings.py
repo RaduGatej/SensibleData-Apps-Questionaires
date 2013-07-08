@@ -32,8 +32,13 @@ AUTHENTICATION_BACKENDS = (
             'django.contrib.auth.backends.ModelBackend',
         )
 
+def failure_handler_function(request, message, status=None, template_name=None, exception=None):
+	from django.shortcuts import redirect
+	return redirect('openid_failed')
+
 OPENID_CREATE_USERS = True
 OPENID_UPDATE_DETAILS_FROM_SREG = False
+OPENID_RENDER_FAILURE = failure_handler_function
 
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -142,6 +147,7 @@ INSTALLED_APPS = (
     'backend',
     'utils',
     'bootstrap_toolkit',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
