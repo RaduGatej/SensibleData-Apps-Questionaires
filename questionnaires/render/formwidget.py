@@ -122,7 +122,10 @@ class Header(Formwidget):
 		self.primary_content = primary_content;
 
 	def render(self):
-		return '<div class="formheader">' + self.primary_content + "</div>\n"
+		resp = '<div class="formheader">' + self.primary_content + "</div>\n"
+		resp += '<input type="hidden" name="require_answer" value="no"/>\n'
+		resp += '<input type="hidden" name="' + self.variable_name + '" value="1"/>\n'
+		return resp 
 
 class RadioQuestion(Question):
 	def render(self):
@@ -169,7 +172,9 @@ class GridQuestion(Question):
 
 
 	def render(self):
-		resp = self.prerender() + '\n<table>\n';
+		resp = self.prerender();
+		resp += '<input type="hidden" name="' + self.variable_name + '" value="1" />\n';
+		resp += '\n<table>\n';
 		resp += '<tr>\n\t<th></th>';
 		for answer in self.answers:
 			resp +='\n\t<th>' + answer + '</th>';

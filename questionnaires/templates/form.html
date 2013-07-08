@@ -4,7 +4,13 @@
 
     <div class="well">
         <h1>Hi!</h1>
-    </div>
+    	<form action="form" method="post">
+			{% csrf_token %}
+			{{ question|safe }} 
+			<input type="button" value="&lt Previous">
+			<input type="submit" value="Next &gt"> 
+		</form>
+	</div>
 
 
 {% endblock %}
