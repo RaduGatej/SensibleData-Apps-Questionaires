@@ -86,6 +86,7 @@ class Formwidget:
 		self.additional_content = additional_content;
 		self.inclusion_condition = inclusion_condition;
 		self.answer_type = answer_type;
+		self.answer = [];
 		self.variable_name = variable_name;
 		answers = answers.split(";");
 		self.answers = [];
@@ -98,6 +99,9 @@ class Formwidget:
 
 	def to_html(self):
 		return '<div class="formwidget">\n' + self.render() + '\n</div>';
+
+	def set_answer(self, answer):
+		self.answer = answer;
 
 		
 class Question(Formwidget):
