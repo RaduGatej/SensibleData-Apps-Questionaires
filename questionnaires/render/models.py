@@ -6,7 +6,7 @@ class Response(models.Model):
 	form_version = models.CharField(max_length=64)
 	variable_name = models.CharField(max_length=30)
 	response = models.CharField(max_length=30)
-	last_answered = models.DateField(auto_now=True)
+	last_answered = models.DateTimeField(auto_now=True)
 	synced_with_study = models.BooleanField(default=False)
 
 	@property
