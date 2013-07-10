@@ -40,6 +40,7 @@ OPENID_CREATE_USERS = True
 OPENID_UPDATE_DETAILS_FROM_SREG = False
 OPENID_RENDER_FAILURE = failure_handler_function
 
+ROOT_DIR = '/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -128,10 +129,7 @@ ROOT_URLCONF = 'questionnaires.urls'
 WSGI_APPLICATION = 'questionnaires.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/templates'
+    ROOT_DIR+'templates'
 )
 
 INSTALLED_APPS = (
