@@ -44,7 +44,7 @@ def getAttributes(user, attributes):
 		return json.dumps({'error':'need multiple queries'})
 
 	
-	response = oauth2.query(SECURE_CONFIG.IDP_URI + 'openid/attributes/?', list(tokens)[0], '&attributes='+','.join(attributes), SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?' )
+	response = oauth2.query(SECURE_CONFIG.IDP_URI + 'openid/attributes/', list(tokens)[0], '&attributes='+','.join(attributes), SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?' )
 	for attribute in response:
 		s = 'request.user.'+attribute + '= response["%s"]'%attribute
 		exec(s)

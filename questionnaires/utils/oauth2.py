@@ -28,7 +28,8 @@ def generateState(user):
 
 @login_required
 def grant(request):
-	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), SECURE_CONFIG.SERVICE_URL+SECURE_CONFIG.AUTH_ENDPOINT+'oauth2/token/?')
+	#token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), SECURE_CONFIG.SERVICE_URL+SECURE_CONFIG.AUTH_ENDPOINT+'oauth2/token/?')
+	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), 'http://166.78.249.214:8082/authorization_manager/connector_questionnaire/auth/token/')
 	if 'error' in token:
                 return HttpResponse(json.dumps(token))
 
@@ -117,8 +118,9 @@ def query(request_uri, token, params, client_id, client_secret, redirect_uri, re
 
 	token = AccessToken.objects.filter(token=token)[0]
 	url = request_uri
-	url += 'bearer_token='+token.token
+	url += '?bearer_token='+token.token
 	url += params
+
 
 	try: response = urllib2.urlopen(url).read()
 	except urllib2.HTTPError as e:
@@ -127,12 +129,13 @@ def query(request_uri, token, params, client_id, client_secret, redirect_uri, re
 			return {'error': e.getcode(), 'body': e.read()}
 		#401, let's try to refresh token
 		new_token = exchangeRefreshTokenForToken(token.refresh_token, scopes, client_id, client_secret, redirect_uri, refresh_uri)
-		if 'error' in new_token: return new_token
+		if 'error' in new_token: 
+			return new_token
 		saveToken(token.user, new_token)
 
 
 		url = request_uri
-		url += 'bearer_token='+new_token['access_token']
+		url += '?bearer_token='+new_token['access_token']
 		url += params
 
 		try: response = urllib2.urlopen(url).read()

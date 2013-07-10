@@ -162,7 +162,10 @@ class NumberQuestion(Question):
 	def render(self):
 		resp = self.prerender() + '<input type="number" name="' + htmlize(self.variable_name) + '"'
 		resp += 'min=0 max=' + str(self.extra_param);
-		resp += 'placeholder="0-' + str(self.extra_param) + '" '
+		if (self.answer != []):
+			resp += 'value=' + self.answer ' '
+		else:
+			resp += 'placeholder="0-' + str(self.extra_param) + '" '
 		resp += 'class="input-mini" ';
 		resp += ' />'
 		return resp

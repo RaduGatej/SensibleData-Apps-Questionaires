@@ -1,7 +1,6 @@
 import formwidget as fw
 from render.models import Response
-import pdb
-
+from django.conf import settings
 
 def get_first_question(user_id, survey_version):
 	questions = get_questions_list();
@@ -42,7 +41,10 @@ def get_next_question(user_id, survey_version, current_name):
 			
 
 def get_next_unanswered_question(user_id,survey_version):
-	pdb.set_trace();
+<<<<<<< HEAD
+	#pdb.set_trace();
+=======
+>>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 	questions = get_questions_list();
 	entries = Response.objects.filter(user=user_id,\
 				form_version=survey_version);
@@ -50,7 +52,10 @@ def get_next_unanswered_question(user_id,survey_version):
 		answers = {};
 		for e in entries:
 			answers[e.variable_name] = e.response;
-		pdb.set_trace();	
+<<<<<<< HEAD
+		#pdb.set_trace();	
+=======
+>>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 		for question in questions:
 			if isinstance(question, fw.GridQuestion):
 				for sub in question.get_subquestion_variables():
@@ -69,7 +74,10 @@ def return_question(user_id, survey_version, question):
 	return question
 
 def set_current_question(user_id, survey_version, variable_name):
-	pdb.set_trace();
+<<<<<<< HEAD
+	#pdb.set_trace();
+=======
+>>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 	entries = Progress.objects.filter(user=user_id,\
                    form_version=survey_version);
 	if len(entries) > 0:
@@ -82,7 +90,10 @@ def set_current_question(user_id, survey_version, variable_name):
 	
 
 def get_current_question(user_id, survey_version):
-	pdb.set_trace();
+<<<<<<< HEAD
+	#pdb.set_trace();
+=======
+>>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 	entries = Progress.objects.filter(user=user_id,\
                  form_version=survey_version);
 	questions = get_questions_list();
@@ -126,8 +137,7 @@ def get_response(user_id, survey_version, variable_name):
 
 
 def get_questions_list():
-	# TODO change it to something that makes more sense, please
-	return fw.parsefile('/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/render/data/sample_new.txt')
+	return fw.parsefile(settings.ROOT_DIR+'render/data/sample_new.txt')
 	
 				
 
