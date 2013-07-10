@@ -6,20 +6,17 @@ from django.shortcuts import render_to_response, redirect
 import formwidget
 from django.template import RequestContext
 import form_provider
-import pdb
 
 def home(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 @login_required
 def form(request):
-	#pdb.set_trace();
 	#TODO add wrapper function for gettting authorizations
 	#auth = oauth2.getToken(request.user, scope=Scope.objects.get(scope='connector_questionnaire.input_form_data'))
 	#if auth == None:
 		#show user site to authorize the form
 	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
-	pdb.set_trace();
 	next_question = None;
 	unanswered = False;
 	if request.POST:
@@ -61,7 +58,6 @@ def form(request):
 	else:	
 		di['question'] = next_question.to_html()
 		di['unanswered'] = unanswered
-	pdb.set_trace()
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
 
 @login_required

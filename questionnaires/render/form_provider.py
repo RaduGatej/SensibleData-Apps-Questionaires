@@ -1,6 +1,5 @@
 import formwidget as fw
 from render.models import Response
-import pdb
 
 
 def get_first_question(user_id, survey_version):
@@ -42,7 +41,6 @@ def get_next_question(user_id, survey_version, current_name):
 			
 
 def get_next_unanswered_question(user_id,survey_version):
-	pdb.set_trace();
 	questions = get_questions_list();
 	entries = Response.objects.filter(user=user_id,\
 				form_version=survey_version);
@@ -50,7 +48,6 @@ def get_next_unanswered_question(user_id,survey_version):
 		answers = {};
 		for e in entries:
 			answers[e.variable_name] = e.response;
-		pdb.set_trace();	
 		for question in questions:
 			if isinstance(question, fw.GridQuestion):
 				for sub in question.get_subquestion_variables():
@@ -69,7 +66,6 @@ def return_question(user_id, survey_version, question):
 	return question
 
 def set_current_question(user_id, survey_version, variable_name):
-	pdb.set_trace();
 	entries = Progress.objects.filter(user=user_id,\
                    form_version=survey_version);
 	if len(entries) > 0:
@@ -82,7 +78,6 @@ def set_current_question(user_id, survey_version, variable_name):
 	
 
 def get_current_question(user_id, survey_version):
-	pdb.set_trace();
 	entries = Progress.objects.filter(user=user_id,\
                  form_version=survey_version);
 	questions = get_questions_list();
