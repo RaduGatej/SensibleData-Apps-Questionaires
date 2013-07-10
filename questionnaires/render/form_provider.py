@@ -1,6 +1,6 @@
 import formwidget as fw
 from render.models import Response
-
+from django.conf import settings
 
 def get_first_question(user_id, survey_version):
 	questions = get_questions_list();
@@ -121,8 +121,7 @@ def get_response(user_id, survey_version, variable_name):
 
 
 def get_questions_list():
-	# TODO change it to something that makes more sense, please
-	return fw.parsefile('/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/render/data/sample_new.txt')
+	return fw.parsefile(settings.ROOT_DIR+'render/data/sample_new.txt')
 	
 				
 
