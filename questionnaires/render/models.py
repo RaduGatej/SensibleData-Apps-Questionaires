@@ -3,10 +3,11 @@ from django.contrib.auth.models import User
 
 class Response(models.Model):
 	user = models.ForeignKey(User)
-	form_version = models.CharField(max_length=64);
-	variable_name = models.CharField(max_length=30);
-	response = models.CharField(max_length=30);
-	last_answered = models.DateField(auto_now=True);
+	form_version = models.CharField(max_length=64)
+	variable_name = models.CharField(max_length=30)
+	response = models.CharField(max_length=30)
+	last_answered = models.DateField(auto_now=True)
+	synced_with_study = models.BooleanField(default=False)
 
 	@property
 	def details( self ):
