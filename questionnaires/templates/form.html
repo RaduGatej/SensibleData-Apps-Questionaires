@@ -2,9 +2,13 @@
 
 {% block content %}
 	<script>
+		var actor;
 		function validateForm()
 		{
-			var required_vars = document.forms["myform"]["required_vars"].value;
+			if (actor == 'prev') {
+				return true;
+			}
+			var required_vars = document.forms["myform"]["__required_vars"].value;
 			required_vars = required_vars.split(',');
 			for (var idx=0; idx<required_vars.length; idx++) {
 				// check if radio group:
@@ -28,8 +32,14 @@
 		
 		}
 	</script>
-    <!--<div class="well"> -->
-        <h1>Hi!</h1>
+        
+		<!-- deciding on the heading -->
+		{% if last_page %}
+			<h1>The end</h1>
+			<p>Thank you for finishing the survey, you can now close this browser tab. </p>
+		{% endif %}
+		
+		<!-- display the error message -->
 		{% if unanswered %}
 			<div class="alert alert-error" id="answer_alert">
 		{% else %}
@@ -40,13 +50,27 @@
     	<form action="form" method="post" name="myform" onsubmit="return validateForm()">
 			<fieldset>
 				{% csrf_token %}
-				{{ question|safe }} 
+				
+				<!-- display the question? -->
+				{% if last_page %}
+					<input type="hidden" name="__question_name" value="__goodbye" />
+				{% else %}
+					{{ question|safe }} 
+				{% endif %}
+
 				<div class="form-actions">
-				<button type="button" class="btn">&lt Previous</button>
-				<button type="submit" class="btn btn-primary">Next &gt</button> 	
+				
+					<!-- Which buttons to display? -->
+					{% if last_page %}
+						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Previous</button>
+						<button type="submit" name="_from_top" class="btn btn-primary"><i class="icon-refresh icon-white"></i> Start from the beginning</button>
+					{% else %}
+						<button type="submit" onclick="actor='next_new'" name="_next_new" class="btn btn-primary">Next unanswered question <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></button> 	
+						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Previous</button>
+						<button type="submit" onclick="actor='next'" name="_next" class="btn">Next <i class="icon-chevron-right"></i> </button>
+					{% endif %}
 			</fieldset>
 		</form>
-	<!-- </div> -->
 
 
 {% endblock %}

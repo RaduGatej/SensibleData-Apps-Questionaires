@@ -2,10 +2,17 @@
 
 {% block content %}
 
-    <div class="well">
         <h1>The end</h1>
 		<p>Thank you for finishing the survey, you can now close this browser tab. </p>
-	</div>
-
+		<form action="form" method="post">
+			<fieldset>
+ 				{% csrf_token %}
+				<input type="hidden" name="__question_name" value="__goodbye" />
+				<div class="form-actions">
+					<button type="submit" name="_prev" class="btn">&lt Previous</button>
+            		<button type="submit" name="_from_top" class="btn btn-primary">Start from the beginning</button>
+				</div>
+			</fieldset>
+		</form> 
 
 {% endblock %}
