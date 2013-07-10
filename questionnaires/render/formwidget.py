@@ -111,12 +111,12 @@ class Formwidget:
 class Question(Formwidget):
 	def prerender(self):
 		if len(self.primary_content) > 0:
-			resp = '<legend>' + self.primary_content + '</legend>\n';
+			resp = '<h2>' + self.primary_content + '</h2>\n';
 		else:
 			resp = '';
 
 		if len(self.secondary_content) > 0:
-			resp += '<label>' + self.secondary_content + '</label>\n';
+			resp += '<legend>' + self.secondary_content + '</legend>\n';
 
 		return resp + self.list_required_vars();
 
@@ -131,8 +131,8 @@ class Header(Formwidget):
 		self.secondary_content = secondary_content;
 
 	def render(self):
-		resp = '<legend>' + self.primary_content + "<legend>\n"
-		resp += '<label>' + self.secondary_content + '</label>\n'
+		resp = '<h2>' + self.primary_content + "<h2>\n"
+		resp += '<legend>' + self.secondary_content + '</legend>\n'
 		#resp += '<input type="hidden" name="require_answer" value="no"/>\n'
 		resp += '<input type="hidden" name="' + self.variable_name + '" value="1"/>\n'
 		return resp 
