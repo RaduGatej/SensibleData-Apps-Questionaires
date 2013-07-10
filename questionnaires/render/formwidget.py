@@ -143,7 +143,11 @@ class RadioQuestion(Question):
 		for answer in self.answers:
 			resp += '<label class="radio">\n';
 			resp += '\t<input type="radio" name="' + self.variable_name + \
-					'" value="' + htmlize(answer) + '"/>' + answer + '\n'
+					'" value="' + htmlize(answer) +'" '
+			if self.answer != []:
+				if self.answer == htmlize(answer):
+					resp += ' checked="checked" '
+			resp += '/>' + answer + '\n'
 			resp += '</label>\n';
 		return resp;
 
@@ -153,7 +157,11 @@ class ListQuestion(Question):
 		# add empty answer as default
 		resp += '\t<option value=""></option>\n';
 		for answer in self.answers:
-	 		resp += '\t<option value="' + htmlize(answer) + '">' + answer + '</option>\n'
+	 		resp += '\t<option value="' + htmlize(answer) + '" '
+			if (self.answer != []):
+				if self.answer == htmlize(answer):
+					resp += 'selected="selected"' 
+			resp += '">' + answer + '</option>\n'
 		resp += '<select>\n';
 
 		return resp
@@ -161,9 +169,9 @@ class ListQuestion(Question):
 class NumberQuestion(Question):
 	def render(self):
 		resp = self.prerender() + '<input type="number" name="' + htmlize(self.variable_name) + '"'
-		resp += 'min=0 max=' + str(self.extra_param);
+		resp += 'min=0 max=' + str(self.extra_param) + ' ';
 		if (self.answer != []):
-			resp += 'value=' + self.answer + ' '
+			resp += 'value=' + str(self.answer) + ' '
 		else:
 			resp += 'placeholder="0-' + str(self.extra_param) + '" '
 		resp += 'class="input-mini" ';
@@ -175,17 +183,32 @@ class SubQuestion(Formwidget):
 		resp = '\n<tr>\n\t<td>' + self.secondary_content + '</td>\n'
 		if self.answer_type == 'radio':
 			for answer in self.answers:
-				resp += '\t<td><input type="radio" name="' + htmlize(self.variable_name) + '" value="' + htmlize(answer) + '"></td>\n'
+				resp += '\t<td><input type="radio" name="' + htmlize(self.variable_name) + '" value="' + htmlize(answer) + '"'
+				if self.answer == htmlize(answer):
+					resp += ' checked="checked" '
+				resp += '></td>\n'
 		
 		elif self.answer_type == 'number':
 			for answer in self.answers:
 				resp += '\t<td><input type="number" name="' + self.variable_name + '_' + htmlize(answer) + '" max=' + str(self.extra_param) + ' min=0'
+				if isinstance(self.answer,dict):
+					if (self.variable_name + '_' + htmlize(answer)) in self.answer.keys():
+						resp += ' value=' + str(self.answer[self.variable_name + '_' + htmlize(answer)])
 				resp += ' placeholder="0-' + str(self.extra_param) + '" '
 				resp += 'class="input-mini"'
 				resp += '/></td>\n'
 
 		resp += '</tr>';
 		return resp;
+
+	def get_variable_names(self):
+		if self.answer_type == 'radio':
+			return [self.variable_name]
+		elif self.answer_type == 'number':
+			resp = [];
+			for answer in self.answers:
+				resp.append(self.variable_name + '_' + htmlize(answer));
+			return resp
 
 		
 		

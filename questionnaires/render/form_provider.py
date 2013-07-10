@@ -1,6 +1,12 @@
 import formwidget as fw
 from render.models import Response
 from django.conf import settings
+import pdb
+
+_DEBUG = True
+def DEBUG():
+	if _DEBUG:
+		pdb.set_trace()
 
 def get_first_question(user_id, survey_version):
 	questions = get_questions_list();
@@ -28,7 +34,7 @@ def get_next_question(user_id, survey_version, current_name):
 	for q in questions:	
 		if now_is_the_time:
 			# TODO add support for conditional inclusion
-			return q
+			return return_question(user_id, survey_version, q)
 		elif q.variable_name == current_name:
 			now_is_the_time = True
 		else:
@@ -63,7 +69,29 @@ def get_next_unanswered_question(user_id,survey_version):
 
 def return_question(user_id, survey_version, question):
 	#set_current_question(user_id, survey_version, question.variable_name)
+	DEBUG();
+	if isinstance(question, fw.GridQuestion):
+		for sub in question.data:
+			var_names = sub.get_variable_names()
+			if len(var_names) == 1:
+				response = get_response(user_id, survey_version, var_names[0])
+				if response != None:
+					sub.set_answer(response)
+			else:
+				response = {}
+				for var_name in var_names:
+					r = get_response(user_id, survey_version, var_name)
+					if r != None:
+						response[var_name] = r;
+				if response != {}:
+					sub.set_answer(response)
+				
+	else:
+		response = get_response(user_id, survey_version, question.variable_name)
+		if response != None:
+			question.set_answer(response)
 	return question
+
 
 def set_current_question(user_id, survey_version, variable_name):
 	entries = Progress.objects.filter(user=user_id,\
