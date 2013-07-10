@@ -101,7 +101,8 @@ class Formwidget:
 
 	def to_html(self):
 		#return '<div class="formwidget">\n' + self.render() + '\n</div>';
-		return self.render();
+		resp = '<input type="hidden" name="__question_name" value="' + self.variable_name + '" />\n';
+		return resp + self.render();
 
 	def set_answer(self, answer):
 		self.answer = answer;
@@ -120,7 +121,7 @@ class Question(Formwidget):
 		return resp + self.list_required_vars();
 
 	def list_required_vars(self):
-		resp = '<input type="hidden" name="required_vars" value="' + self.variable_name + '" />\n'
+		resp = '<input type="hidden" name="__required_vars" value="' + self.variable_name + '" />\n'
 		return resp;
 
 
@@ -215,7 +216,7 @@ class GridQuestion(Question):
 		return resp
 	
 	def list_required_vars(self):
-		resp = '<input type="hidden" name="required_vars" value="';
+		resp = '<input type="hidden" name="__required_vars" value="';
 		resp += ','.join(self.get_subquestion_variables());
 		resp +='" />\n';
 		return resp

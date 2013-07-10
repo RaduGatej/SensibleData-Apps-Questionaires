@@ -2,8 +2,15 @@ import formwidget as fw
 from render.models import Response
 import pdb
 
+
+def get_first_question(user_id, survey_version):
+	questions = get_questions_list();
+	return return_question(user_id, survey_version, questions[0]);
+
 def get_previous_question(user_id, survey_version, current_name):
 	questions = get_questions_list();
+	if current_name == '__goodbye':
+		return return_question(user_id, survey_version, questions[-1])
 	previous = None;
 	for q in questions:
 		if q.variable_name == current_name:
@@ -29,7 +36,7 @@ def get_next_question(user_id, survey_version, current_name):
 			pass
 	if now_is_the_time:
 		# TODO change to return last page
-		raise NameError(current_name + ' is not a valid question name');a
+		return None;
 	else:
 		raise NameError(current_name + ' is not a valid question name');
 			
