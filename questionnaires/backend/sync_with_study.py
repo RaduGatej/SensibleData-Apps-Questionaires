@@ -17,8 +17,8 @@ def sync_with_study():
 		values = urllib.quote(json.dumps(values))
 
 		token = oauth2.getToken(response.user, Scope.objects.get(scope='connector_questionnaire.input_form_data'))
-		print token
-		r = oauth2.query('http://166.78.249.214:8082/connectors/connector_questionnaire/upload/', token, '&doc='+values, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), 'http://166.78.249.214:8082/connectors/connector_questionnaire/auth/refresh_token/')
+
+		r = oauth2.query(SECURE_CONFIG.SERVICE_UPLOAD_URI, token, '&doc='+values, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), SECURE_CONFIG.SERVICE_REFRESH_TOKEN_URI)
 		if 'ok' in r:
 			response.synced_with_study = True
 			response.save()
