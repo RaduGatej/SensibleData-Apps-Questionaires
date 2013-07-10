@@ -3,7 +3,7 @@ from render.models import Response
 from django.conf import settings
 import pdb
 
-_DEBUG = True
+_DEBUG = False
 def DEBUG():
 	if _DEBUG:
 		pdb.set_trace()
