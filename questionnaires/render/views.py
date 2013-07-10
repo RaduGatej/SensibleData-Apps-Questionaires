@@ -18,10 +18,7 @@ def form(request):
 		#show user site to authorize the form
 	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
 <<<<<<< HEAD
-<<<<<<< HEAD
 	#pdb.set_trace();
-=======
->>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 =======
 >>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 	next_question = None;
@@ -66,10 +63,7 @@ def form(request):
 		di['question'] = next_question.to_html()
 		di['unanswered'] = unanswered
 <<<<<<< HEAD
-<<<<<<< HEAD
 	#pdb.set_trace()
-=======
->>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 =======
 >>>>>>> 0d3dcd11d846cb81e8f6109db6107331ce03fa25
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
