@@ -20,7 +20,7 @@
  						return false;
 					}
 				}
-				if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
+				else if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
 					document.getElementById("answer_alert").style.display = "block";
 					return false;
 				}	
@@ -29,6 +29,7 @@
 		}
 	</script>
     <!--<div class="well"> -->
+        <h1>Hi!</h1>
 		{% if unanswered %}
 			<div class="alert alert-error" id="answer_alert">
 		{% else %}
