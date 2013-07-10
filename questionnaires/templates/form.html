@@ -25,6 +25,7 @@
 					}
 				}
 				else if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
+					//document.forms["myform"][required_vars[idx]].className = 'control-group error';
 					document.getElementById("answer_alert").style.display = "block";
 					return false;
 				}	

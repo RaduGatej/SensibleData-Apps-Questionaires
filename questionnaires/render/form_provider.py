@@ -19,13 +19,13 @@ def get_previous_question(user_id, survey_version, current_name):
 	previous = None;
 	for q in questions:
 		if q.variable_name == current_name:
-			# TODO add support for conditional inclusion
 			if previous == None:
 				return return_question(user_id, survey_version, questions[0])
 			else:
 				return return_question(user_id, survey_version, previous);
 		else:
-			previous = q;
+			if check_condition(user_id, survey_version, q.inclusion_condition):
+				previous = q
 	raise NameError(current_name + ' is not a valid question name');
 
 def get_next_question(user_id, survey_version, current_name):
@@ -33,14 +33,15 @@ def get_next_question(user_id, survey_version, current_name):
 	now_is_the_time = False;
 	for q in questions:	
 		if now_is_the_time:
-			# TODO add support for conditional inclusion
-			return return_question(user_id, survey_version, q)
+			if check_condition(user_id, survey_version, q.inclusion_condition):
+				return return_question(user_id, survey_version, q)
+			else:
+				pass
 		elif q.variable_name == current_name:
 			now_is_the_time = True
 		else:
 			pass
 	if now_is_the_time:
-		# TODO change to return last page
 		return None;
 	else:
 		raise NameError(current_name + ' is not a valid question name');
@@ -55,14 +56,14 @@ def get_next_unanswered_question(user_id,survey_version):
 		for e in entries:
 			answers[e.variable_name] = e.response;
 		for question in questions:
-			if isinstance(question, fw.GridQuestion):
-				for sub in question.get_subquestion_variables():
-					if sub not in answers.keys():
-						return return_question(user_id, survey_version, question)
-			elif question.variable_name not in answers.keys():
-				# TODO add support for conditional inclusion
-				# if q.inclusion_condition != '':
-				return return_question(user_id, survey_version, question)
+			if check_condition(user_id, survey_version, question.inclusion_condition):
+				if isinstance(question, fw.GridQuestion):
+					for sub in question.get_subquestion_variables():
+						if sub not in answers.keys():
+							return return_question(user_id, survey_version, question)
+				elif question.variable_name not in answers.keys():
+					# if q.inclusion_condition != '':
+					return return_question(user_id, survey_version, question)
 	else:
 		return return_question(user_id, survey_version, questions[0]);
 
@@ -92,7 +93,7 @@ def return_question(user_id, survey_version, question):
 			question.set_answer(response)
 	return question
 
-
+'''
 def set_current_question(user_id, survey_version, variable_name):
 	entries = Progress.objects.filter(user=user_id,\
                    form_version=survey_version);
@@ -115,7 +116,7 @@ def get_current_question(user_id, survey_version):
 				return question
 	else:
 		return questions[0]
-	
+'''	
 
 def set_answer(user_id, survey_version, variable_name, response):
 	#saving the question index
@@ -147,6 +148,16 @@ def get_response(user_id, survey_version, variable_name):
 	else:
 		return None
 
+def check_condition(user_id, survey_version, condition):
+	if (condition == None) | (condition == ''):
+		return True;
+
+	parts = condition.split('==');
+	for part in parts:
+		part = part.strip();
+	# left hand side is the var name, right hand side is the value
+	response = get_response(user_id, survey_version, parts[0])
+	return (response == fw.htmlize(parts[1]));	
 
 def get_questions_list():
 	return fw.parsefile(settings.ROOT_DIR+'render/data/sample_new.txt')

@@ -18,8 +18,8 @@ def parsefile(filename):
 		if idx == 0:
 			idx +=1
 			continue
-		print line
-
+		#print line
+		line = line.replace('"','')
 		widget = parseline(line);
 		if widget is None:
 			print 'Error in line: ' + str(idx)
@@ -161,7 +161,7 @@ class ListQuestion(Question):
 			if (self.answer != []):
 				if self.answer == htmlize(answer):
 					resp += 'selected="selected"' 
-			resp += '">' + answer + '</option>\n'
+			resp += '>' + answer + '</option>\n'
 		resp += '<select>\n';
 
 		return resp
