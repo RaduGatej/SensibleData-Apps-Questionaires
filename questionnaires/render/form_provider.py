@@ -1,19 +1,22 @@
 import formwidget as fw
 from render.models import Response
+import pdb
 
-
-def get_previous_question(current_name):
+def get_previous_question(user_id, survey_version, current_name):
 	questions = get_questions_list();
 	previous = None;
 	for q in questions:
 		if q.variable_name == current_name:
 			# TODO add support for conditional inclusion
-			return previous;
+			if previous == None:
+				return return_question(user_id, survey_version, questions[0])
+			else:
+				return return_question(user_id, survey_version, previous);
 		else:
 			previous = q;
 	raise NameError(current_name + ' is not a valid question name');
 
-def get_next_question(current_name):
+def get_next_question(user_id, survey_version, current_name):
 	questions = get_questions_list();
 	now_is_the_time = False;
 	for q in questions:	
@@ -24,40 +27,90 @@ def get_next_question(current_name):
 			now_is_the_time = True
 		else:
 			pass
-
-	raise NameError(current_name + ' is not a valid question name');
+	if now_is_the_time:
+		# TODO change to return last page
+		raise NameError(current_name + ' is not a valid question name');a
+	else:
+		raise NameError(current_name + ' is not a valid question name');
 			
 
 def get_next_unanswered_question(user_id,survey_version):
+	pdb.set_trace();
 	questions = get_questions_list();
-	entries = Response.objects.filter(user_id=user_id,\
+	entries = Response.objects.filter(user=user_id,\
 				form_version=survey_version);
 	if len(entries) > 0:
 		answers = {};
 		for e in entries:
 			answers[e.variable_name] = e.response;
-	
-		for q in questions:
-			if q.variable_name not in answers.keys():
+		pdb.set_trace();	
+		for question in questions:
+			if isinstance(question, fw.GridQuestion):
+				for sub in question.get_subquestion_variables():
+					if sub not in answers.keys():
+						return return_question(user_id, survey_version, question)
+			elif question.variable_name not in answers.keys():
 				# TODO add support for conditional inclusion
 				# if q.inclusion_condition != '':
-				return q
+				return return_question(user_id, survey_version, question)
 	else:
-		return questions[0];
+		return return_question(user_id, survey_version, questions[0]);
+
+
+def return_question(user_id, survey_version, question):
+	#set_current_question(user_id, survey_version, question.variable_name)
+	return question
+
+def set_current_question(user_id, survey_version, variable_name):
+	pdb.set_trace();
+	entries = Progress.objects.filter(user=user_id,\
+                   form_version=survey_version);
+	if len(entries) > 0:
+		entries[0].question_variable_name = variable_name;
+		entries[0].save();
+	else:
+		e = Progress(user_id=user_id,\
+                     form_version=survey_version, question_variable_name = variable_name);
+		e.save();
+	
+
+def get_current_question(user_id, survey_version):
+	pdb.set_trace();
+	entries = Progress.objects.filter(user=user_id,\
+                 form_version=survey_version);
+	questions = get_questions_list();
+	if len(entries) > 0:
+		for question in questions:
+			if question.variable_name == entries[0].question_variable_name:
+				return question
+	else:
+		return questions[0]
+	
 
 def set_answer(user_id, survey_version, variable_name, response):
-	entries = Response.objects.filter(user_id = user_id, form_version=survey_version, \
+	#saving the question index
+	#entries = Progress.objects.filter(user_id = user_id, form_version=survey_version, question_index=question_index);
+	#if len(entries) > 0:
+	#	entries[0].question_index = question_index;
+	#	entries[0].save()
+	#else:
+	#	r = Progress(user_id = user_id, form_version=survey_version, question_index=question_index);
+	#	r.save();
+	
+
+	#saving the actual answer
+	entries = Response.objects.filter(user = user_id, form_version=survey_version, \
                 variable_name = variable_name)
 	if len(entries) > 0:
 		entries[0].response = response;
 		entries[0].save();
 	else:
-		r = Response(user_id = user_id, form_version=survey_version, \
+		r = Response(user = user_id, form_version=survey_version, \
 				variable_name = variable_name, response=response);
 		r.save();
 
 def get_response(user_id, survey_version, variable_name):
-	entries = Response.objects.filter(user_id = user_id, form_version=survey_version, \
+	entries = Response.objects.filter(user = user_id, form_version=survey_version, \
                 variable_name = variable_name)
 	if len(entries) > 0:
 		return entries[0].response;

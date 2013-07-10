@@ -91,14 +91,17 @@ class Formwidget:
 		answers = answers.split(";");
 		self.answers = [];
 		for answer in answers:
-			self.answers.append(answer.strip());
+			ans = answer.strip();
+			if ans != '':
+				self.answers.append(answer.strip());
 		self.extra_param = extra_param;
 		self.data = [];
 	def render(self):
 		return "<p></p>";
 
 	def to_html(self):
-		return '<div class="formwidget">\n' + self.render() + '\n</div>';
+		#return '<div class="formwidget">\n' + self.render() + '\n</div>';
+		return self.render();
 
 	def set_answer(self, answer):
 		self.answer = answer;
@@ -107,23 +110,29 @@ class Formwidget:
 class Question(Formwidget):
 	def prerender(self):
 		if len(self.primary_content) > 0:
-			resp = '<div class="question_title">' + self.primary_content + '</div>\n';
+			resp = '<legend>' + self.primary_content + '</legend>\n';
 		else:
 			resp = '';
 
 		if len(self.secondary_content) > 0:
-			resp += '<div class="question_content">' + self.secondary_content + '</div>\n';
+			resp += '<label>' + self.secondary_content + '</label>\n';
 
+		return resp + self.list_required_vars();
+
+	def list_required_vars(self):
+		resp = '<input type="hidden" name="required_vars" value="' + self.variable_name + '" />\n'
 		return resp;
 
 
 class Header(Formwidget):
-	def __init__(self, primary_content):
+	def __init__(self, primary_content, secondary_content):
 		self.primary_content = primary_content;
+		self.secondary_content = secondary_content;
 
 	def render(self):
-		resp = '<div class="formheader">' + self.primary_content + "</div>\n"
-		resp += '<input type="hidden" name="require_answer" value="no"/>\n'
+		resp = '<legend>' + self.primary_content + "<legend>\n"
+		resp += '<label>' + self.secondary_content + '</label>\n'
+		#resp += '<input type="hidden" name="require_answer" value="no"/>\n'
 		resp += '<input type="hidden" name="' + self.variable_name + '" value="1"/>\n'
 		return resp 
 
@@ -131,13 +140,15 @@ class RadioQuestion(Question):
 	def render(self):
 		resp = self.prerender();
 		for answer in self.answers:
-			resp += '<input type="radio" name="' + self.variable_name + \
-					'" value="' + htmlize(answer) + '"/>' + answer + '<br />\n'
+			resp += '<label class="radio">\n';
+			resp += '\t<input type="radio" name="' + self.variable_name + \
+					'" value="' + htmlize(answer) + '"/>' + answer + '\n'
+			resp += '</label>\n';
 		return resp;
 
 class ListQuestion(Question):
 	def render(self):
-		resp = self.prerender() + '\n<select>\n';
+		resp = self.prerender() + '\n<select name="' + self.variable_name + '">\n';
 		# add empty answer as default
 		resp += '\t<option value=""></option>\n';
 		for answer in self.answers:
@@ -146,9 +157,14 @@ class ListQuestion(Question):
 
 		return resp
 		
-class NumberQuestion(Formwidget):
-	def __render(self):
-		resp = self.prerender() + '\n<input type="number" name="' + htmlize(self.variable_name) + '" />'
+class NumberQuestion(Question):
+	def render(self):
+		resp = self.prerender() + '<input type="number" name="' + htmlize(self.variable_name) + '"'
+		resp += 'min=0 max=' + str(self.extra_param);
+		resp += 'placeholder="0-' + str(self.extra_param) + '" '
+		resp += 'class="input-mini" ';
+		resp += ' />'
+		return resp
 
 class SubQuestion(Formwidget):
 	def render(self):
@@ -159,10 +175,14 @@ class SubQuestion(Formwidget):
 		
 		elif self.answer_type == 'number':
 			for answer in self.answers:
-				resp += '\t<td><input type="number" name="' + self.variable_name + '_' + htmlize(answer) + '" /></td>\n'
+				resp += '\t<td><input type="number" name="' + self.variable_name + '_' + htmlize(answer) + '" max=' + str(self.extra_param) + ' min=0'
+				resp += ' placeholder="0-' + str(self.extra_param) + '" '
+				resp += 'class="input-mini"'
+				resp += '/></td>\n'
 
 		resp += '</tr>';
 		return resp;
+
 		
 		
 class GridQuestion(Question):
@@ -170,11 +190,19 @@ class GridQuestion(Question):
 	def add_subquestion(self, subquestion):
 		self.data.append(subquestion)
 
+	def get_subquestion_variables(self):
+		resp = [];
+		for sub in self.data:
+			if sub.answer_type == 'radio':
+				resp.append(sub.variable_name)
+			elif sub.answer_type == 'number':
+				for answer in sub.answers:
+					resp.append(sub.variable_name + '_' + htmlize(answer));
+		return resp
 
 	def render(self):
 		resp = self.prerender();
-		resp += '<input type="hidden" name="' + self.variable_name + '" value="1" />\n';
-		resp += '\n<table>\n';
+		resp += '\n<table class="table table-bordered table-hover">\n';
 		resp += '<tr>\n\t<th></th>';
 		for answer in self.answers:
 			resp +='\n\t<th>' + answer + '</th>';
@@ -185,4 +213,10 @@ class GridQuestion(Question):
 		resp += '\n</table>';
 
 		return resp
-		
+	
+	def list_required_vars(self):
+		resp = '<input type="hidden" name="required_vars" value="';
+		resp += ','.join(self.get_subquestion_variables());
+		resp +='" />\n';
+		return resp
+

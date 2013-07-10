@@ -1,16 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-    <div class="well">
+	<script>
+		function validateForm()
+		{
+			var required_vars = document.forms["myform"]["required_vars"].value;
+			required_vars = required_vars.split(',');
+			for (var idx=0; idx<required_vars.length; idx++) {
+				// check if radio group:
+				if (document.forms["myform"][required_vars[idx]] instanceof NodeList) {
+					var answered = false;
+					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
+						if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
+							answered = true;
+						}
+					}
+					if (!answered) {
+						document.getElementById("answer_alert").style.display = "block";
+ 						return false;
+					}
+				}
+				if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
+					document.getElementById("answer_alert").style.display = "block";
+					return false;
+				}	
+			}
+		
+		}
+	</script>
+    <!--<div class="well"> -->
         <h1>Hi!</h1>
-    	<form action="form" method="post">
-			{% csrf_token %}
-			{{ question|safe }} 
-			<input type="button" value="&lt Previous">
-			<input type="submit" value="Next &gt"> 
+		{% if unanswered %}
+			<div class="alert alert-error" id="answer_alert">
+		{% else %}
+			<div class="alert alert-error" id="answer_alert" style="display:none">
+		{% endif %}
+				Please answer the question before continuing.
+			</div>
+    	<form action="form" method="post" name="myform" onsubmit="return validateForm()">
+			<fieldset>
+				{% csrf_token %}
+				{{ question|safe }} 
+				<div class="form-actions">
+				<button type="button" class="btn">&lt Previous</button>
+				<button type="submit" class="btn btn-primary">Next &gt</button> 	
+			</fieldset>
 		</form>
-	</div>
+	<!-- </div> -->
 
 
 {% endblock %}
