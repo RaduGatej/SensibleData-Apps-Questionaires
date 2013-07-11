@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, redirect
 from .models import *
+import identity
 
 @login_required
 def do_login(request):
@@ -11,4 +12,5 @@ def do_login(request):
 		f.firstLogin = False
 		f.save()
 		return redirect('request_attributes')
+	identity.getAttributes(request.user, ['email', 'first_name'])
 	return redirect('home')
