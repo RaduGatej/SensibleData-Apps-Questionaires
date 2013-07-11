@@ -8,11 +8,12 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+ROOT_DIR = '/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'SECURE_data.db',                      # Or path to database file if using sqlite3.
+        'NAME': ROOT_DIR+'SECURE_data.db',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -22,7 +23,7 @@ DATABASES = {
 }
 
 
-LOGIN_URL = '/openid/login/'
+LOGIN_URL = '/questions/openid/login/'
 LOGIN_REDIRECT_URL = '/'
 OPENID_SSO_SERVER_URL = 'http://166.78.249.214:8081/openid/xrds/'
 #OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
@@ -40,8 +41,7 @@ OPENID_CREATE_USERS = True
 OPENID_UPDATE_DETAILS_FROM_SREG = False
 OPENID_RENDER_FAILURE = failure_handler_function
 
-#ROOT_DIR = '/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/'
-ROOT_DIR = '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/'
+#ROOT_DIR = '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/'
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -82,11 +82,11 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = ROOT_DIR+'static_root'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/'
+STATIC_URL = '/questions/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -101,6 +101,11 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+	'django.core.context_processors.static',
+	'django.contrib.auth.context_processors.auth',
 )
 
 # Make this unique, and don't share it with anybody.
