@@ -12,7 +12,7 @@ import urllib, urllib2
 @login_required
 def requestAttributes(request):
 	url = SECURE_CONFIG.IDP_AUTHORIZATION_URI
-	url += "redirect_uri="+SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('attributes_redirect')
+	url += "redirect_uri="+SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect')
 	url += "&client_id="+SECURE_CONFIG.IDP_CLIENT_ID
 	url += "&response_type=code"
 	url += "&scope="+','.join([s.scope for s in Scope.objects.filter(type=Type.objects.get(type='identity'))])
@@ -23,9 +23,9 @@ def requestAttributes(request):
 
 @login_required
 def attributesRedirect(request):
-	token = oauth2.exchangeCodeForToken(request, SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?')
+	token = oauth2.exchangeCodeForToken(request, SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?')
 	if 'error' in token:
-		return HttpResponse(json.dumps(token))
+		return HttpResponse(token)
 	oauth2.saveToken(request.user, token)
 	return redirect('home')
 
@@ -44,10 +44,8 @@ def getAttributes(user, attributes):
 		return json.dumps({'error':'need multiple queries'})
 
 	
-	response = oauth2.query(SECURE_CONFIG.IDP_URI + 'openid/attributes/', list(tokens)[0], '&attributes='+','.join(attributes), SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?' )
+	response = oauth2.query(SECURE_CONFIG.IDP_URI + 'openid/attributes/', list(tokens)[0], '&attributes='+','.join(attributes), SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?' )
 	for attribute in response:
-		s = 'request.user.'+attribute + '= response["%s"]'%attribute
+		s = 'user.'+attribute + '= response["%s"]'%attribute
 		exec(s)
-	request.user.save()
-
-
+	user.save()
