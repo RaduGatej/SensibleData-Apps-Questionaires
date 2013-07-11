@@ -60,11 +60,6 @@ def form(request):
 		di['unanswered'] = unanswered
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
 
-@login_required
-def login(request):
-	getAttributes(request.user, ['email', 'first_name'])
-	return redirect('home')
-
 def logout_success(request):
 	return render_to_response('logout_success.html', {}, context_instance=RequestContext(request))
 
