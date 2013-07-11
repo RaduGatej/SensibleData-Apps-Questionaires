@@ -52,6 +52,8 @@ def form(request):
 		next_question = form_provider.get_next_unanswered_question(request.user,'1.0');
 
 	di = {}
+	progress = form_provider.get_user_progress(request.user,'1.0');
+	di['progress'] = str(progress);
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;
