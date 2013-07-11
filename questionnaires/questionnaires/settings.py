@@ -8,7 +8,8 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-ROOT_DIR = '/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/'
+ROOT_DIR = '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/'
+#ROOT_DIR = '/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/'
 
 DATABASES = {
     'default': {
@@ -42,7 +43,6 @@ OPENID_CREATE_USERS = True
 OPENID_UPDATE_DETAILS_FROM_SREG = False
 OPENID_RENDER_FAILURE = failure_handler_function
 
-#ROOT_DIR = '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/'
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
