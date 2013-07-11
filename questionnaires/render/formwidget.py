@@ -43,7 +43,7 @@ def parsefile(filename):
 
 def parseline(string):
 	parts = string.strip().split('\t');
-	print (parts)
+	#print (parts)
 	if len(parts) < 9:
 		parts += ['' for e in xrange(9-len(parts))]
 	if parts[0] == 'header':

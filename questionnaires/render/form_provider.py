@@ -100,11 +100,12 @@ def get_user_progress(user_id, survey_version):
 	
 	#check how many questions in total
 	total = get_survey_length(survey_version);
+	print "answered " + str(answered) + '/' + str(total);
 	return answered*100/total;
 
 def get_survey_length(survey_version):
 	#TODO change to checking in the DB instead
-	return len(open(settings.ROOT_DIR + 'render/data/sample_new.txt').readlines())-1;
+	return len(open(settings.ROOT_DIR + 'render/data/sample_new.txt').readlines());
 
 '''
 def set_current_question(user_id, survey_version, variable_name):

@@ -20,24 +20,24 @@ def form(request):
 	next_question = None;
 	unanswered = False;
 	if request.POST:
+		# add answers:
+		answers = [];
+		required_vars = [];
+		for ans in request.POST.keys():
+			if ans == '__required_vars': # list of required answers
+				required_vars = request.POST[ans].split(",");
+			elif (ans == str('csrfmiddlewaretoken')) | (ans == str('__question_name')): # token or question_name
+				continue
+			elif request.POST[ans] == '': #empty answer
+				continue
+			else: #good answer
+				answers.append(ans);
+				form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
 		if '_prev' in request.POST:
 			next_question = form_provider.get_previous_question(request.user,'1.0',request.POST['__question_name']);
 		elif '_from_top' in request.POST:
 			next_question = form_provider.get_first_question(request.user,'1.0');
 		else:
-			# add answers:
-			answers = [];
-			required_vars = [];
-			for ans in request.POST.keys():
-				if ans == '__required_vars': # list of required answers
-					required_vars = request.POST[ans].split(",");
-				elif (ans == str('csrfmiddlewaretoken')) | (ans == str('__question_name')): # token or question_name
-					continue
-				elif request.POST[ans] == '': #empty answer
-					continue
-				else: #good answer
-					answers.append(ans);
-					form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
 			if len(required_vars) > 0:
 				for v in required_vars:
 					if v not in answers:
