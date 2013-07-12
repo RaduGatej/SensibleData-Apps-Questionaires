@@ -8,20 +8,18 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Removing unique constraint on 'AccessToken', fields ['refresh_token']
-        #db.delete_unique(u'utils_accesstoken', ['refresh_token'])
-
-        # Removing unique constraint on 'AccessToken', fields ['token']
-        #db.delete_unique(u'utils_accesstoken', ['token'])
-	pass
+        # Adding model 'Cas'
+        db.create_table(u'utils_cas', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('student_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100, db_index=True)),
+        ))
+        db.send_create_signal(u'utils', ['Cas'])
 
 
     def backwards(self, orm):
-        # Adding unique constraint on 'AccessToken', fields ['token']
-        db.create_unique(u'utils_accesstoken', ['token'])
-
-        # Adding unique constraint on 'AccessToken', fields ['refresh_token']
-        db.create_unique(u'utils_accesstoken', ['refresh_token'])
+        # Deleting model 'Cas'
+        db.delete_table(u'utils_cas')
 
 
     models = {
@@ -64,7 +62,7 @@ class Migration(SchemaMigration):
         u'utils.accesstoken': {
             'Meta': {'object_name': 'AccessToken'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'refresh_token': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'refresh_token': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'scope': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['utils.Scope']", 'symmetrical': 'False'}),
             'token': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
@@ -74,6 +72,18 @@ class Migration(SchemaMigration):
             'attribute': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'scope': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['utils.Scope']"})
+        },
+        u'utils.cas': {
+            'Meta': {'object_name': 'Cas'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'student_id': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+        },
+        u'utils.firstlogin': {
+            'Meta': {'object_name': 'FirstLogin'},
+            'firstLogin': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
         },
         u'utils.scope': {
             'Meta': {'object_name': 'Scope'},
@@ -85,7 +95,7 @@ class Migration(SchemaMigration):
         u'utils.state': {
             'Meta': {'object_name': 'State'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'nonce': ('django.db.models.fields.CharField', [], {'default': "'297beb32a55f68d'", 'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
+            'nonce': ('django.db.models.fields.CharField', [], {'default': "'6e3d801a05e15e6'", 'unique': 'True', 'max_length': '100', 'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         u'utils.type': {
