@@ -11,5 +11,5 @@ urlpatterns = patterns('',
     url(r'^backend/', include('backend.urls')),
     url(r'^logout/', 'utils.logout.do_logout', name = 'logout'),
     url(r'^login/', 'utils.login.do_login', name = 'login'),
-    url(r'^', include('render.urls')),
+    url(r'^/?', include('render.urls')),
 )
