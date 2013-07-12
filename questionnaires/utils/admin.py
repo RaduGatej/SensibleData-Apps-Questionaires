@@ -38,3 +38,14 @@ class UserAdmin(UserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+
+class CasInline(admin.StackedInline):
+	model = Cas
+	can_delete = True
+
+class UserAdmin(UserAdmin):
+	inlines = (CasInline, )
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
