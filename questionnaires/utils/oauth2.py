@@ -116,7 +116,9 @@ def query(request_uri, token, params, client_id, client_secret, redirect_uri, re
 		for s in t.scope.all():
 			scopes.add(s)
 
-	token = AccessToken.objects.filter(token=token)[0]
+	try:
+		token = AccessToken.objects.filter(token=token)[0]
+	except IndexError: return {'error':'no access token found'}
 	url = request_uri
 	url += '?bearer_token='+token.token
 	url += params

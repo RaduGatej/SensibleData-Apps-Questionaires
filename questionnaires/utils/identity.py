@@ -42,7 +42,8 @@ def getAttributes(user, attributes):
 		tokens.add(token)
 	if len(tokens) > 1: 
 		return json.dumps({'error':'need multiple queries'})
-
+	if len(tokens) == 0:
+		return json.dumps({'error':'no token available'})
 	
 	response = oauth2.query(SECURE_CONFIG.IDP_URI + 'openid/attributes/', list(tokens)[0], '&attributes='+','.join(attributes), SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?' )
 	for attribute in response:
