@@ -7,5 +7,5 @@ import SECURE_CONFIG
 def do_logout(request):
 	if request.user.is_authenticated():
 		logout(request)
-		return redirect(SECURE_CONFIG.IDP_URI+'accounts/logout/?next='+SECURE_CONFIG.APPLICATION_URI+'logout/')	
+		return redirect(SECURE_CONFIG.IDP_URI+'accounts/logout/?next='+SECURE_CONFIG.APPLICATION_URI+'/logout/')	
 	return redirect('logout_success')	
