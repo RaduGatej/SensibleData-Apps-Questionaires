@@ -1,5 +1,7 @@
 # Django settings for questionnaires project.
 
+import os
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -8,11 +10,20 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-ROOT_DIR = '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+#ROOT_DIR = '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/'
 #ROOT_DIR = '/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/'
+ROOT_DIR = '/home/sensibleDTU/sensible-dtu-apps/questionnaires/SensibleData-Apps-Questionaires/questionnaires/'
+ROOT_URL = '/apps/questionnaire/'
 
 DATABASES = {
-    'default': {
+	'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': os.path.join(BASE_DIR,'SECURE_my.cnf'),
+        },
+    },
+    'dev': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': ROOT_DIR+'SECURE_data.db',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
@@ -24,11 +35,9 @@ DATABASES = {
 }
 
 
-LOGIN_URL = '/questions/openid/login/'
-LOGIN_REDIRECT_URL = '/'
-#OPENID_SSO_SERVER_URL = 'http://166.78.249.214:8081/openid/xrds/'
-OPENID_SSO_SERVER_URL = "http://www.sensible.dtu.dk/sensible-data/openid/xrds/"
-#OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
+LOGIN_URL = ROOT_URL+'openid/login/'
+LOGIN_REDIRECT_URL = ROOT_URL
+OPENID_SSO_SERVER_URL = "https://www.sensible.dtu.dk/sensible-data/openid/xrds/"
 OPENID_USE_EMAIL_FOR_USERNAME = False
 AUTHENTICATION_BACKENDS = (
             'django_openid_auth.auth.OpenIDBackend',
@@ -37,11 +46,17 @@ AUTHENTICATION_BACKENDS = (
 
 def failure_handler_function(request, message, status=None, template_name=None, exception=None):
 	from django.shortcuts import redirect
+	from django.http import HttpResponse
+	registration = request.REQUEST.get('registration', False)
+	#TODO
+	if registration: return redirect('login')
 	return redirect('openid_failed')
 
 OPENID_CREATE_USERS = True
 OPENID_UPDATE_DETAILS_FROM_SREG = False
 OPENID_RENDER_FAILURE = failure_handler_function
+
+APPEND_SLASH = True
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -87,7 +102,7 @@ STATIC_ROOT = ROOT_DIR+'static_root'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/questions/static/'
+STATIC_URL = ROOT_URL+'static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
