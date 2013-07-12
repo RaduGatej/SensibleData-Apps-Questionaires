@@ -32,8 +32,8 @@ class Scope(models.Model):
 
 class AccessToken(models.Model):
 	user = models.ForeignKey(User)
-	token = models.CharField(max_length=100, db_index=True)
-    	refresh_token = models.CharField(blank=True, null=True, max_length=100, db_index=True)
+	token = models.CharField(max_length=100, db_index=True, unique=False)
+    	refresh_token = models.CharField(blank=True, null=True, max_length=100)
 	scope = models.ManyToManyField(Scope)
 
 class State(models.Model):
@@ -47,3 +47,9 @@ class Attribute(models.Model):
 class FirstLogin(models.Model):
     user = models.OneToOneField(User)
     firstLogin = models.BooleanField(default=True)
+
+class Cas(models.Model):
+	user = models.OneToOneField(User)
+	student_id = models.CharField(unique=True, max_length=100, db_index=True)
+
+
