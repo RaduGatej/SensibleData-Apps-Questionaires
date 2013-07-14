@@ -23,7 +23,3 @@ subquestion		"Eksem, hududslet, kløe"			radio	symptoms_eksem	"Nej; Ja, lidt gen
 subquestion		"Forkølelse, snue, hoste"			radio	symptoms_snue	"Nej; Ja, lidt generet; Ja, meget generet"	
 subquestion		"Åndedrætsbesvær, forpustethed "			radio	symptoms_forpustethed	"Nej; Ja, lidt generet; Ja, meget generet"	
 question		Ryger du?			dropdown	ryger_freq	"Ja, dagligt; Ja, men ikke dagligt; Nej, men jeg har røget tidligere; Nej, jeg har aldrig røget"	
-question				"ryger_freq=='Ja, dagligt'"	grid	ryger	Antal cigaretter; Cerutter; Cigarer; Pibestop; 	
-subquestion		Hvor meget ryger du i gennemsnit om dagen?		"ryger_freq=='Ja, dagligt'"	number	ryger_antal	Antal cigaretter; Cerutter; Cigarer; Pibestop; 	99
-question		Alcohol volume			grid	alco	Mandag;Tirsdag;Onsdag;Torsdag;Fredag;Lorgag;Sontag	
-subquestion		Hvor mange genstande drak du på hver af dagene I sidste uge? 	"Skriv 0 ved de dage, hvor du ikke drak alkohol."		number	alco_volume	Mandag;Tirsdag;Onsdag;Torsdag;Fredag;Lorgag;Sontag	99

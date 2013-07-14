@@ -15,7 +15,12 @@
 				if (document.forms["myform"][required_vars[idx]] instanceof NodeList) {
 					var answered = false;
 					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
-						if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
+						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "number") {
+							if (document.forms["myform"][required_vars[idx]][inner_idx].value > 0) {
+								answered = true;
+							}
+						}
+						else if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
 							answered = true;
 						}
 					}

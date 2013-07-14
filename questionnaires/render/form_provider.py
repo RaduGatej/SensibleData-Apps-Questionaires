@@ -49,6 +49,7 @@ def get_next_question(user_id, survey_version, current_name):
 
 def get_next_unanswered_question(user_id,survey_version):
 	questions = get_questions_list();
+	#pdb.set_trace()
 	entries = Response.objects.filter(user=user_id,\
 				form_version=survey_version);
 	if len(entries) > 0:
@@ -73,20 +74,10 @@ def return_question(user_id, survey_version, question):
 	DEBUG();
 	if isinstance(question, fw.GridQuestion):
 		for sub in question.data:
-			var_names = sub.get_variable_names()
-			if len(var_names) == 1:
-				response = get_response(user_id, survey_version, var_names[0])
-				if response != None:
-					sub.set_answer(response)
-			else:
-				response = {}
-				for var_name in var_names:
-					r = get_response(user_id, survey_version, var_name)
-					if r != None:
-						response[var_name] = r;
-				if response != {}:
-					sub.set_answer(response)
-				
+			var_name = sub.variable_name;
+			response = get_response(user_id, survey_version, var_name)
+			if response != None:
+				sub.set_answer(response)	
 	else:
 		response = get_response(user_id, survey_version, question.variable_name)
 		if response != None:
@@ -105,7 +96,18 @@ def get_user_progress(user_id, survey_version):
 
 def get_survey_length(survey_version):
 	#TODO change to checking in the DB instead
-	return len(open(settings.ROOT_DIR + 'render/data/sample_new.txt').readlines());
+	#return len(open(settings.ROOT_DIR + 'render/data/sample_new.txt').readlines());
+	resp = 0;
+	previous = ''
+	for line in open(settings.ROOT_DIR + 'render/data/sample_new_types.txt'):
+		if line.startswith('header') | line.startswith('question'):
+			resp +=1
+		elif line.startswith('subquestion'):
+			if previous.startswith('subquestion'):
+				resp +=1
+		previous = line
+		
+	return resp
 
 '''
 def set_current_question(user_id, survey_version, variable_name):
@@ -174,7 +176,7 @@ def check_condition(user_id, survey_version, condition):
 	return (response == fw.htmlize(parts[1]));	
 
 def get_questions_list():
-	return fw.parsefile(settings.ROOT_DIR+'render/data/sample_new.txt')
+	return fw.parsefile(settings.ROOT_DIR+'render/data/sample_new_types.txt')
 	
 				
 
