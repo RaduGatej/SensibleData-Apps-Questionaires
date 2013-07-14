@@ -1,5 +1,5 @@
 import re
-
+import pdb
 
 
 #### Utility methods
@@ -12,6 +12,7 @@ def debug(widgets):
 	f.close()
 
 def parsefile(filename):
+	#pdb.set_trace()
 	widgets = [];
 	idx = 0;
 	for line in open(filename):
@@ -168,13 +169,38 @@ class ListQuestion(Question):
 		
 class NumberQuestion(Question):
 	def render(self):
-		resp = self.prerender() + '<input type="number" name="' + htmlize(self.variable_name) + '"'
+		self.answers = re.sub('_+','_',self.answers[0])
+		parts = self.answers.split('_');
+		for part in parts:
+			part = part.strip();
+		
+		resp = self.prerender();
+		resp += '<div class="'
+		if parts[0] != '':
+			resp +='input-prepend '
+		if parts[1] != '':
+			resp += 'input append'
+		resp +='">\n'
+		if parts[0] != '':
+			resp += '\t<span class="add-on">' + parts[0] + '</span>'
+		resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
 		resp += 'min=0 max=' + str(self.extra_param) + ' ';
 		if (self.answer != []):
 			resp += 'value=' + str(self.answer) + ' '
 		else:
 			resp += 'placeholder="0-' + str(self.extra_param) + '" '
-		resp += 'class="input-mini" ';
+		resp += 'class="input-mini span2" ';
+		resp += 'id="'
+		if parts[0] != '':
+			if parts[1] != '':
+				resp += 'appendedPrepended'
+			else:
+				resp += 'prepended'
+		else:
+			if parts[1] != '':
+				resp += 'appended'
+
+		resp +='Input"'
 		resp += ' />'
 		return resp
 

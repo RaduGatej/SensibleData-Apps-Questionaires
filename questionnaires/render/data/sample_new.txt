@@ -1,6 +1,6 @@
 Type	Primary content	Secondary content	Additional content	Inclusion condition	Answer type	Variable name	Answers	extra param
 question		Er du mand eller kvinde?			radio	sex	Mand; Kvinde	
-question		Hvilket år er du født? 19			number	birthdate		99
+question		Hvilket år er du født?			number	birthdate	19_	99
 question	Self efficacy				grid	efficacy	Strongly disagree; Disagree; Neutral; Agree; Strongly agree;	
 subquestion		I generally manage to solve difficult physics problems if I try hard enough			radio	efficacy_solving	Strongly disagree; Disagree; Neutral; Agree; Strongly agree;	
 subquestion		I know I can stick to my aims and accomplish my goals in physics			radio	efficacy_sticking	Strongly disagree; Disagree; Neutral; Agree; Strongly agree;	
