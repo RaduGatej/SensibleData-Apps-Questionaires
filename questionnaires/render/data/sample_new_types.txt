@@ -5,7 +5,7 @@ subquestion					number	smoke_volume_cerutter	Antal cerutter_	99
 subquestion					number	smoke_volume_cigarer	Antal cigarer_	99		
 subquestion					number	smoke_volume_pibestop	Antal pibestop_	99		
 										
-question		Give me that scale			scale	ssss	1; 2; 3; 4; 5;			
-question		Ile masz lat?			number/radio	lat	mam _ lat; nie mam lat	50		
-question		O ktorej?			number	oktorej	o_	time		
-question	tytul!	napisz sobie			textarea	sdf				
+question		How well do you feel on scale 1 - very bad 5 - very good			scale	ssss	1; 2; 3; 4; 5;			
+question		How old are you?			number/radio	lat	I'm _ years old; I am not old	50		
+question		At what time did you wake up?			number	oktorej	around _ o'clock	time		
+question	Question title	Write whatever...			textarea	sdf				

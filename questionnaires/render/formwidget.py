@@ -257,6 +257,14 @@ class NumberQuestion(Question):
 #equal to the number of answers +1. The only border in the table is the horizontal line between the notes
 #and radio buttons.
 class ScaleQuestion(Question):
+	def prerender(self):
+		if len(self.primary_content) > 0:
+			resp = '<h2>' + self.primary_content + '</h2>\n';
+		else:
+			resp = '';
+			
+		return resp + self.list_required_vars();
+		
 	def render(self):
 		resp = self.prerender();
 		resp += '<table class="table table-condensed">\n'
