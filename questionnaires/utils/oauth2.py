@@ -28,8 +28,8 @@ def generateState(user):
 
 @login_required
 def grant(request):
-	#token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), SECURE_CONFIG.SERVICE_URL+SECURE_CONFIG.AUTH_ENDPOINT+'oauth2/token/?')
-	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), 'http://166.78.249.214:8082/authorization_manager/connector_questionnaire/auth/token/')
+	#TODO pull urls from config
+	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri='https://www.sensible.dtu.dk/apps/questionnaire/oauth2/grant/', request_uri='https://www.sensible.dtu.dk/sensible-dtu/authorization_manager/connector_questionnaire/auth/token/')
 	if 'error' in token:
                 return HttpResponse(json.dumps(token))
 
@@ -104,7 +104,7 @@ def saveToken(user, token):
 	return True
 	
 def getToken(user, scope):
-	try: a = AccessToken.objects.get(user=user, scope=scope)
+	try: a = AccessToken.objects.get(user=user, scope=Scope.objects.get(scope=scope))
 	except AccessToken.DoesNotExist: return None
 	return a.token
 
