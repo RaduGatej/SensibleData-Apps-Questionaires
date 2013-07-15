@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response, redirect
 import formwidget
 from django.template import RequestContext
 import form_provider
+from backend.sync_with_study import *
 
 def home(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
@@ -59,6 +60,10 @@ def form(request):
 	else:	
 		di['question'] = next_question.to_html()
 		di['unanswered'] = unanswered
+	try:
+		sync_with_study(subtle=True)
+	except: pass
+
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
 
 def logout_success(request):
