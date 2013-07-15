@@ -6,7 +6,9 @@ from utils import oauth2
 from utils.models import Scope
 from django.core.urlresolvers import reverse
 
-def sync_with_study():
+def sync_with_study(subtle=False):
+	no = len(Response.objects.filter(synced_with_study=False))
+	i = 0
 	for response in Response.objects.filter(synced_with_study=False):
 		values = {}
 		values['form_version'] = str(response.form_version)
@@ -22,3 +24,6 @@ def sync_with_study():
 		if 'ok' in r:
 			response.synced_with_study = True
 			response.save()
+
+		i = 0
+		if subtle and i > 10: break
