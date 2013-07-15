@@ -12,7 +12,7 @@
 			required_vars = required_vars.split(',');
 			for (var idx=0; idx<required_vars.length; idx++) {
 				// check if radio group:
-				if (document.forms["myform"][required_vars[idx]] instanceof NodeList) || (document.forms["myform"][required_vars[idx]] instanceof HTMLCollection){
+				if ((document.forms["myform"][required_vars[idx]] instanceof NodeList) || (document.forms["myform"][required_vars[idx]] instanceof HTMLCollection)){
 					var answered = false;
 					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
 						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "number") {
