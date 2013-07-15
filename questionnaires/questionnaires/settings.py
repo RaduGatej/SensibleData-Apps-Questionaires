@@ -1,6 +1,7 @@
 # Django settings for questionnaires project.
 
 import os
+import LOCAL_SETTINGS
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -9,25 +10,13 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+
+BASE_DIR = LOCAL_SETTINGS.BASE_DIR
+ROOT_DIR = LOCAL_SETTINGS.ROOT_DIR
+ROOT_URL = LOCAL_SETTINGS.ROOT_URL
+DATABASES = LOCAL_SETTINGS.DATABASES
+
 MANAGERS = ADMINS
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = '/Users/piotr/SensibleData-Apps-Questionaires/questionnaires/'
-#ROOT_DIR = '/home/arks/MODIS/SensibleData-Apps-Questionaires/questionnaires/'
-#ROOT_DIR = '/home/sensibleDTU/sensible-dtu-apps/questionnaires/SensibleData-Apps-Questionaires/questionnaires/'
-ROOT_URL = '/apps/questionnaire/'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': ROOT_DIR+'SECURE_data.db',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-    }
-}
-
 
 LOGIN_URL = ROOT_URL+'openid/login/'
 LOGIN_REDIRECT_URL = ROOT_URL
