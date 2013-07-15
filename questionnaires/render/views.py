@@ -13,7 +13,7 @@ def home(request):
 @login_required
 def form(request):
 	#TODO add wrapper function for gettting authorizations
-	auth = oauth2.getToken(request.user, scope=Scope.objects.get(scope='connector_questionnaire.input_form_data'))
+	auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
 	if auth == None:
 		#show user site to authorize the form
 		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
