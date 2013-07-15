@@ -8,7 +8,7 @@ Type	Primary content	Secondary content	Additional content	Inclusion condition	An
 question		How well do you feel on scale 1 - very bad 5 - very good			scale	ssss	1; 2; 3; 4; 5;			
 question		How old are you?			number/radio	lat	I'm _ years old; I am not old	50		
 question		At what time did you wake up?			number	oktorej	around _ o'clock	time		
-question	Question title	Write whatever…			textarea	sdf				
+question	Question title	Write whatever			textarea	sdf				
 										
 question	Self efficacy				grid	efficacy	Strongly disagree; Disagree; Neutral; Agree; Strongly agree;			
 subquestion		I generally manage to solve difficult physics problems if I try hard enough			radio	efficacy_solving	Strongly disagree; Disagree; Neutral; Agree; Strongly agree;			
