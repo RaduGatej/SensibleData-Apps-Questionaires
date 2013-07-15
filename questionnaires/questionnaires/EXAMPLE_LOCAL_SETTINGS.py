@@ -16,3 +16,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
+
+#import uuid, hashlib
+#str(hashlib.sha256(str(uuid.uuid4())).hexdigest())
+SECRET_KEY = '1234'

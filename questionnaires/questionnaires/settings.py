@@ -108,7 +108,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'xxyx_@ybsw56k-t_@3wa$i&)4ttspfirmy7!qlmy-s^!^_!fu6'
+SECRET_KEY = LOCAL_SETTINGS.SECRET_KEY
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
