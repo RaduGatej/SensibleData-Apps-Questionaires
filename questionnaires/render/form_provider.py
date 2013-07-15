@@ -13,9 +13,12 @@ def get_first_question(user_id, survey_version):
 	return return_question(user_id, survey_version, questions[0]);
 
 def get_previous_question(user_id, survey_version, current_name):
+	#pdb.set_trace()
 	questions = get_questions_list();
 	if current_name == '__goodbye':
-		return return_question(user_id, survey_version, questions[-1])
+		for i in range(1,len(questions)):
+			if check_condition(user_id, survey_version, questions[-i].inclusion_condition):
+				return return_question(user_id, survey_version, questions[-i])
 	previous = None;
 	for q in questions:
 		if q.variable_name == current_name:
@@ -29,6 +32,7 @@ def get_previous_question(user_id, survey_version, current_name):
 	raise NameError(current_name + ' is not a valid question name');
 
 def get_next_question(user_id, survey_version, current_name):
+	#pdb.set_trace()
 	questions = get_questions_list();
 	now_is_the_time = False;
 	for q in questions:	
@@ -168,12 +172,25 @@ def check_condition(user_id, survey_version, condition):
 	if (condition == None) | (condition == ''):
 		return True;
 
-	parts = condition.split('==');
+	equal = False;
+	parts = condition.split('==')
+	if len(parts) > 0: # condition equal
+		equal = True;
+	else:
+		parts = condition.split('!=')
+		
 	for part in parts:
 		part = part.strip();
+	
+	parts[1] = parts[1].split("|")
+	
 	# left hand side is the var name, right hand side is the value
-	response = get_response(user_id, survey_version, parts[0])
-	return (response == fw.htmlize(parts[1]));	
+	answer = get_response(user_id, survey_version, parts[0])
+	for part in parts[1]:
+		if answer == fw.htmlize(part):
+			return equal
+
+	return not equal;
 
 def get_questions_list():
 	return fw.parsefile(settings.ROOT_DIR+'render/data/sample_new_types.txt')
