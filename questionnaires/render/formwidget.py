@@ -102,6 +102,9 @@ def makequestion(primary_content, secondary_content, additional_content,\
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
+    elif answer_type == 'checklist':
+		return ChecklistQuestion(primary_content, secondary_content, additional_content,\
+                inclusion_condition, answer_type, variable_name, answers, extra_param);
 	elif answer_type == 'grid':
 		return GridQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
@@ -199,6 +202,22 @@ class ListQuestion(Question):
 		resp += '<select>\n';
 
 		return resp
+		
+class ChecklistQuestion(Question):
+	def render(self):
+		resp = self.prerender();
+		self.answer = self.answer.split(',');
+		resp += '<input type="hidden" name="__required_answer_count" value="' + self.extra_param + '" />\n'
+		for answer in self.answers:
+			resp += '\t<label class="checkbox">\n'
+      		resp += '\t\t<input type="checkbox" name="' + self.variable_name + '" '
+      		resp += 'value="' + htmlize(answer) + '" '
+      		if self.answer != []:
+      			if htmlize(answer) in self.answer:
+      				resp += ' checked '
+      		resp +=' />'
+      		resp += answer + '\n'
+    		resp += '\t</label>\n'
 		
 class NumberQuestion(Question):
 	def render(self):
