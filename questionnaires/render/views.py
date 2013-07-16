@@ -8,20 +8,22 @@ from django.template import RequestContext
 import form_provider
 from backend.sync_with_study import *
 
+import pdb
+
 def home(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 @login_required
 def form(request):
-	auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
-	if auth == None:
+	#auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
+	#if auth == None:
 		#show user site to authorize the form
-		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
 	next_question = None;
 	unanswered = False;
 	if request.POST:
 		# add answers:
-		answers = [];
+		answers = {};
 		required_vars = [];
 		for ans in request.POST.keys():
 			if ans == '__required_vars': # list of required answers
@@ -31,8 +33,13 @@ def form(request):
 			elif request.POST[ans] == '': #empty answer
 				continue
 			else: #good answer
-				answers.append(ans);
-				form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
+				#pdb.set_trace();
+				if ans.endswith('[]'):
+					answers[ans[:-2]] = ','.join(request.POST.getlist(ans))
+				else:
+					answers[ans] = request.POST[ans];
+				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
+		set_answers(answers, request.user, '1.0')
 		if '_prev' in request.POST:
 			next_question = form_provider.get_previous_question(request.user,'1.0',request.POST['__question_name']);
 		elif '_from_top' in request.POST:
@@ -40,7 +47,7 @@ def form(request):
 		else:
 			if len(required_vars) > 0:
 				for v in required_vars:
-					if v not in answers:
+					if v not in answers.keys():
 						unanswered = True;
 						break
 				
@@ -65,6 +72,11 @@ def form(request):
 	except: pass
 
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
+
+def set_answers(answer_dict, user, survey_version):
+	for var in answer_dict.keys():
+		form_provider.set_answer(user, survey_version, var, answer_dict[var])
+
 
 def logout_success(request):
 	return render_to_response('logout_success.html', {}, context_instance=RequestContext(request))
