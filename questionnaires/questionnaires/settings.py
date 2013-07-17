@@ -20,7 +20,7 @@ MANAGERS = ADMINS
 
 LOGIN_URL = ROOT_URL+'openid/login/'
 LOGIN_REDIRECT_URL = ROOT_URL
-OPENID_SSO_SERVER_URL = "https://www.sensible.dtu.dk/sensible-data/openid/xrds/"
+OPENID_SSO_SERVER_URL = LOCAL_SETTINGS.OPENID_SSO_SERVER_URL
 OPENID_USE_EMAIL_FOR_USERNAME = False
 AUTHENTICATION_BACKENDS = (
             'django_openid_auth.auth.OpenIDBackend',
