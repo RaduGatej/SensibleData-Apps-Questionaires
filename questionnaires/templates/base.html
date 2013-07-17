@@ -28,8 +28,19 @@
     <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="{% url 'home' %}">SensibleDTU: Questionnaires</a>
-	<ul class="nav pull-right action">
 	{% if user.is_authenticated %}
+	<div class="nav-collapse collapse">
+		            <ul class="nav">
+		<li class="divider-vertical"></li>
+	<li><a href="{% url 'home' %}" class=""><i class="icon-home"></i> Home</a></li>
+		<li class="divider-vertical"></li>
+	<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> About</a></li>
+	<li class="divider-vertical"></li>
+	<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Quit</a></li>
+	<li class="divider-vertical"></li>
+	</ul>
+	</div>
+	<ul class="nav pull-right action">
 		  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
 		<i class="icon-user icon-white"></i>
 			{% if user.first_name != '' %}
@@ -43,8 +54,7 @@
 		    <li><a href={% url 'logout' %}>Logout</a></li>
 		  </ul>
 	{% else %}
-		<a class="btn btn-primary" href="{% url 'login' %}">
-		<i class="icon-user icon-white"></i> Login</a>
+	<ul class="nav pull-right action">
 	{% endif %}
       </ul>
 
@@ -64,13 +74,14 @@
 
     <footer class="row">
         <div class="span6">
-            <p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires">SensibleDTU: Questionnaires</a></p>
+			<p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires">SensibleDTU: Questionnaires</a>
+			<span class="label label-info">0.0.1-devel</span></p>
         </div>
         <div class="span6" style="text-align:right">
             <p>
-                &copy; <a href="http://stopczynski.com">Arkadiusz Stopczynski</a> 2013
+                &copy; <a href="http://www.dtu.dk/Service/Telefonbog/Person?id=55971&cpid=116399&tab=3&qt=dtuprojectquery">Piotr Sapiezynski</a> 2013
                 |
-                <a href="https://raw.github.com/dyve/django-bootstrap-toolkit/master/LICENSE">license</a>
+                <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires/master/LICENSE">license</a>
             </p>
         </div>
     </footer>
