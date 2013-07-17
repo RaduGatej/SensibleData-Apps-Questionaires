@@ -20,3 +20,5 @@ DATABASES = {
 #import uuid, hashlib
 #str(hashlib.sha256(str(uuid.uuid4())).hexdigest())
 SECRET_KEY = '1234'
+
+OPENID_SSO_SERVER_URL = 'http://example.com/'
