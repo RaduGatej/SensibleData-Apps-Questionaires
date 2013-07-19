@@ -15,13 +15,24 @@
 				if ((document.forms["myform"][required_vars[idx]] instanceof NodeList) || (document.forms["myform"][required_vars[idx]] instanceof HTMLCollection)){
 					var answered = false;
 					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
+						var counter = 0;
 						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "number") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].value > 0) {
 								answered = true;
 							}
 						}
-						else if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
-							answered = true;
+						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "radio") {
+							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
+								answered = true;
+							} 
+						}
+						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
+							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
+								counter +=1;
+							}
+							if (counter >= document.forms["myform"]["__required_answer_count"]) {
+								answered = true;
+							}
 						}
 					}
 					if (!answered) {

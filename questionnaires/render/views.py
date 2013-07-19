@@ -35,7 +35,10 @@ def form(request):
 			else: #good answer
 				#pdb.set_trace();
 				if ans.endswith('[]'):
+					if request.POST.getlist(ans).length < request.POST['__required_answer_count']:
+						unanswered = True;
 					answers[ans[:-2]] = ','.join(request.POST.getlist(ans))
+					
 				else:
 					answers[ans] = request.POST[ans];
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
