@@ -2,6 +2,20 @@ import re
 from django.conf import settings
 import pdb
 
+#indices of columns in the Excel file
+ELEMENT_TYPE = 0;
+PRIMARY_CONTENT = 1;
+SECONDARY_CONTENT = 2;
+ADDITIONAL_CONTENT = 3;
+INCLUSION_CONDITION = 4;
+ANSWER_TYPE = 5;
+VARIABLE_NAME = 6;
+VARIABLE_LABEL = 7;
+ANSWERS = 8;
+EXTRA_PARAM = 9;
+
+NUMBER_OF_COLUMNS = 10;
+
 
 #### Utility methods
 def debug(widgets):
@@ -20,10 +34,13 @@ def is_number(s):
 		return False
 
 def parsefile(filename):
-	
 	widgets = [];
 	idx = 0;
+	line_idx = 0;
 	for line in open(filename):
+		line_idx +=1;
+		print line_idx;
+		line = line.replace('"','')
 		if line.startswith('Type'):
 			#header line, create Survey with meta data
 			#survey = Survey(version=survey_version,location=path,\
@@ -34,11 +51,11 @@ def parsefile(filename):
 			print 'skipping empty line'
 			continue
 		#print line
-		line = line.replace('"','')
+		
 		widget = parseline(line);
 		if widget is None:
-			print 'Error in line: ' + str(idx)
-			return
+			print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
+			continue
 		idx +=1;
 		if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion):
 			widgets[-1].add_subquestion(widget)
@@ -57,28 +74,66 @@ def parsefile(filename):
 
 
 def parseline(string):
-	parts = string.strip().split('\t');
-	#pdb.set_trace()
-	print (parts)
-	if len(parts) < 9:
-		parts += ['' for e in xrange(9-len(parts))]
-	if parts[0] == 'header':
-		return Header(parts[1], parts[2])
-	elif parts[0] == 'question':
-		return makequestion(parts[1], parts[2], parts[3], \
-							parts[4], parts[5], parts[6], parts[7], parts[8])
-	elif parts[0] == 'subquestion':
-		if parts[5] == 'radio':
-			return SubQuestion(parts[1], parts[2], parts[3], \
-                            parts[4], parts[5], parts[6], parts[7], parts[8])
-		elif parts[5] == 'number':
-			return NumberSubquestion(parts[1], parts[2], parts[3], \
-                            parts[4], parts[5], parts[6], parts[7], parts[8])
+	parts = validate(string)
+	if parts == None:
+		return None;
+	
+	if parts[ELEMENT_TYPE] == 'header':
+		return Header(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], \
+			parts[ADDITIONAL_CONTENT], parts[INCLUSION_CONDITION], parts[VARIABLE_LABEL])
+	elif parts[ELEMENT_TYPE] == 'question':
+		return makequestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], \
+							parts[ADDITIONAL_CONTENT], \
+							parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
+							parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
+	elif parts[ELEMENT_TYPE] == 'subquestion':
+		if parts[ANSWER_TYPE] == 'radio':
+			return SubQuestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], 
+							parts[ADDITIONAL_CONTENT], \
+                            parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
+                            parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
+		elif parts[ANSWER_TYPE] == 'number':
+			return NumberSubquestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], 
+							parts[ADDITIONAL_CONTENT], \
+                            parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
+                            parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
 	else:
-		raise Exception('',parts[0] + ' is not a valid element type!');
+		#raise Exception('',parts[ELEMENT_TYPE] + ' is not a valid element type!');
 		return None
 		
-
+def validate(string):
+	parts = string.strip().split('\t');
+	#pdb.set_trace()
+	#print (parts)
+	if len(parts) < NUMBER_OF_COLUMNS:
+		parts += ['' for e in xrange(NUMBER_OF_COLUMNS-len(parts))]
+	
+	error = False;
+	
+	if parts[ELEMENT_TYPE] not in ['header','question','subquestion']:
+		print 'ERROR: ' + parts[ELEMENT_TYPE] + ' is not a valid element type!';
+		error = True;
+	if parts[ELEMENT_TYPE] in ['question','subquestion']:
+		if parts[ANSWER_TYPE] not in ['radio','number','checklist','grid','multi_number','scale','textarea', 'number;radio']:
+			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
+			error = True;
+		if parts[ANSWER_TYPE] != 'multi_number':
+			if parts[ANSWERS] == '':
+				print 'ERROR: missing list of answers'
+				error = True;
+	if parts[ANSWER_TYPE] != 'grid':
+		if parts[VARIABLE_NAME] == '':
+			print 'ERROR: variable name is missing';
+			error = True
+		if parts[VARIABLE_LABEL] == '':
+			print 'ERROR: variable label is missing';
+			error = True
+	
+	if error:
+		return None
+	else:
+		return parts
+	
 def makequestion(primary_content, secondary_content, additional_content,\
 				inclusion_condition, answer_type, variable_name, answers, extra_param):
 	if answer_type == 'radio':
@@ -93,7 +148,7 @@ def makequestion(primary_content, secondary_content, additional_content,\
 	elif answer_type == 'scale':
 		return ScaleQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
-	elif answer_type == 'number/radio':
+	elif answer_type == 'number;radio':
 		return NumberCheckQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
 	elif answer_type == 'textarea':
@@ -114,6 +169,7 @@ def makequestion(primary_content, secondary_content, additional_content,\
 
 def htmlize(string):
     return re.sub('[^a-z_0-9]','',string.strip().lower().replace(' ','_'));
+    
 #### Class definitions
 class Formwidget:
 	def __init__(self, primary_content, secondary_content, additional_content, \
@@ -154,6 +210,9 @@ class Question(Formwidget):
 
 		if len(self.secondary_content) > 0:
 			resp += '<legend>' + self.secondary_content + '</legend>\n';
+		
+		if len(self.additional_content) > 0:
+			resp += '<div class="alert alert-info">' + self.additional_content + '</div>';
 
 		return resp + self.list_required_vars();
 
@@ -163,13 +222,18 @@ class Question(Formwidget):
 
 
 class Header(Formwidget):
-	def __init__(self, primary_content, secondary_content):
+	def __init__(self, primary_content, secondary_content, additional_content, \
+		inclusion_condition, variable_name):
 		self.primary_content = primary_content;
 		self.secondary_content = secondary_content;
+		self.additional_content = additional_content;
+		self.variable_name = variable_name;
+		self.inclusion_condition = inclusion_condition;
 
 	def render(self):
 		resp = '<h2>' + self.primary_content + "<h2>\n"
 		resp += '<legend>' + self.secondary_content + '</legend>\n'
+		
 		#resp += '<input type="hidden" name="require_answer" value="no"/>\n'
 		resp += '<input type="hidden" name="' + self.variable_name + '" value="1"/>\n'
 		return resp 
@@ -228,8 +292,8 @@ class NumberQuestion(Question):
 		self.answers = re.sub('_+','_',self.answers[0])
 		parts = self.answers.split('_');
 		if len(parts) > 0: #there was the underscore, so we prepend/append
-			for part in parts:
-				part = part.strip();
+			for i, part in enumerate(parts):
+				parts[i] = part.strip();
 			resp += '<div class="'
 			if parts[0] != '':
 				resp +='input-prepend '
@@ -280,10 +344,12 @@ class NumberQuestion(Question):
 #and radio buttons.
 class ScaleQuestion(Question):
 	def prerender(self):
+		resp = '';
 		if len(self.primary_content) > 0:
 			resp = '<h2>' + self.primary_content + '</h2>\n';
-		else:
-			resp = '';
+
+		if len(self.additional_content) > 0:
+			resp += '<div class="alert alert-info">' + self.additional_content + '</div>';
 			
 		return resp + self.list_required_vars();
 		
@@ -311,6 +377,8 @@ class FreeTextQuestion(Question):
 		resp += '<textarea name="' + self.variable_name + '" rows="4">' 
 		if self.answer != []:
 			resp += self.answer
+		else:
+			resp += ' '
 		resp += '</textarea>\n'
 		return resp
 
@@ -324,10 +392,11 @@ class NumberCheckQuestion(Question):
 		resp += '</script>\n'
 		self.answers[0] = re.sub('_+','_',self.answers[0])
 		parts = self.answers[0].split('_');
-		for part in parts:
-			part = part.strip();
+		for i, part in enumerate(parts):
+			parts[i] = part.strip();
 			
 		numeric_answer = False;
+		#pdb.set_trace();
 		if self.answer !=[]:
 			if is_number(self.answer):
 				numeric_answer = True;
@@ -339,7 +408,7 @@ class NumberCheckQuestion(Question):
 		resp += 'id="numberfield" onchange="numberEntered();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" '
 		if self.answer != []:
 			if numeric_answer:
-				resp += 'value="' + self.answer + '" '
+				resp += 'value="' + str(self.answer) + '" '
 			else:
 				resp += 'disabled="true" '
 		resp += '/>\n'
@@ -426,12 +495,15 @@ class GridQuestion(Question):
 		
 class NumberSubquestion(NumberQuestion):
 	def prerender(self):
-		return ''
+		resp = '';
+		if len(self.secondary_content) > 0:
+			resp = self.secondary_content + ' ';
+		return resp
 
 class MultiNumberQuestion(GridQuestion):
 	def render(self):
 		resp = self.prerender()
 		for sub in self.data:
-			resp += sub.render() + '<br />\n'
+			resp += '<div class="form-inline">' + sub.render() + '</div><br />\n'
 		
 		return resp

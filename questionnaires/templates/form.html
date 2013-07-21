@@ -3,6 +3,11 @@
 {% block content %}
 	<script>
 		var actor;
+		
+		function isNumber(n) {
+  			return !isNaN(parseFloat(n)) && isFinite(n);
+		}
+		
 		function validateForm()
 		{
 			if (actor == 'prev') {
@@ -17,8 +22,13 @@
 					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
 						var counter = 0;
 						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "number") {
-							if (document.forms["myform"][required_vars[idx]][inner_idx].value > 0) {
-								answered = true;
+							if (document.forms["myform"][required_vars[idx]][inner_idx].value.length > 0) {
+								// do the number check for stupid safari
+								if (isNumber(document.forms["myform"][required_vars[idx]][inner_idx].value)) {
+									answered = true;
+								} else {
+									document.forms["myform"][required_vars[idx]][inner_idx].value = "";
+								}
 							}
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "radio") {
@@ -28,11 +38,16 @@
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
-								counter +=1;
+								if (document.forms["myform"]["__required_answer_count"] > -1) {
+									counter +=1;
+									if (counter >= document.forms["myform"]["__required_answer_count"]) {
+										answered = true;
+									}
+								} else {
+									answered = true;
+								}
 							}
-							if (counter >= document.forms["myform"]["__required_answer_count"]) {
-								answered = true;
-							}
+							
 						}
 					}
 					if (!answered) {
