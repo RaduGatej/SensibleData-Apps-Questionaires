@@ -45,6 +45,8 @@
 		<i class="icon-user icon-white"></i>
 			{% if user.first_name != '' %}
 		    {{ user.first_name }}
+			{% elif user.email != '' %}
+		    {{ user.email }}
 			{% else %}
 		    {{ user.username }}
 			{% endif %}
