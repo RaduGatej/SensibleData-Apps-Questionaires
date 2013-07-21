@@ -82,6 +82,8 @@ def return_question(user_id, survey_version, question):
 			response = get_response(user_id, survey_version, var_name)
 			if response != None:
 				sub.set_answer(response)	
+	elif isinstance(question, fw.Header):
+		pass
 	else:
 		response = get_response(user_id, survey_version, question.variable_name)
 		if response != None:
@@ -171,16 +173,16 @@ def get_response(user_id, survey_version, variable_name):
 def check_condition(user_id, survey_version, condition):
 	if (condition == None) | (condition == ''):
 		return True;
-
+	#pdb.set_trace()
 	equal = False;
 	parts = condition.split('==')
-	if len(parts) > 0: # condition equal
+	if len(parts) > 1: # condition equal
 		equal = True;
 	else:
 		parts = condition.split('!=')
 		
-	for part in parts:
-		part = part.strip();
+	for i, part in enumerate(parts):
+		parts[i] = part.strip();
 	
 	parts[1] = parts[1].split("|")
 	
@@ -193,7 +195,7 @@ def check_condition(user_id, survey_version, condition):
 	return not equal;
 
 def get_questions_list():
-	return fw.parsefile(settings.ROOT_DIR+'render/data/sample_new_types.txt')
+	return fw.parsefile(settings.ROOT_DIR+'render/data/survey_ASD_2013071914_our.txt')
 	
 				
 
