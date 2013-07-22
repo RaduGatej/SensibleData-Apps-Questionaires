@@ -3,6 +3,9 @@ from render.models import Response
 from django.conf import settings
 import pdb
 
+SURVEY_PATH = settings.ROOT_DIR+'render/data/survey_ASD_2013071914_our.txt'
+
+
 _DEBUG = False
 def DEBUG():
 	if _DEBUG:
@@ -93,19 +96,29 @@ def return_question(user_id, survey_version, question):
 def get_user_progress(user_id, survey_version):
 	# check how many answers already given
 	entries = Response.objects.filter(user = user_id, form_version=survey_version);
+	variables = get_ordered_variable_names(survey_version)
+	max_index = 0;
+	#pdb.set_trace()
+	for entry in entries:
+		curr_index = variables.index(entry.variable_name)
+		if curr_index > max_index:
+			max_index = curr_index
+	
 	answered = len(entries);
 	
 	#check how many questions in total
 	total = get_survey_length(survey_version);
-	print "answered " + str(answered) + '/' + str(total);
-	return answered*100/total;
+	#print "answered " + str(answered) + '/' + str(total);
+	print "at " + str(max_index) + '/' + str(len(variables));
+	#return answered*100/total;
+	return float(max_index)*100/len(variables)
 
 def get_survey_length(survey_version):
 	#TODO change to checking in the DB instead
 	#return len(open(settings.ROOT_DIR + 'render/data/sample_new.txt').readlines());
 	resp = 0;
 	previous = ''
-	for line in open(settings.ROOT_DIR + 'render/data/sample_new_types.txt'):
+	for line in open(SURVEY_PATH):
 		if line.startswith('header') | line.startswith('question'):
 			resp +=1
 		elif line.startswith('subquestion'):
@@ -114,6 +127,14 @@ def get_survey_length(survey_version):
 		previous = line
 		
 	return resp
+	
+def get_ordered_variable_names(survey_version):
+	resp = [];
+	for line in open(SURVEY_PATH):
+		if line.startswith('header') | line.startswith('question') | line.startswith('subquestion'):
+			resp.append(line.split('\t')[fw.VARIABLE_LABEL].strip())
+		
+	return resp	
 
 '''
 def set_current_question(user_id, survey_version, variable_name):
@@ -195,7 +216,7 @@ def check_condition(user_id, survey_version, condition):
 	return not equal;
 
 def get_questions_list():
-	return fw.parsefile(settings.ROOT_DIR+'render/data/survey_ASD_2013071914_our.txt')
+	return fw.parsefile(SURVEY_PATH)
 	
 				
 

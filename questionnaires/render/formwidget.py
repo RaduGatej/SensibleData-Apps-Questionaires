@@ -248,6 +248,7 @@ class RadioQuestion(Question):
 			if self.answer != []:
 				if self.answer == htmlize(answer):
 					resp += ' checked="checked" '
+			resp += 'onclick="document.getElementById(\'next_button\').click();" '
 			resp += '/>' + answer + '\n'
 			resp += '</label>\n';
 		return resp;
