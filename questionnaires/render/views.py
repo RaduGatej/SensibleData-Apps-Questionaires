@@ -15,10 +15,10 @@ def home(request):
 
 @login_required
 def form(request):
-	auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
-	if auth == None:
+	#auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
+	#if auth == None:
 		#show user site to authorize the form
-		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
 	next_question = None;
 	unanswered = False;
 	if request.POST:
@@ -35,7 +35,10 @@ def form(request):
 			else: #good answer
 				#pdb.set_trace();
 				if ans.endswith('[]'):
+					if request.POST.getlist(ans).length < request.POST['__required_answer_count']:
+						unanswered = True;
 					answers[ans[:-2]] = ','.join(request.POST.getlist(ans))
+					
 				else:
 					answers[ans] = request.POST[ans];
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
