@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 import urllib, urllib2
 import json
 from django.core.urlresolvers import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def authorize(request):
@@ -26,10 +27,11 @@ def generateState(user):
 	return State.objects.create(user=user).nonce
 
 
+@csrf_exempt
 @login_required
 def grant(request):
 	#TODO pull urls from config
-	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri='https://www.sensible.dtu.dk/apps/questionnaire/oauth2/grant/', request_uri='https://www.sensible.dtu.dk/sensible-dtu/authorization_manager/connector_questionnaire/auth/token/')
+	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri='http://localhost:8083/oauth2/grant/', request_uri='http://localhost:8082/authorization_manager/connector_questionnaire/auth/token/')
 	if 'error' in token:
                 return HttpResponse(json.dumps(token))
 
@@ -48,18 +50,18 @@ def exchangeCodeForToken(request, client_id, client_secret, redirect_uri, reques
 	values['code'] = code
 	values['grant_type'] = 'authorization_code'
 	values['client_id'] = client_id
-        values['client_secret'] = client_secret
-        values['redirect_uri'] = redirect_uri
-        data = urllib.urlencode(values)
+	values['client_secret'] = client_secret
+	values['redirect_uri'] = redirect_uri
+	data = urllib.urlencode(values)
+		
+	req = urllib2.Request(request_uri, data)
+	try:
+		response = urllib2.urlopen(req).read()
+	except urllib2.HTTPError as e:
+		response = e.read()
+		return response
 
-        req = urllib2.Request(request_uri, data)
-        try:
-                response = urllib2.urlopen(req).read()
-        except urllib2.HTTPError as e:
-                response = e.read()
-                return response
-
-        return json.loads(response)
+	return json.loads(response)
 
 def exchangeRefreshTokenForToken(refresh_token, scopes, client_id, client_secret, redirect_uri, request_uri):
 	values = {}
@@ -122,7 +124,6 @@ def query(request_uri, token, params, client_id, client_secret, redirect_uri, re
 	url = request_uri
 	url += '?bearer_token='+token.token
 	url += params
-
 
 	try: response = urllib2.urlopen(url).read()
 	except urllib2.HTTPError as e:

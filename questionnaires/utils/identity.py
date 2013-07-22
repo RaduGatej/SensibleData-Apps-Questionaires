@@ -26,7 +26,7 @@ def requestAttributes(request):
 def attributesRedirect(request):
 	token = oauth2.exchangeCodeForToken(request, SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?')
 	if 'error' in token:
-		return HttpResponse(token)
+		return redirect('home')
 	oauth2.saveToken(request.user, token)
 	getAttributes(request.user, ['email', 'first_name', 'cas.student_id'])
 	return redirect('home')
