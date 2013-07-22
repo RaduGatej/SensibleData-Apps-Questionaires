@@ -255,7 +255,10 @@ class RadioQuestion(Question):
 
 class ListQuestion(Question):
 	def render(self):
-		resp = self.prerender() + '\n<select name="' + self.variable_name + '">\n';
+		resp = self.prerender() 
+		resp += '\n<select name="' + self.variable_name + '" ' 
+		resp += 'onchange="document.getElementById(\'next_button\').click();"' 
+		resp += '>\n';
 		# add empty answer as default
 		resp += '\t<option value=""></option>\n';
 		for answer in self.answers:
@@ -264,7 +267,7 @@ class ListQuestion(Question):
 				if self.answer == htmlize(answer):
 					resp += 'selected="selected"' 
 			resp += '>' + answer + '</option>\n'
-		resp += '<select>\n';
+		resp += '</select>\n';
 
 		return resp
 		
@@ -358,14 +361,31 @@ class ScaleQuestion(Question):
 		resp = self.prerender();
 		resp += '<table class="table table-condensed">\n'
 		resp += '\t<tr>\n\t\t<td></td>'
-		for answer in self.answers:
-			resp+='<td>' + answer + '</td>'
+		for idx, answer in enumerate(self.answers):
+			resp += '<td style="text-align:'
+			if idx == 0:
+				resp += 'right'
+			elif idx == (len(self.answers)-1):
+				resp += 'left'
+			else:
+				resp += 'center'
+			resp += '">' + answer + '</td>'
+			
 		resp += '\n\t</tr>'
 		resp += '\t<tr>\n\t\t<td>' + self.secondary_content + '</td>'
-		for answer in self.answers:
-			resp += '<td><input type="radio" name="' + self.variable_name + '" value="' + answer + '" '
+		for idx, answer in enumerate(self.answers):
+			resp += '<td style="text-align:'
+			if idx == 0:
+				resp += 'right'
+			elif idx == (len(self.answers)-1):
+				resp += 'left'
+			else:
+				resp += 'center'
+			resp += '">'
+			resp += '<input type="radio" name="' + self.variable_name + '" value="' + answer + '" '
 			if self.answer == answer:
 				resp += ' checked '
+			resp += 'onclick="document.getElementById(\'next_button\').click();" '
 			resp += '/></td>'
 			
 		resp += '\n\t</tr>\n</table>\n'

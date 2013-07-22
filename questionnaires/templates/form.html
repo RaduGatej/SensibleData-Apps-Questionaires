@@ -82,7 +82,7 @@
 		{% endif %}
 				Please answer the question before continuing.
 			</div>
-    	<form action="form" method="post" name="myform" onsubmit="return validateForm()">
+    	<form action="form" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
 			<fieldset>
 				{% csrf_token %}
 				
