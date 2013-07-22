@@ -82,7 +82,7 @@
 		{% endif %}
 				Please answer the question before continuing.
 			</div>
-    	<form action="form" method="post" name="myform" onsubmit="return validateForm()">
+    	<form action="form" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
 			<fieldset>
 				{% csrf_token %}
 				
@@ -102,7 +102,7 @@
 					{% else %}
 						<button type="submit" onclick="actor='next_new'" name="_next_new" class="btn btn-primary">Next unanswered question <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></button> 	
 						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Previous</button>
-						<button type="submit" onclick="actor='next'" name="_next" class="btn">Next <i class="icon-chevron-right"></i> </button>
+						<button type="submit" onclick="actor='next'" name="_next" class="btn" id="next_button">Next <i class="icon-chevron-right"></i> </button>
 					{% endif %}
 			</fieldset>
 		</form>
