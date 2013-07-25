@@ -30,8 +30,7 @@ def generateState(user):
 @csrf_exempt
 @login_required
 def grant(request):
-	#TODO pull urls from config
-	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri='http://localhost:8083/oauth2/grant/', request_uri='http://localhost:8082/authorization_manager/connector_questionnaire/auth/token/')
+	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri=SECURE_CONFIG.SERVICE_MY_REDIRECT, request_uri=SECURE_CONFIG.SERVICE_TOKEN_URI)
 	if 'error' in token:
                 return HttpResponse(json.dumps(token))
 
