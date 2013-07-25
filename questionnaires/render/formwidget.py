@@ -34,6 +34,7 @@ def is_number(s):
 		return False
 
 def parsefile(filename):
+	print filename
 	widgets = [];
 	idx = 0;
 	line_idx = 0;
@@ -117,7 +118,7 @@ def validate(string):
 		if parts[ANSWER_TYPE] not in ['radio','number','checklist','grid','multi_number','scale','textarea', 'number;radio']:
 			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
 			error = True;
-		if parts[ANSWER_TYPE] != 'multi_number':
+		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea']:
 			if parts[ANSWERS] == '':
 				print 'ERROR: missing list of answers'
 				error = True;
@@ -397,7 +398,7 @@ class FreeTextQuestion(Question):
 		resp = self.prerender();	
 		resp += '<textarea name="' + self.variable_name + '" rows="4">' 
 		if self.answer != []:
-			resp += self.answer
+			resp += str(self.answer)
 		else:
 			resp += ' '
 		resp += '</textarea>\n'

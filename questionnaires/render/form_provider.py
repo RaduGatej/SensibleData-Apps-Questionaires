@@ -3,8 +3,7 @@ from render.models import Response
 from django.conf import settings
 import pdb
 
-SURVEY_PATH = settings.ROOT_DIR+'render/data/survey_ASD_2013071914_our.txt'
-
+SURVEY_PATH = settings.SURVEY_DIR + settings.SURVEY_FILE
 
 _DEBUG = False
 def DEBUG():
