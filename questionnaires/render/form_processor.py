@@ -1,12 +1,42 @@
 from django.conf import settings
-from render.models import Formelement
-from render.models import Survey
+#from render.models import Formelement
+#from render.models import Survey
 import pdb
+
+import codecs
+
+def preprocess_survey(filename):
+	pdb.set_trace()
+	path = settings.SURVEY_DIR + filename;
+	# Step 1: read the "straight from excel file and remove carriage returns in quotes"
+	raw = codecs.open(path, 'r','utf-16').read();
+	prepreprocessed = []
+	parts = raw.split('"');
+	for idx, part in enumerate(parts):
+		if idx/2*2 == idx: # if even, do nothing
+			prepreprocessed.append(part)
+		else: #if odd, remove carriage returns
+			prepreprocessed.append(part.replace("\r",""));
+	prepreprocessed = " ".join(prepreprocessed);
+	pdb.set_trace()
+	
+	# Step 2: add our questions two questions before the end
+	lines = prepreprocessed.split("\r\n");
+	ourquestions = codecs.open(settings.SURVEY_DIR + settings.OUR_QUESTIONS,'r','utf-16').readlines();
+	processed_lines = lines[:-2] + ourquestions + lines[-2:]
+	
+	# Step 3: save to the final output file
+	output = "\r\n".join(processed_lines);
+	outfile = codecs.open(settings.SURVEY_DIR + settings.SURVEY_FILE,'w','utf-8');
+	outfile.write(output);
+	outfile.close();
 
 def myvalidation():
 	Formelement.objects.create().full_clean()
 	Survey.objects.create().full_clean()
 	Response.objects.create().full_clean()
+
+
 
 def survey_to_db():
 	# path to be hard coded in the settings

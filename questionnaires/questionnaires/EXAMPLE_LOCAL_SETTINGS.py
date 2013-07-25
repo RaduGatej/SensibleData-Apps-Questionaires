@@ -4,6 +4,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 ROOT_DIR = '/home/user/questionnaires/'
 ROOT_URL = '/apps/questionnaire/'
+SURVEY_DIR = ROOT_DIR + 'render/data/'
+SURVEY_FILE = 'survey.txt'
+OUR_QUESTIONS = 'additional_questions.txt'
 
 DATABASES = {
     'default': {
