@@ -25,5 +25,4 @@ def sync_with_study(subtle=False):
 			response.synced_with_study = True
 			response.save()
 
-		i = 0
 		if subtle and i > 10: break
