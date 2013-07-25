@@ -56,6 +56,15 @@
 		    <li><a href={% url 'logout' %}>Logout</a></li>
 		  </ul>
 	{% else %}
+	<div class="nav-collapse collapse">
+		            <ul class="nav">
+		<li class="divider-vertical"></li>
+	<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> About</a></li>
+	<li class="divider-vertical"></li>
+	<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Quit</a></li>
+	<li class="divider-vertical"></li>
+	</ul>
+	</div>
 	<ul class="nav pull-right action">
 	{% endif %}
       </ul>
