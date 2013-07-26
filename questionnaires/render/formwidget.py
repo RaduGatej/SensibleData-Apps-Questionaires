@@ -232,7 +232,7 @@ class Header(Formwidget):
 		self.inclusion_condition = inclusion_condition;
 
 	def render(self):
-		resp = '<h2>' + self.primary_content + "<h2>\n"
+		resp = '<h2>' + self.primary_content + "</h2>\n"
 		resp += '<legend>' + self.secondary_content + '</legend>\n'
 		
 		#resp += '<input type="hidden" name="require_answer" value="no"/>\n'
