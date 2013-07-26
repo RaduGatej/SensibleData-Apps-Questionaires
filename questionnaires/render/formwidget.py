@@ -410,7 +410,7 @@ class NumberCheckQuestion(Question):
 		#pdb.set_trace()
 		resp = self.prerender()
 		resp += '<script type="text/javascript"> '
-		resp += "function checkboxClicked() {var numberfield = document.getElementById('numberfield');var checkbox = document.getElementById('checkboxfield');if (checkbox.checked == true) {numberfield.value = 'fake';numberfield.disabled = true;} else {numberfield.value = '';numberfield.disabled = false;}}function numberEntered() {var element = document.getElementById('checkboxfield');element.checked=false;}"
+		resp += "function checkboxClicked() {var numberfield = document.getElementById('numberfield');var checkbox = document.getElementById('checkboxfield');if (checkbox.checked == true) {numberfield.value = '  ';numberfield.disabled = true;} else {numberfield.value = '';numberfield.disabled = false;}}function numberEntered() {var element = document.getElementById('checkboxfield');element.checked=false;}"
 		resp += '</script>\n'
 		self.answers[0] = re.sub('_+','_',self.answers[0])
 		parts = self.answers[0].split('_');
