@@ -296,6 +296,7 @@ class NumberQuestion(Question):
 		resp = self.prerender();
 		self.answers = re.sub('_+','_',self.answers[0])
 		parts = self.answers.split('_');
+		#pdb.set_trace()
 		if len(parts) > 0: #there was the underscore, so we prepend/append
 			for i, part in enumerate(parts):
 				parts[i] = part.strip();
@@ -303,7 +304,7 @@ class NumberQuestion(Question):
 			if parts[0] != '':
 				resp +='input-prepend '
 			if parts[1] != '':
-				resp += 'input append'
+				resp += 'input-append'
 			resp +='">\n'
 			if parts[0] != '':
 				resp += '\t<span class="add-on">' + parts[0] + '</span>'
@@ -334,6 +335,9 @@ class NumberQuestion(Question):
 
 			resp +='Input"'
 			resp += ' />'
+			if parts[1] != '':
+				resp += '\t<span class="add-on">' + parts[1] + '</span>'
+			resp += '\n</div>'
 		else: # there was no underscore, so we keep the simple number field
 			resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
 			resp += 'min=0 max=' + str(self.extra_param) + ' ';
