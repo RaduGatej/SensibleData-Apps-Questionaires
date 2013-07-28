@@ -87,7 +87,6 @@ def logout_success(request):
 def openid_failed(request):
 	return render_to_response('openid_failed.html', {}, context_instance=RequestContext(request))
 
-@login_required
 def about(request):
 	return render_to_response('about.html', {}, context_instance=RequestContext(request))
 
