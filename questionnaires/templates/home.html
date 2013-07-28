@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="page-header">
+	        <h1>Welcome to SensibleDTU: Questionnaires</h1>
+		</div>
 
-    <div class="well">
-        <h1>Welcome to SensibleDTU: Questionnaires</h1>
+		<p class="lead">An application for filling out questionnaires. Have fun!</p>
+
 	{% if user.is_authenticated %}
-		<p>Here is a short explanation of what the application is...</p>
+		<p class="lead">Piotr, instructions about how to fill out questions go here. We may also delete this text...</p>
 		<p><a class="btn btn-primary" href="{% url 'form' %}">Start <i class="icon-chevron-right icon-white"></i></a></p>
 	{% else %}
 	<p><a class="btn btn-primary" href="{% url 'login' %}"><i class="icon-user icon-white"></i> Login</a></p>
 	{% endif %}
-    </div>
 
 
 {% endblock %}
