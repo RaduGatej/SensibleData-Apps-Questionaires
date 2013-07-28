@@ -8,6 +8,28 @@
   			return !isNaN(parseFloat(n)) && isFinite(n);
 		}
 		
+		function isValidInputForNumberField(field) {
+			if (field.value.length > 0) {
+				if (isNumber(field.value)) {
+					var n = parseFloat(field.value);
+					if ((n >= field.min) && (n <= field.max)) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}	
+		}
+		
+		function markRowSuccess(event) {
+			row = document.getElementById(event.name);
+			row.className = 'success';
+		}
+		
 		function validateForm()
 		{
 			if (actor == 'prev') {
@@ -21,19 +43,10 @@
 					var answered = false;
 					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
 						var counter = 0;
-						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "number") {
-							if (document.forms["myform"][required_vars[idx]][inner_idx].value.length > 0) {
-								// do the number check for stupid safari
-								if (isNumber(document.forms["myform"][required_vars[idx]][inner_idx].value)) {
-									answered = true;
-								} else {
-									document.forms["myform"][required_vars[idx]][inner_idx].value = "";
-								}
-							}
-						}
-						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "radio") {
+						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "radio") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
 								answered = true;
+								break;
 							} 
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
@@ -45,21 +58,37 @@
 									}
 								} else {
 									answered = true;
+									break;
 								}
 							}
 							
 						}
-					}
-					if (!answered) {
-						document.getElementById("answer_alert").style.display = "block";
- 						return false;
+						else if (document.forms["myform"][required_vars[idx]][inner_idx].max !== undefined) {
+							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]][inner_idx])) {
+								answered = true;
+							}
+						}
 					}
 				}
+				else if (document.forms["myform"][required_vars[idx]].max !== undefined) {
+							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]])) {
+								answered = true;
+							} else {
+								answered = false;
+								document.forms["myform"][required_vars[idx]].value = "";
+							}
+						}
 				else if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
 					//document.forms["myform"][required_vars[idx]].className = 'control-group error';
-					document.getElementById("answer_alert").style.display = "block";
-					return false;
-				}	
+					answered = false;
+					break;
+				} else {
+					answered = true;
+				}
+			}
+			if (!answered) {
+				document.getElementById("answer_alert").style.display = "block";
+ 				return false;
 			}
 		
 		}

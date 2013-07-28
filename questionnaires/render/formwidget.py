@@ -210,7 +210,7 @@ class Question(Formwidget):
 			resp = '';
 
 		if len(self.secondary_content) > 0:
-			resp += '<legend>' + self.secondary_content + '</legend>\n';
+			resp += '<p style="width:80%">' + self.secondary_content + '</p>\n';
 		
 		if len(self.additional_content) > 0:
 			resp += '<div class="alert alert-info">' + self.additional_content + '</div>';
@@ -232,8 +232,8 @@ class Header(Formwidget):
 		self.inclusion_condition = inclusion_condition;
 
 	def render(self):
-		resp = '<h2>' + self.primary_content + "<h2>\n"
-		resp += '<legend>' + self.secondary_content + '</legend>\n'
+		resp = '<h2>' + self.primary_content + "</h2>\n"
+		resp += '<p style="width:80%">' + self.secondary_content + '</p>\n'
 		
 		#resp += '<input type="hidden" name="require_answer" value="no"/>\n'
 		resp += '<input type="hidden" name="' + self.variable_name + '" value="1"/>\n'
@@ -296,6 +296,7 @@ class NumberQuestion(Question):
 		resp = self.prerender();
 		self.answers = re.sub('_+','_',self.answers[0])
 		parts = self.answers.split('_');
+		#pdb.set_trace()
 		if len(parts) > 0: #there was the underscore, so we prepend/append
 			for i, part in enumerate(parts):
 				parts[i] = part.strip();
@@ -303,10 +304,10 @@ class NumberQuestion(Question):
 			if parts[0] != '':
 				resp +='input-prepend '
 			if parts[1] != '':
-				resp += 'input append'
+				resp += 'input-append'
 			resp +='">\n'
 			if parts[0] != '':
-				resp += '\t<span class="add-on">' + parts[0] + '</span>'
+				resp += '\t<span class="add-on span1">' + parts[0] + '</span>'
 			resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
 			resp += 'min=0 '
 			#pdb.set_trace()
@@ -334,6 +335,9 @@ class NumberQuestion(Question):
 
 			resp +='Input"'
 			resp += ' />'
+			if parts[1] != '':
+				resp += '\t<span class="add-on span3">' + parts[1] + '</span>'
+			resp += '\n</div>'
 		else: # there was no underscore, so we keep the simple number field
 			resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
 			resp += 'min=0 max=' + str(self.extra_param) + ' ';
@@ -363,26 +367,26 @@ class ScaleQuestion(Question):
 		resp += '<table class="table table-condensed">\n'
 		resp += '\t<tr>\n\t\t<td></td>'
 		for idx, answer in enumerate(self.answers):
-			resp += '<td style="text-align:'
-			if idx == 0:
-				resp += 'right'
-			elif idx == (len(self.answers)-1):
-				resp += 'left'
-			else:
-				resp += 'center'
-			resp += '">' + answer + '</td>'
+			resp += '<th style="text-align:center">'
+			#if idx == 0:
+			#	resp += 'right'
+			#elif idx == (len(self.answers)-1):
+			#	resp += 'left'
+			#else:
+			#	resp += 'center'
+			resp += answer + '</th>'
 			
 		resp += '\n\t</tr>'
 		resp += '\t<tr>\n\t\t<td>' + self.secondary_content + '</td>'
 		for idx, answer in enumerate(self.answers):
-			resp += '<td style="text-align:'
-			if idx == 0:
-				resp += 'right'
-			elif idx == (len(self.answers)-1):
-				resp += 'left'
-			else:
-				resp += 'center'
-			resp += '">'
+			resp += '<td style="text-align:center;width:5%">'
+			#if idx == 0:
+			#	resp += 'right'
+			#elif idx == (len(self.answers)-1):
+			#	resp += 'left'
+			#else:
+			#	resp += 'center'
+			#resp += '">'
 			resp += '<input type="radio" name="' + self.variable_name + '" value="' + answer + '" '
 			if self.answer == answer:
 				resp += ' checked '
@@ -410,7 +414,7 @@ class NumberCheckQuestion(Question):
 		#pdb.set_trace()
 		resp = self.prerender()
 		resp += '<script type="text/javascript"> '
-		resp += "function checkboxClicked() {var numberfield = document.getElementById('numberfield');var checkbox = document.getElementById('checkboxfield');if (checkbox.checked == true) {numberfield.value = 'fake';numberfield.disabled = true;} else {numberfield.value = '';numberfield.disabled = false;}}function numberEntered() {var element = document.getElementById('checkboxfield');element.checked=false;}"
+		resp += "function checkboxClicked() {var numberfield = document.getElementById('numberfield');var checkbox = document.getElementById('checkboxfield');if (checkbox.checked == true) {numberfield.value = ',';numberfield.disabled = true;} else {numberfield.value = '';numberfield.disabled = false;}}function numberEntered() {var element = document.getElementById('checkboxfield');element.checked=false;}"
 		resp += '</script>\n'
 		self.answers[0] = re.sub('_+','_',self.answers[0])
 		parts = self.answers[0].split('_');
@@ -448,23 +452,32 @@ class NumberCheckQuestion(Question):
 
 class SubQuestion(Formwidget):
 	def render(self):
-		resp = '\n<tr>\n\t<td>' + self.secondary_content + '</td>\n'
+		resp = ''
+		answered = False;
 		if self.answer_type == 'radio':
 			for answer in self.answers:
-				resp += '\t<td><input type="radio" name="' + htmlize(self.variable_name) + '" value="' + htmlize(answer) + '"'
+				resp += '\t<td style="text-align:center;">'
+				resp += '<input type="radio" name="' + htmlize(self.variable_name) + '" value="' + htmlize(answer) + '"'
 				if self.answer == htmlize(answer):
 					resp += ' checked="checked" '
+					answered = True;
+				resp += 'onclick="markRowSuccess(this)" '
 				resp += '></td>\n'
+		pre = '\n<tr id="' + htmlize(self.variable_name) + '"'
+		if answered:
+			pre += ' class="success"'
+		pre += '>\n\t<td>' + self.secondary_content + '</td>\n'	
+		resp = pre + resp;	
 		
-		elif self.answer_type == 'number':
-			for answer in self.answers:
-				resp += '\t<td><input type="number" name="' + self.variable_name + '_' + htmlize(answer) + '" max=' + str(self.extra_param) + ' min=0'
-				if isinstance(self.answer,dict):
-					if (self.variable_name + '_' + htmlize(answer)) in self.answer.keys():
-						resp += ' value=' + str(self.answer[self.variable_name + '_' + htmlize(answer)])
-				resp += ' placeholder="0-' + str(self.extra_param) + '" '
-				resp += 'class="input-mini"'
-				resp += '/></td>\n'
+		#elif self.answer_type == 'number':
+		#	for answer in self.answers:
+		#		resp += '\t<td><input type="number" name="' + self.variable_name + '_' + htmlize(answer) + '" max=' + str(self.extra_param) + ' min=0'
+		#		if isinstance(self.answer,dict):
+		#			if (self.variable_name + '_' + htmlize(answer)) in self.answer.keys():
+		#				resp += ' value=' + str(self.answer[self.variable_name + '_' + htmlize(answer)])
+		#		resp += ' placeholder="0-' + str(self.extra_param) + '" '
+		#		resp += 'class="input-mini"'
+		#		resp += '/></td>\n'
 
 		resp += '</tr>';
 		return resp;
@@ -500,7 +513,7 @@ class GridQuestion(Question):
 		resp += '\n<table class="table table-bordered table-hover">\n';
 		resp += '<tr>\n\t<th></th>';
 		for answer in self.answers:
-			resp +='\n\t<th>' + answer + '</th>';
+			resp +='\n\t<th style="width:8%;vertical-align:bottom;text-align:center;">' + answer + '</th>';
 		resp += '\n</tr>\n'
 		for sub in self.data:
 			resp += sub.render();

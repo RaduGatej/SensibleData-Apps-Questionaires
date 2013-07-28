@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load bootstrap_toolkit %}
+{% load staticfiles %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -27,6 +28,7 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
+			<div class="nav"><img src="{% static "img/red_logo5.png" %}" width=40px></div>
             <a class="brand" href="{% url 'home' %}">SensibleDTU: Questionnaires</a>
 	{% if user.is_authenticated %}
 	<div class="nav-collapse collapse">
@@ -86,15 +88,22 @@
     <footer class="row">
         <div class="span6">
 			<p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires">SensibleDTU: Questionnaires</a>
-			<span class="label label-info">0.0.3</span></p>
+			<span class="label label-info">0.0.4</span></p>
         </div>
-        <div class="span6" style="text-align:right">
-            <p>
-                &copy; <a href="http://www.dtu.dk/Service/Telefonbog/Person?id=55971&cpid=116399&tab=3&qt=dtuprojectquery">Piotr Sapiezynski</a> 2013
-                |
-                <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires/master/LICENSE">license</a>
-            </p>
-        </div>
+
+		 <div class="span6" style="text-align:right">
+			         <p>
+					         &copy; <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Platform/master/COPYRIGHT">Technical University of Denmark</a> 2013
+							         |
+									         <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Platform/master/LICENSE">software license</a>
+											         </p>
+													     </div>
+
+														 <div class="span">
+															        <p><a rel="license" href="https://creativecommons.org/licenses/by/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/3.0/80x15.png" /></a> <span xmlns:dct="https://purl.org/dc/terms/" property="dct:title"></span> licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a>.</p>
+																       </div>	
+
+
     </footer>
 
 </div> <!-- container -->

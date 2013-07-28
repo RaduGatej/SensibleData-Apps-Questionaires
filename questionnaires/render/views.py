@@ -15,10 +15,10 @@ def home(request):
 
 @login_required
 def form(request):
-	auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
-	if auth == None:
+	#auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
+	#if auth == None:
 		#show user site to authorize the form
-		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
 	next_question = None;
 	unanswered = False;
 	if request.POST:
@@ -87,7 +87,6 @@ def logout_success(request):
 def openid_failed(request):
 	return render_to_response('openid_failed.html', {}, context_instance=RequestContext(request))
 
-@login_required
 def about(request):
 	return render_to_response('about.html', {}, context_instance=RequestContext(request))
 
