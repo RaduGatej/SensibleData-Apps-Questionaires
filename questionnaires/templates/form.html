@@ -8,6 +8,28 @@
   			return !isNaN(parseFloat(n)) && isFinite(n);
 		}
 		
+		function isValidInputForNumberField(field) {
+			if (field.value.length > 0) {
+				if (isNumber(field.value)) {
+					var n = parseFloat(field.value);
+					if ((n >= field.min) && (n <= field.max)) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}	
+		}
+		
+		function markRowSuccess(event) {
+			row = document.getElementById(event.name);
+			row.className = 'success';
+		}
+		
 		function validateForm()
 		{
 			if (actor == 'prev') {
@@ -24,6 +46,7 @@
 						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "radio") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
 								answered = true;
+								break;
 							} 
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
@@ -35,39 +58,33 @@
 									}
 								} else {
 									answered = true;
+									break;
 								}
 							}
 							
 						}
+						else if (document.forms["myform"][required_vars[idx]][inner_idx].max !== undefined) {
+							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]][inner_idx])) {
+								answered = true;
+							}
+						}
 					}
 				}
 				else if (document.forms["myform"][required_vars[idx]].max !== undefined) {
-							if (document.forms["myform"][required_vars[idx]].value.length > 0) {
-								// do the number check for stupid safari
-								if (isNumber(document.forms["myform"][required_vars[idx]].value)) {
-									var n = parseFloat(document.forms["myform"][required_vars[idx]].value);
-									if ((n >= document.forms["myform"][required_vars[idx]].min) && (n <= document.forms["myform"][required_vars[idx]].max)) {
-										answered = true;
-									} else {
-										document.forms["myform"][required_vars[idx]].value = "";
-										answered = false;
-										break;
-									}
-								} else {
-									document.forms["myform"][required_vars[idx]].value = "";
-									answered = false;
-									break;
-								}
+							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]])) {
+								answered = true;
 							} else {
 								answered = false;
-								break;
+								document.forms["myform"][required_vars[idx]].value = "";
 							}
 						}
 				else if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
 					//document.forms["myform"][required_vars[idx]].className = 'control-group error';
 					answered = false;
 					break;
-				}	
+				} else {
+					answered = true;
+				}
 			}
 			if (!answered) {
 				document.getElementById("answer_alert").style.display = "block";
