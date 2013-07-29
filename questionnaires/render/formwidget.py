@@ -307,7 +307,7 @@ class NumberQuestion(Question):
 				resp += 'input-append'
 			resp +='">\n'
 			if parts[0] != '':
-				resp += '\t<span class="add-on span1">' + parts[0] + '</span>'
+				resp += '\t<span class="add-on">' + parts[0] + '</span>'
 			resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
 			resp += 'min=0 '
 			#pdb.set_trace()
@@ -322,7 +322,7 @@ class NumberQuestion(Question):
 					resp+='placeholder="HH.MM" '
 				else:
 					resp += 'placeholder="0-' + str(self.extra_param) + '" '
-			resp += 'class="input-mini span2" ';
+			resp += 'class="input-mini span1" ';
 			resp += 'id="'
 			if parts[0] != '':
 				if parts[1] != '':
@@ -336,7 +336,7 @@ class NumberQuestion(Question):
 			resp +='Input"'
 			resp += ' />'
 			if parts[1] != '':
-				resp += '\t<span class="add-on span3">' + parts[1] + '</span>'
+				resp += '\t<span class="add-on">' + parts[1] + '</span>'
 			resp += '\n</div>'
 		else: # there was no underscore, so we keep the simple number field
 			resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
