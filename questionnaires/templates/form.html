@@ -100,7 +100,7 @@
 		<!-- deciding on the heading -->
 		{% if last_page %}
 			<h1>The end</h1>
-			<p>Thank you for finishing the survey, you can now close this browser tab. </p>
+			<p>Congratulations! You have answered all the questions in this survey. You can now press the Quit button to go back to the main page. </p>
 		{% endif %}
 		
 		<!-- display the error message -->
@@ -127,7 +127,8 @@
 					<!-- Which buttons to display? -->
 					{% if last_page %}
 						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Previous</button>
-						<button type="submit" name="_from_top" class="btn btn-primary"><i class="icon-refresh icon-white"></i> Start from the beginning</button>
+						<button type="submit" name="_from_top" class="btn"><i class="icon-refresh"></i> Start from the beginning</button>
+						<button type="submit" name="_quit" class="btn btn-primary"><i class="icon-remove icon-white"></i> Quit</button>
 					{% else %}
 						<button type="submit" onclick="actor='next_new'" name="_next_new" class="btn btn-primary">Next unanswered question <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></button> 	
 						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Previous</button>

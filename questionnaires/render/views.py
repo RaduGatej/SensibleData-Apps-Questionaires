@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from utils import oauth2, identity
 from utils.models import Scope
@@ -47,6 +47,8 @@ def form(request):
 			next_question = form_provider.get_previous_question(request.user,'1.0',request.POST['__question_name']);
 		elif '_from_top' in request.POST:
 			next_question = form_provider.get_first_question(request.user,'1.0');
+		elif '_quit' in request.POST:
+			return HttpResponseRedirect('/quit');
 		else:
 			if len(required_vars) > 0:
 				for v in required_vars:
