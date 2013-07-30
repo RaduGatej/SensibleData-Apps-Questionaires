@@ -28,6 +28,11 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
+
+			<button style="color:#000000" type="button" class="btn btn-navbar btn-primary" data-toggle="collapse" data-target=".nav-collapse">
+				    <i class="icon-tasks"></i> Menu
+					          </button>
+
 			<div class="nav"><img src="{% static "img/red_logo5.png" %}" width=40px></div>
             <a class="brand" href="{% url 'home' %}">SensibleDTU: Questionnaires</a>
 	{% if user.is_authenticated %}
