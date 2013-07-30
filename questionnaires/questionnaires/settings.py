@@ -3,7 +3,7 @@
 import os
 import LOCAL_SETTINGS
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
