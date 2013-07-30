@@ -33,7 +33,7 @@ def attributesRedirect(request):
 
 @login_required
 def test(request):
-	return HttpResponse(getAttributes(request.user, ['email', 'first_name', 'cas.student_id']))
+	return HttpResponse(getAttributes(request.user, ['email']))
 
 
 def getAttributes(user, attributes):
