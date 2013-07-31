@@ -1,7 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from utils import oauth2, identity
-from utils.models import Scope
+from utils.models import Scope, FirstLogin
+from render.models import Response
 from django.shortcuts import render_to_response, redirect
 import formwidget
 from django.template import RequestContext
@@ -9,19 +10,54 @@ import form_provider
 from backend.sync_with_study import *
 import utils
 import pdb
+from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
+import json
+from datetime import datetime
+
+def home_refreshed(request):
+	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def home(request):
-	return render_to_response('home.html', {}, context_instance=RequestContext(request))
+	try:
+		sessions = Session.objects.filter(expire_date__gte=datetime.now())
+		for session in sessions:
+			data = session.get_decoded()
+			try: user = User.objects.filter(id=data.get('_auth_user_id', None))[0]
+			except: continue
+			if request.user == user:
+				session.delete()
+	except: pass
+
+	if request.user.is_authenticated():
+		try: f = FirstLogin.objects.get(user=request.user)
+		except FirstLogin.DoesNotExist: f = FirstLogin.objects.create(user=request.user)
+		if f.firstLogin:
+			f.firstLogin = False
+			f.save()
+			return redirect('request_attributes')
+		identity.getAttributes(request.user, ['email'])
+
+	return redirect(settings.ROOT_URL+'form/')
+
 
 @login_required
 def form(request):
-	auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
-	if auth == None:
+	#auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
+	#if auth == None:
 		#show user site to authorize the form
-		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	try:
+		Response.objects.get(user = request.user,form_version='1.0',variable_name='_submitted')
+		return HttpResponseRedirect('/nochanges');
+	except Exception:
+		pass
+	 
 	next_question = None;
 	unanswered = False;
 	if request.POST:
+		#pdb.set_trace()
 		# add answers:
 		answers = {};
 		required_vars = [];
@@ -40,7 +76,8 @@ def form(request):
 					answers[ans[:-2]] = ','.join(request.POST.getlist(ans))
 					
 				else:
-					answers[ans] = request.POST[ans];
+					if not ans.startswith('_'):
+						answers[ans] = request.POST[ans];
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
 		set_answers(answers, request.user, '1.0')
 		if '_prev' in request.POST:
@@ -48,6 +85,8 @@ def form(request):
 		elif '_from_top' in request.POST:
 			next_question = form_provider.get_first_question(request.user,'1.0');
 		elif '_quit' in request.POST:
+			r = Response(user = request.user,form_version='1.0',variable_name='_submitted',response='true');
+			r.save()
 			return HttpResponseRedirect('/quit');
 		else:
 			if len(required_vars) > 0:
@@ -66,6 +105,7 @@ def form(request):
 	di = {}
 	progress = form_provider.get_user_progress(request.user,'1.0');
 	di['progress'] = str(progress);
+	di['int_progress'] = 'approx. ' + str(int(progress)) + '%';
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;
@@ -82,6 +122,14 @@ def set_answers(answer_dict, user, survey_version):
 	for var in answer_dict.keys():
 		form_provider.set_answer(user, survey_version, var, answer_dict[var])
 
+def changebrowser(request):
+	return render_to_response('changebrowser.html', {}, context_instance=RequestContext(request))
+	
+def nochanges(request):
+	return render_to_response('nochanges.html', {}, context_instance=RequestContext(request))
+	
+def noscript(request):
+	return render_to_response('js_disabled.html', {}, context_instance=RequestContext(request))
 
 def logout_success(request):
 	return render_to_response('logout_success.html', {}, context_instance=RequestContext(request))

@@ -2,10 +2,11 @@
 
 {% block content %}
 
-    <div class="well">
         <h1>You have logged out!</h1>
-		<p><a class="btn btn-primary" href="{% url 'login' %}"><i class="icon-user icon-white"></i> Login</a></p>
-    </div>
+		<p>
+		<a class="btn" href="{% url 'quit' %}"><i class="icon-remove"></i> Quit</a>
+		<a class="btn btn-primary" href="{% url 'login' %}"><i class="icon-user icon-white"></i> Sign in</a>
+		</p>
 
 
 {% endblock %}

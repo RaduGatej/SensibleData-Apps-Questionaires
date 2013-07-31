@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 def sync_with_study(subtle=False):
 	no = len(Response.objects.filter(synced_with_study=False))
 	i = 0
+	success = 0
 	for response in Response.objects.filter(synced_with_study=False):
 		values = {}
 		values['form_version'] = str(response.form_version)
@@ -24,6 +25,8 @@ def sync_with_study(subtle=False):
 		if 'ok' in r:
 			response.synced_with_study = True
 			response.save()
+			success += 1
 
 		i += 1
 		if subtle and i == 1: break
+	return (i, success)

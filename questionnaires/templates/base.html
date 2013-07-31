@@ -3,11 +3,23 @@
 {% load staticfiles %}
 <html lang="en">
 <head>
+	<noscript>
+		<meta http-equiv="refresh" content="0; url=/noscript" />
+	</noscript>
     <meta charset="utf-8">
     <title>SensibleDTU: Questionnaires</title>
     <meta name="description" content="">
     <meta name="author" content="Arkadiusz Stopczynski">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <script>
+    	try {
+    		NodeList;
+    		HTMLCollection;
+    	} catch (err) {
+    		window.location = "/changebrowser";
+    	}
+    </script>
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -33,7 +45,7 @@
 				    <i class="icon-tasks"></i> Menu
 					          </button>
 
-			<div class="nav"><img src="{% static "img/red_logo5.png" %}" width=40px></div>
+			<div class="nav"><img src="{% static "img/red_logo5_40px.png" %}"></div>
             <a class="brand" href="{% url 'home' %}">SensibleDTU: Questionnaires</a>
 	{% if user.is_authenticated %}
 	<div class="nav-collapse collapse">
@@ -93,7 +105,7 @@
     <footer class="row">
         <div class="span6">
 			<p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires">SensibleDTU: Questionnaires</a>
-			<span class="label label-info">0.0.5</span></p>
+			<span class="label label-info">0.0.6</span></p>
         </div>
 
 		 <div class="span6" style="text-align:right">

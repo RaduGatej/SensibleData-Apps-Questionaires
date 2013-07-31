@@ -9,9 +9,27 @@ import urllib, urllib2
 import json
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
+import json
+from datetime import datetime
+from django.conf import settings
+
+def authorize(request):
+	try:
+		sessions = Session.objects.filter(expire_date__gte=datetime.now())
+		for session in sessions:
+			data = session.get_decoded()
+			try: user = User.objects.filter(id=data.get('_auth_user_id', None))[0]
+			except: continue
+			if request.user == user:
+				session.delete()
+	except: pass
+
+	return redirect(settings.ROOT_URL+'oauth2/authorize_refreshed/')
 
 @login_required
-def authorize(request):
+def authorizeRefreshedUser(request):
 	state = generateState(request.user)
 	url = SECURE_CONFIG.SERVICE_URL + SECURE_CONFIG.AUTH_ENDPOINT + SECURE_CONFIG.CONNECTOR
 	url += '/auth/grant/?'
@@ -113,6 +131,7 @@ def getToken(user, scope):
 def query(request_uri, token, params, client_id, client_secret, redirect_uri, refresh_uri):
 	tokens = AccessToken.objects.filter(token=token)
 	scopes = set()
+	response = {}
 	for t in tokens:
 		for s in t.scope.all():
 			scopes.add(s)
@@ -123,7 +142,6 @@ def query(request_uri, token, params, client_id, client_secret, redirect_uri, re
 	url = request_uri
 	url += '?bearer_token='+token.token
 	url += params
-
 	try: response = urllib2.urlopen(url).read()
 	except urllib2.HTTPError as e:
 		if not e.getcode() == 401:
