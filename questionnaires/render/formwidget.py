@@ -324,11 +324,20 @@ class NumberQuestion(Question):
 			resp += 'isTime="true" '
 			resp += 'placeholder="TT:MM" '
 		else:
+			mmin = '0'
+			mmax = '0'
+			extra_parts = str(self.extra_param).split(';')
+			if len(extra_parts) > 1:
+				mmin = extra_parts[0]
+				mmax = extra_parts[1]
+			else:
+				mmax = extra_parts[0]
+				
 			resp += '" '
 			resp += 'type="number" '
-			resp += 'min=0 '
-			resp += 'max="' + str(self.extra_param) + '" ';
-			resp += 'placeholder="0-' + str(self.extra_param) + '" '
+			resp += 'min="' + mmin + '" '
+			resp += 'max="' + mmax + '" ';
+			resp += 'placeholder="' + mmin + '-' + mmax + '" '
 		if (self.answer != []):
 			resp += 'value="' + str(self.answer) + '" '
 			
