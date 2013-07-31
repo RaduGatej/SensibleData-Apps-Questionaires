@@ -40,7 +40,8 @@ def form(request):
 					answers[ans[:-2]] = ','.join(request.POST.getlist(ans))
 					
 				else:
-					answers[ans] = request.POST[ans];
+					if not ans.startswith('_'):
+						answers[ans] = request.POST[ans];
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
 		set_answers(answers, request.user, '1.0')
 		if '_prev' in request.POST:
