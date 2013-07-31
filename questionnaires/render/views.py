@@ -68,6 +68,7 @@ def form(request):
 	di = {}
 	progress = form_provider.get_user_progress(request.user,'1.0');
 	di['progress'] = str(progress);
+	di['int_progress'] = 'approx. ' + str(int(progress)) + '%';
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;
