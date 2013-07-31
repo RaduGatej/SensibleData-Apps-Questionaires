@@ -34,16 +34,26 @@ def get_previous_question(user_id, survey_version, current_name):
 	raise NameError(current_name + ' is not a valid question name');
 
 def get_next_question(user_id, survey_version, current_name):
-	#pdb.set_trace()
+	
 	questions = get_questions_list();
 	now_is_the_time = False;
-	for q in questions:	
+	for question in questions:	
 		if now_is_the_time:
-			if check_condition(user_id, survey_version, q.inclusion_condition):
-				return return_question(user_id, survey_version, q)
+			#pdb.set_trace()
+			if check_condition(user_id, survey_version, question.inclusion_condition):
+				return return_question(user_id, survey_version, question)
 			else:
 				pass
-		elif q.variable_name == current_name:
+		elif question.variable_name == current_name:
+			#pdb.set_trace()
+			# it is a grid question it might still be unanswered, verify
+			if isinstance(question, fw.GridQuestion):
+				#pdb.set_trace();
+				entries = Response.objects.filter(user=user_id,\
+						form_version=survey_version,\
+						variable_name__in = question.get_subquestion_variables());
+				if len(entries) != len(question.get_subquestion_variables()):
+					return return_question(user_id, survey_version, question)
 			now_is_the_time = True
 		else:
 			pass

@@ -180,7 +180,7 @@ question		Hvor gammel var du første gang du drak mindst en genstand?			number;r
 question		Hvor mange gange er du blevet fuld af at drikke alkohol i løbet af  <u>de sidste 30 dage</u>?	 Det er individuelt hvor meget alkohol, der skal til, for at man bliver fuld. Med fuld menes derfor situationer, hvor du har drukket så meget alkohol, at du har følt dig fuld. 	a30 != 'Jeg har aldrig drukket alkohol'	radio	a30a	alcohol_drunk	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6-9 gange; 10+ gange	
 question		Hvor mange genstande drak du på hver af dagene i sidste uge?	1 flaske øl = 1 genstand; 1 stærk øl = 1 1/4 genstand; 1 glas vin = 1 genstand; 1 flaske vin = 6 genstande; 1 blandet drik = 1 genstand; 1 shot = 1/2 genstand; 1 alkoholsodavand = 1 genstand; 1 flaske spiritus (70 cl.) = 19 genstande 	a30 != 'Jeg har aldrig drukket alkohol'	multi_number	a30b	alcohol_volume		
 subquestion			 Angiv 0 på de dage, hvor du ikke drak alkohol 		number	a30b1	alcohol_volume_monday	Antal genstande mandag____	99
-subquestion					number	a30b2	alcohol_volume_tuesday	Antal genstande tirsdag____	99
+subquestion					number	a30b2	alcohol_volume_tuesday	Antal genstande tirsdag____	1;99
 subquestion					number	a30b3	alcohol_volume_wednesday	Antal genstande onsdag____	99
 subquestion					number	a30b4	alcohol_volume_thursday	Antal genstande torsdag____	99
 subquestion					number	a30b5	alcohol_volume_friday	Antal genstande fredag____	99
