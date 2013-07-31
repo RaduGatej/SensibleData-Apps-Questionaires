@@ -88,6 +88,11 @@
 								answered = true;
 								break;
 							} 
+							// if it went to the end of the question and it is still not answered, return false
+							if ((inner_idx == document.forms["myform"][required_vars[idx]].length - 1) && (!answered)) {
+								document.getElementById("answer_alert").style.display = "block";
+								return false;
+							}
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
