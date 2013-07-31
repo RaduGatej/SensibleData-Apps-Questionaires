@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^form', 'render.views.form', name='form'),
     url(r'^about', 'render.views.about', name='about'),
     url(r'^quit', 'render.views.quit', name='quit'),
+    url(r'home_refreshed', 'render.views.home_refreshed', name='home_refreshed'),
     url(r'^', 'render.views.home', name='home'),
 )
