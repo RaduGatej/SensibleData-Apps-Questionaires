@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from utils import oauth2, identity
 from utils.models import Scope
+from render.models import Response
 from django.shortcuts import render_to_response, redirect
 import formwidget
 from django.template import RequestContext
@@ -19,6 +20,12 @@ def form(request):
 	#if auth == None:
 		#show user site to authorize the form
 	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	try:
+		Response.objects.get(user = request.user,form_version='1.0',variable_name='_submitted')
+		return HttpResponseRedirect('/nochanges');
+	except Exception:
+		pass
+	 
 	next_question = None;
 	unanswered = False;
 	if request.POST:
@@ -50,6 +57,8 @@ def form(request):
 		elif '_from_top' in request.POST:
 			next_question = form_provider.get_first_question(request.user,'1.0');
 		elif '_quit' in request.POST:
+			r = Response(user = request.user,form_version='1.0',variable_name='_submitted',response='true');
+			r.save()
 			return HttpResponseRedirect('/quit');
 		else:
 			if len(required_vars) > 0:
@@ -87,6 +96,9 @@ def set_answers(answer_dict, user, survey_version):
 
 def changebrowser(request):
 	return render_to_response('changebrowser.html', {}, context_instance=RequestContext(request))
+	
+def nochanges(request):
+	return render_to_response('nochanges.html', {}, context_instance=RequestContext(request))
 	
 def noscript(request):
 	return render_to_response('js_disabled.html', {}, context_instance=RequestContext(request))
