@@ -84,6 +84,11 @@ def set_answers(answer_dict, user, survey_version):
 	for var in answer_dict.keys():
 		form_provider.set_answer(user, survey_version, var, answer_dict[var])
 
+def changebrowser(request):
+	return render_to_response('changebrowser.html', {}, context_instance=RequestContext(request))
+	
+def noscript(request):
+	return render_to_response('js_disabled.html', {}, context_instance=RequestContext(request))
 
 def logout_success(request):
 	return render_to_response('logout_success.html', {}, context_instance=RequestContext(request))
