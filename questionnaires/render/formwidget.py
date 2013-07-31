@@ -294,38 +294,45 @@ class ChecklistQuestion(Question):
 class NumberQuestion(Question):
 	def render(self):
 		resp = self.prerender();
+
+		if self.secondary_content != '':
+			resp += '<div class="span4">'
+		else:
+			resp += '<div class="span8">'
 		self.answers = re.sub('_+','_',self.answers[0])
 		parts = self.answers.split('_');
 		#pdb.set_trace()
-		if len(parts) > 0: #there was the underscore, so we prepend/append
+		if len(parts) > 1: #there was the underscore, so we prepend/append
 			for i, part in enumerate(parts):
 				parts[i] = part.strip();
 			resp += '<div class="'
 			if parts[0] != '':
 				resp +='input-prepend '
 			if parts[1] != '':
-				resp += 'input-append'
+				resp += 'input-append '
+			
 			resp +='">\n'
 			if parts[0] != '':
-				resp += '\t<span class="add-on">' + parts[0] + '</span>'
+				resp += '\t<span class="add-on '
+				resp += '">' + parts[0] + '</span>'
 			
-			resp += '<input name="' + htmlize(self.variable_name) + '" '
-			resp += 'class="input-mini span1 ';
-			if self.extra_param == 'time':
-				resp += 'time" ';
-				resp += 'type="text" '
-				resp += 'isTime="true" '
-				resp += 'placeholder="TT:MM" '
-			else:
-				resp += '" '
-				resp += 'type="number" '
-				resp += 'min=0 '
-				resp += 'max="' + str(self.extra_param) + '" ';
-				resp += 'placeholder="0-' + str(self.extra_param) + '" '
-			if (self.answer != []):
-				resp += 'value="' + str(self.answer) + '" '
-				
+		resp += '<input name="' + htmlize(self.variable_name) + '" '
+		resp += 'class="input-small ';
+		if self.extra_param == 'time':
+			resp += 'time" ';
+			resp += 'type="text" '
+			resp += 'isTime="true" '
+			resp += 'placeholder="TT:MM" '
+		else:
+			resp += '" '
+			resp += 'type="number" '
+			resp += 'min=0 '
+			resp += 'max="' + str(self.extra_param) + '" ';
+			resp += 'placeholder="0-' + str(self.extra_param) + '" '
+		if (self.answer != []):
+			resp += 'value="' + str(self.answer) + '" '
 			
+		if len(parts) > 1:
 			resp += 'id="'
 			if parts[0] != '':
 				if parts[1] != '':
@@ -341,14 +348,11 @@ class NumberQuestion(Question):
 			if parts[1] != '':
 				resp += '\t<span class="add-on">' + parts[1] + '</span>'
 			resp += '\n</div>'
-		else: # there was no underscore, so we keep the simple number field
-			resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
-			resp += 'min=0 max=' + str(self.extra_param) + ' ';
-			if (self.answer != []):
-				resp += 'value=' + str(self.answer) + ' '
-			else:
-				resp += 'placeholder="0-' + str(self.extra_param) + '" />'
-				
+			
+		else:
+			resp += ' />'
+			
+		resp += '</div>\n'
 		return resp
 		
 #similar to grid question, but with different styling. There is a table with two rows and the number of columns
@@ -535,13 +539,17 @@ class NumberSubquestion(NumberQuestion):
 	def prerender(self):
 		resp = '';
 		if len(self.secondary_content) > 0:
-			resp = self.secondary_content + ' ';
+			resp = '<div class="span8">' + self.secondary_content + '</div>';
 		return resp
 
 class MultiNumberQuestion(GridQuestion):
 	def render(self):
 		resp = self.prerender()
+		resp += '<div class="row">\n'
 		for sub in self.data:
-			resp += '<div class="form-inline">' + sub.render() + '</div><br />\n'
+			resp += sub.render() + '<br/>\n'
+		
+		resp += '</div>\n'
+			
 		
 		return resp
