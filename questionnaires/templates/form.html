@@ -172,7 +172,7 @@
 		{% else %}
 			<div class="alert alert-error" id="answer_alert" style="display:none">
 		{% endif %}
-				Please answer the question before continuing.
+				Besvare spørgsmålet, før du fortsætter.
 			</div>
     	<form action="form" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
 			<fieldset>
@@ -189,13 +189,13 @@
 				
 					<!-- Which buttons to display? -->
 					{% if last_page %}
-						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Previous</button>
-						<button type="submit" name="_from_top" class="btn"><i class="icon-refresh"></i> Start from the beginning</button>
-						<button type="submit" name="_quit" class="btn btn-primary"><i class="icon-remove icon-white"></i> Quit</button>
+						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Tilbage</button>
+						<button type="submit" name="_from_top" class="btn"><i class="icon-refresh"></i> Begynd igen</button>
+						<button type="submit" name="_quit" class="btn btn-primary"><i class="icon-remove icon-white"></i> Indsend besvarelse</button>
 					{% else %}
-						<button type="submit" onclick="actor='next_new'" name="_next_new" class="btn btn-primary">Next unanswered question <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></button> 	
-						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Previous</button>
-						<button type="submit" onclick="actor='next'" name="_next" class="btn" id="next_button">Next <i class="icon-chevron-right"></i> </button>
+						<button type="submit" onclick="actor='next_new'" name="_next_new" class="btn btn-primary">Næste ubesvarede <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></button> 	
+						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Tilbage</button>
+						<button type="submit" onclick="actor='next'" name="_next" class="btn" id="next_button">Næste <i class="icon-chevron-right"></i> </button>
 					{% endif %}
 			</fieldset>
 		</form>
