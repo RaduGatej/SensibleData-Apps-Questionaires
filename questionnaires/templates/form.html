@@ -8,6 +8,14 @@
   			return !isNaN(parseFloat(n)) && isFinite(n);
 		}
 		
+		function isInteger(n) {
+			if (!isNaN(n)) {
+				return n.indexOf(".") == -1;
+			}
+			return false;
+		}
+	
+		
 		function isValidInputForNumberField(field) {
 			if (field.value.length > 0) {
 				if (isNumber(field.value)) {
@@ -25,6 +33,26 @@
 			}	
 		}
 		
+		function isValidValueForTimeField(val) {
+			if (val.length > 3) {
+				parts = val.split(':');
+				if (parts.length != 2) {
+					parts = val.split('.');
+					if (parts.length != 2) {
+						return false;
+					}
+				}
+				if (isInteger(parts[0]) && isInteger(parts[1])) {
+					var hours = parseInt(parts[0]);
+					var minutes = parseInt(parts[1]);
+					if ((hours >= 0) && (hours <= 24) && (minutes >= 0) && (minutes < 60)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		
 		function markRowSuccess(event) {
 			row = document.getElementById(event.name);
 			row.className = 'success';
@@ -35,7 +63,13 @@
 			if (actor == 'prev') {
 				return true;
 			}
-			var required_vars = document.forms["myform"]["__required_vars"].value;
+			var required_vars;
+			try{
+				required_vars = document.forms["myform"]["__required_vars"].value;
+			} catch(err) {
+				// no required vars specified, must be a header
+				return true;
+			}
 			required_vars = required_vars.split(',');
 			for (var idx=0; idx<required_vars.length; idx++) {
 				// check if radio group:
@@ -76,20 +110,38 @@
 						}
 					}
 				}
-				else if (document.forms["myform"][required_vars[idx]].max !== undefined) {
+				else {
+					try {
+						if ((document.forms["myform"][required_vars[idx]].max !== undefined) && (document.forms["myform"][required_vars[idx]].max != "")) { // if this is a number field
 							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]])) {
 								answered = true;
+								continue;
 							} else {
 								answered = false;
 								document.forms["myform"][required_vars[idx]].value = "";
+								break;
+							}
+						} 
+						if (document.forms["myform"][required_vars[idx]].className.indexOf('time') > -1) { // if this is a time field
+							if (isValidValueForTimeField(document.forms["myform"][required_vars[idx]].value)) {
+								answered = true;
+								continue;
+							} else {
+								answered = false;
+								document.forms["myform"][required_vars[idx]].value = "";
+								break;
 							}
 						}
-				else if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
-					//document.forms["myform"][required_vars[idx]].className = 'control-group error';
-					answered = false;
-					break;
-				} else {
-					answered = true;
+						throw true;
+					} catch (err) {
+						if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
+							//document.forms["myform"][required_vars[idx]].className = 'control-group error';
+							answered = false;
+							break;
+						} else {
+							answered = true;
+						}
+					}
 				}
 			}
 			if (!answered) {

@@ -308,21 +308,24 @@ class NumberQuestion(Question):
 			resp +='">\n'
 			if parts[0] != '':
 				resp += '\t<span class="add-on">' + parts[0] + '</span>'
-			resp += '<input type="number" name="' + htmlize(self.variable_name) + '"'
-			resp += 'min=0 '
-			#pdb.set_trace()
+			
+			resp += '<input name="' + htmlize(self.variable_name) + '" '
+			resp += 'class="input-mini span1 ';
 			if self.extra_param == 'time':
-				resp += 'max="24" step="0.01" '
+				resp += 'time" ';
+				resp += 'type="text" '
+				resp += 'isTime="true" '
+				resp += 'placeholder="TT:MM" '
 			else:
+				resp += '" '
+				resp += 'type="number" '
+				resp += 'min=0 '
 				resp += 'max="' + str(self.extra_param) + '" ';
+				resp += 'placeholder="0-' + str(self.extra_param) + '" '
 			if (self.answer != []):
-				resp += 'value=' + str(self.answer) + ' '
-			else:
-				if self.extra_param == 'time':
-					resp+='placeholder="HH.MM" '
-				else:
-					resp += 'placeholder="0-' + str(self.extra_param) + '" '
-			resp += 'class="input-mini span1" ';
+				resp += 'value="' + str(self.answer) + '" '
+				
+			
 			resp += 'id="'
 			if parts[0] != '':
 				if parts[1] != '':
