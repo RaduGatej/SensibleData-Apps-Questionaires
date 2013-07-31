@@ -10,6 +10,7 @@ import form_provider
 from backend.sync_with_study import *
 import utils
 import pdb
+import math
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
@@ -105,7 +106,13 @@ def form(request):
 	di = {}
 	progress = form_provider.get_user_progress(request.user,'1.0');
 	di['progress'] = str(progress);
-	di['int_progress'] = 'approx. ' + str(int(progress)) + '%';
+	progress = int(math.ceil(progress));
+	if progress < 3:
+		di['int_progress'] = '';
+	elif progress < 10:
+		di['int_progress'] = str(int(progress)) + '%';
+	else: 
+		di['int_progress'] = 'approx. ' + str(int(progress)) + '%';
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;

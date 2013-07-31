@@ -292,13 +292,30 @@ class ChecklistQuestion(Question):
 		return resp
 		
 class NumberQuestion(Question):
+	
+	def prerender(self):
+		if len(self.primary_content) > 0:
+			resp = '<h2>' + self.primary_content + '</h2>\n';
+		else:
+			resp = '';
+		resp += '<div class="row">'
+		
+		if len(self.secondary_content) > 0:
+			resp += '<div class=span8">' + self.secondary_content + '</div>\n';
+		
+		if len(self.additional_content) > 0:
+			resp += '<div class="alert alert-info">' + self.additional_content + '</div>';
+
+		return resp + self.list_required_vars();
+		
 	def render(self):
+		
 		resp = self.prerender();
 
 		if self.secondary_content != '':
 			resp += '<div class="span4">'
 		else:
-			resp += '<div class="span8">'
+			resp += '<div class="span12">'
 		self.answers = re.sub('_+','_',self.answers[0])
 		parts = self.answers.split('_');
 		#pdb.set_trace()
@@ -361,7 +378,7 @@ class NumberQuestion(Question):
 		else:
 			resp += ' />'
 			
-		resp += '</div>\n'
+		resp += '</div></div>\n'
 		return resp
 		
 #similar to grid question, but with different styling. There is a table with two rows and the number of columns
@@ -546,9 +563,10 @@ class GridQuestion(Question):
 		
 class NumberSubquestion(NumberQuestion):
 	def prerender(self):
-		resp = '';
+		resp = '<div class="row" style="margin-left:0px">';
 		if len(self.secondary_content) > 0:
-			resp = '<div class="span8">' + self.secondary_content + '</div>';
+			resp += '<div class="span8">' + self.secondary_content + '</div>';
+		
 		return resp
 
 class MultiNumberQuestion(GridQuestion):
@@ -556,7 +574,7 @@ class MultiNumberQuestion(GridQuestion):
 		resp = self.prerender()
 		resp += '<div class="row">\n'
 		for sub in self.data:
-			resp += sub.render() + '<br/>\n'
+			resp += sub.render() + '\n'
 		
 		resp += '</div>\n'
 			
