@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from utils import oauth2, identity
-from utils.models import Scope
+from utils.models import Scope, FirstLogin
 from render.models import Response
 from django.shortcuts import render_to_response, redirect
 import formwidget
@@ -11,9 +11,37 @@ from backend.sync_with_study import *
 import utils
 import pdb
 import math
+from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
+import json
+from datetime import datetime
+
+def home_refreshed(request):
+	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def home(request):
-	return render_to_response('home.html', {}, context_instance=RequestContext(request))
+	try:
+		sessions = Session.objects.filter(expire_date__gte=datetime.now())
+		for session in sessions:
+			data = session.get_decoded()
+			try: user = User.objects.filter(id=data.get('_auth_user_id', None))[0]
+			except: continue
+			if request.user == user:
+				session.delete()
+	except: pass
+
+	if request.user.is_authenticated():
+		try: f = FirstLogin.objects.get(user=request.user)
+		except FirstLogin.DoesNotExist: f = FirstLogin.objects.create(user=request.user)
+		if f.firstLogin:
+			f.firstLogin = False
+			f.save()
+			return redirect('request_attributes')
+		identity.getAttributes(request.user, ['email'])
+
+	return redirect(settings.ROOT_URL+'form/')
+
 
 @login_required
 def form(request):
