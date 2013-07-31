@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
 	<noscript>
-		<meta http-equiv="refresh" content="0; url=/noscript" />
+		<meta http-equiv="refresh" content="0; url={% url "noscript" %}" />
 	</noscript>
     <meta charset="utf-8">
     <title>SensibleDTU: Questionnaires</title>
@@ -17,7 +17,7 @@
     		NodeList;
     		HTMLCollection;
     	} catch (err) {
-    		window.location = "/changebrowser";
+		window.location = "{% url "changebrowser" %}";
     	}
     </script>
     <style type="text/css">
