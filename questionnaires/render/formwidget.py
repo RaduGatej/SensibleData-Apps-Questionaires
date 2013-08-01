@@ -171,7 +171,7 @@ def makequestion(primary_content, secondary_content, additional_content,\
 		return None
 
 def htmlize(string):
-    return re.sub('[^a-z_0-9]','',string.strip().lower().replace(' ','_'));
+    return re.sub('[^a-z_0-9-:]','',string.strip().lower().replace(' ','_'));
     
 #### Class definitions
 class Formwidget(object):
@@ -556,11 +556,7 @@ class GridQuestion(Question):
 	def get_subquestion_variables(self):
 		resp = [];
 		for sub in self.data:
-			#if sub.answer_type == 'radio':
 			resp.append(sub.variable_name)
-			#elif sub.answer_type == 'number':
-			#	for answer in sub.answers:
-			#		resp.append(sub.variable_name + '_' + htmlize(answer));
 		return resp
 
 	def render(self):

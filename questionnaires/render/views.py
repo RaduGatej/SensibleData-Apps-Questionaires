@@ -111,10 +111,10 @@ def form(request):
 	progress = int(math.ceil(progress));
 	if progress < 3:
 		di['int_progress'] = '';
-	elif progress < 10:
+	elif progress < 7:
 		di['int_progress'] = str(int(progress)) + '%';
 	else: 
-		di['int_progress'] = 'approx. ' + str(int(progress)) + '%';
+		di['int_progress'] = 'ca. ' + str(int(progress)) + '%';
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;

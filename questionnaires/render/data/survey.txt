@@ -148,8 +148,8 @@ subquestion		 Hvor ofte føler du, at der er nogen, du kan tale med? 			radio	a2
 subquestion		 Hvor ofte føler du, at der er nogen, du kan henvende dig til? 			radio	a22t	loneliness_turn_to	Aldrig; Sjældent; Sommetider; Altid	
 question		 Sker det nogensinde, at du er alene, selvom du har mest lyst til at være sammen med andre? 			radio	a23	involuntary_alone	 Ja, ofte; Ja, engang imellem; ja, men sjældent; Nej 	
 header		De følgende spørgsmål handler om dit helbred.				a24_h	health		
-question		Hvor høj er du uden sko?			number	a24	height	_____Cm	70; 250
-question		Hvad vejer du uden tøj?			number	a25	weight	_____Kg	30; 250
+question		Hvor høj er du uden sko?			number	a24	height	_____cm	70; 250
+question		Hvad vejer du uden tøj?			number	a25	weight	_____kg	30; 250
 question		 Hvordan synes du, dit helbred er alt i alt? 			radio	a26	selfreported_health	Fremragende; Vældig godt; Godt; Mindre godt; Dårligt	
 question		 I løbet af de sidste 30 dage, hvor mange dage har du været helt ude af stand til, at udføre dine sædvanlige aktiviteter eller dit arbejde på grund af dit helbred? 			number	a41h	function_activity	Angiv antallet af dage _____	0; 30
 question		Har du indenfor de <u>sidste 14 dage</u> været generet af nogle af de her nævnte former for smerter og ubehag? Var du meget eller lidt generet af det?			grid	a27	symptoms	 Nej; Ja, lidt generet; Ja, meget generet 	
@@ -175,8 +175,8 @@ subquestion		Kan du løfte 10 kg over skulderhøjde?			radio	a28d	physical_funct
 subquestion		Kan du løbe 8 km?			radio	a28e	physical_function_run_8	Kan ikke; Kan med stort besvær; Kan med noget besvær; Kan med lidt besvær; Kan uden besvær 	
 header		De næste spørgsmål handler om din livsstil.				a29_h	life_style		
 question		Ryger du?			radio	a29	smoke_freq	 Ja, dagligt; Ja, men ikke dagligt; Nej, men jeg har røget tidligere; Nej, jeg har aldrig røget 	
-question		 Hvor gammel var du, da du prøvede: 			grid	a29a	smoke_debut	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
-subquestion		At ryge din første cigaret?		 smoke_freq=='Ja, dagligt' | 'Ja, men ikke dagligt' | 'Nej, men jeg har røget tidligere'  	radio	a29a1	smoke_first_cigarette	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
+question		 Hvor gammel var du, da du prøvede: 		 smoke_freq !=  'Nej, jeg har aldrig røget' 	grid	a29a	smoke_debut	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
+subquestion		At ryge din første cigaret?		 smoke_freq !=  'Nej, jeg har aldrig røget' 	radio	a29a1	smoke_first_cigarette	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
 subquestion		At ryge cigaretter dagligt?		 smoke_freq=='Ja, dagligt' 	radio	a29a2	smoke_daily	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
 question		Hvor meget ryger du i gennemsnit om dagen?		 smoke_freq=='Ja, dagligt' 	multi_number	a29b	smoke_volume		
 subquestion				 smoke_freq=='Ja, dagligt' 	number	a29b1	smoke_volume_cigarette	Antal cigaretter___	0; 99
@@ -322,8 +322,5 @@ question		 Jeg tror på noget åndeligt/spirituelt/guddommeligt, som har betydni
 question		I forhold til andre har jeg et attraktivt udseende: 			radio	a52	selfrated_appearance	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 question		I hvilken udstrækning er du enig i udsagnet: De fleste folk er til at stole på?			radio		trust_other	Helt uenig; Delvist uenig; Hverken enig eller uenig; Delvist enig; Helt enig 	
 question		 Forestil dig, at vi gav dig 100 kroner. Du har nu mulighed for at dele pengene mellem dig selv og en anden, anonym person. Du må beholde alle de penge, du ikke giver til den anden person. Hvor meget ville du give til den anden person? 			radio		give_money	DKK 0; DKK 25; DKK 50; DKK 75; DKK 100	
-question		I hvilken udstrækning er du enig i udsagnet "De fleste folk er til at stole på?"<br/>[1 - Helt uenig, 3 - Hverken enig eller uenig, 5 - Helt enig]			scale	our_1	our_stole	1; 2; 3; 4; 5;	
-
-question		Forestil dig at vi gav dig 100 kroner. Du har nu mulighed for at dele pengene mellem dig selv og en anden, anonym person. Du må beholde alle de penge du ikke giver til den anden person. Hvor meget ville du give til den anden person?			radio	our_2	our_money	DKK0; DKK25; DKK50; DKK75; DKK100;	
 question		 Du er nu færdig med at besvare dette spørgeskema, og vi er meget glade for dit bidrag. Nogle af de spørgsmål, som du har besvaret, vil vi eventuelt gerne kunne belyse yderligere ved personlige interview. Vi vil derfor gerne spørge dig, om vi må kontakte dig igen på et senere tidspunkt med henblik på et interview? 			radio	a53	later_contact	Ja; Nej	
 question		 Har du spørgsmål til undersøgelsen, er du velkommen til at skrive på email: nedi@sund.ku.dk. Hvis du har nogle kommentarer, ris eller ros til spørgeskemaet, så skriv venligst her: 			textarea	a54	comments		

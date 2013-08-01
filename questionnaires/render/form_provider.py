@@ -19,18 +19,32 @@ def get_previous_question(user_id, survey_version, current_name):
 	questions = get_questions_list();
 	if current_name == '__goodbye':
 		for i in range(1,len(questions)):
-			if check_condition(user_id, survey_version, questions[-i].inclusion_condition):
-				return return_question(user_id, survey_version, questions[-i])
+			conditioned_question = get_conditioned_question(questions[-i])
+			if conditioned_question != None:
+				return return_question(user_id, survey_version, conditioned_question)
+			#if check_condition(user_id, survey_version, questions[-i].inclusion_condition):
+			#	if isinstance(questions[-i], fw.GridQuestion):
+			#		for ii in range(len(questions[-i].data)-1, -1, -1):
+			#			sub = questions[-i].data[ii]
+			#			if not check_condition(user_id, survey_version, sub.inclusion_condition):
+			#				questions[-i].data.remove(sub)
+			#	return return_question(user_id, survey_version, questions[-i])
 	previous = None;
-	for q in questions:
-		if q.variable_name == current_name:
+	for question in questions:
+		if question.variable_name == current_name:
 			if previous == None:
 				return return_question(user_id, survey_version, questions[0])
 			else:
 				return return_question(user_id, survey_version, previous);
 		else:
-			if check_condition(user_id, survey_version, q.inclusion_condition):
-				previous = q
+			conditioned_question = get_conditioned_question(user_id, survey_version, question)
+			if conditioned_question != None:
+				#if isinstance(question, fw.GridQuestion):
+				#	for ii in range(len(question.data)-1, -1, -1):
+				#		sub = question.data[ii]
+				#		if not check_condition(user_id, survey_version, sub.inclusion_condition):
+				#			question.data.remove(sub)
+				previous = question
 	raise NameError(current_name + ' is not a valid question name');
 
 def get_next_question(user_id, survey_version, current_name):
@@ -40,20 +54,20 @@ def get_next_question(user_id, survey_version, current_name):
 	for question in questions:	
 		if now_is_the_time:
 			#pdb.set_trace()
-			if check_condition(user_id, survey_version, question.inclusion_condition):
-				return return_question(user_id, survey_version, question)
+			#if check_condition(user_id, survey_version, question.inclusion_condition):
+			#	if isinstance(question, fw.GridQuestion):
+			#		for ii in range(len(question.data)-1, -1, -1):
+			#			sub = question.data[ii]
+			#			if not check_condition(user_id, survey_version, sub.inclusion_condition):
+			#				question.data.remove(sub)
+			conditioned_question = get_conditioned_question(user_id, survey_version, question)
+			if conditioned_question != None:
+				return return_question(user_id, survey_version, conditioned_question)
 			else:
 				pass
 		elif question.variable_name == current_name:
-			#pdb.set_trace()
-			# it is a grid question it might still be unanswered, verify
-			if isinstance(question, fw.GridQuestion):
-				#pdb.set_trace();
-				entries = Response.objects.filter(user=user_id,\
-						form_version=survey_version,\
-						variable_name__in = question.get_subquestion_variables());
-				if len(entries) != len(question.get_subquestion_variables()):
-					return return_question(user_id, survey_version, question)
+			if needs_answer(user_id, survey_version, question):
+				return return_question(user_id, survey_version, get_conditioned_question(user_id, survey_version, question))
 			now_is_the_time = True
 		else:
 			pass
@@ -64,25 +78,33 @@ def get_next_question(user_id, survey_version, current_name):
 			
 
 def get_next_unanswered_question(user_id,survey_version):
-	questions = get_questions_list();
+	for question in get_questions_list():
+		if needs_answer(user_id, survey_version, question):
+			return return_question(user_id, survey_version, get_conditioned_question(user_id, survey_version, question))
 	#pdb.set_trace()
-	entries = Response.objects.filter(user=user_id,\
-				form_version=survey_version);
-	if len(entries) > 0:
-		answers = {};
-		for e in entries:
-			answers[e.variable_name] = e.response;
-		for question in questions:
-			if check_condition(user_id, survey_version, question.inclusion_condition):
-				if isinstance(question, fw.GridQuestion):
-					for sub in question.get_subquestion_variables():
-						if sub not in answers.keys():
-							return return_question(user_id, survey_version, question)
-				elif question.variable_name not in answers.keys():
-					# if q.inclusion_condition != '':
-					return return_question(user_id, survey_version, question)
-	else:
-		return return_question(user_id, survey_version, questions[0]);
+	#entries = Response.objects.filter(user=user_id,\
+	#			form_version=survey_version);
+	#if len(entries) > 0:
+	#	answers = {};
+	#	for e in entries:
+	#		answers[e.variable_name] = e.response;
+	#	for question in questions:
+			#if check_condition(user_id, survey_version, question.inclusion_condition):
+			#	if isinstance(question, fw.GridQuestion):
+			#		for ii in range(len(question.data)-1, -1, -1):
+			#			sub = question.data[ii]
+			#			if not check_condition(user_id, survey_version, sub.inclusion_condition):
+			#				question.data.remove(sub)
+			#		for sub in question.data:
+			#			if sub.variable_name not in answers.keys():
+			#				return return_question(user_id, survey_version, question)
+	#		conditioned_question = get_conditioned_question(question)
+	#		if conditioned_question != None:
+	#			elif question.variable_name not in answers.keys():
+	#				# if q.inclusion_condition != '':
+	#				return return_question(user_id, survey_version, question)
+	#else:
+	#	return return_question(user_id, survey_version, questions[0]);
 
 
 def return_question(user_id, survey_version, question):
@@ -205,6 +227,47 @@ def get_response(user_id, survey_version, variable_name):
                 variable_name = variable_name)
 	if len(entries) > 0:
 		return entries[0].response;
+	else:
+		return None
+		
+def needs_answer(user_id, survey_version, question):
+	#pdb.set_trace()
+	question = get_conditioned_question(user_id, survey_version, question)
+	if question != None:
+		if isinstance(question, fw.GridQuestion):
+			entries = Response.objects.filter(user = user_id, form_version=survey_version, \
+                variable_name__in = question.get_subquestion_variables())
+			responses = [x.variable_name for x in entries]
+			if len(intersect(question.get_subquestion_variables(), responses)) < len(question.get_subquestion_variables()):
+				return True
+			else:
+				return False  
+		else:
+			entries = Response.objects.filter(user = user_id, form_version=survey_version, \
+                variable_name = question.variable_name)
+			if len(entries) == 0:
+				return True
+			else:
+				return False
+	else:
+		return False
+		
+def intersect(a, b):
+     return list(set(a) & set(b))
+
+def get_conditioned_question(user_id, survey_version, question):
+	if check_condition(user_id, survey_version, question.inclusion_condition):
+		if isinstance(question, fw.GridQuestion):
+			for ii in range(len(question.data)-1, -1, -1):
+				sub = question.data[ii]
+				if not check_condition(user_id, survey_version, sub.inclusion_condition):
+					question.data.remove(sub)
+			if len(question.data) > 0:
+				return question
+			else:
+				return None
+		else:
+			return question
 	else:
 		return None
 
