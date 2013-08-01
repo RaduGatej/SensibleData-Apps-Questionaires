@@ -6,11 +6,19 @@ from utils import oauth2
 from utils.models import Scope
 from django.core.urlresolvers import reverse
 
-def sync_with_study(subtle=False):
-	no = len(Response.objects.filter(synced_with_study=False))
+def sync_with_study(subtle=False, user=None):
+	if not user == None:
+		no = len(Response.objects.filter(synced_with_study=False, user=user))
+	else:
+		no = len(Response.objects.filter(synced_with_study=False))
 	i = 0
 	success = 0
-	for response in Response.objects.filter(synced_with_study=False):
+	if not user == None:
+		all_responses = Response.objects.filter(synced_with_study=False, user=user)
+	else:
+		all_responses = Response.objects.filter(synced_with_study=False)
+	
+	for response in all_responses:
 		values = {}
 		values['form_version'] = str(response.form_version)
 		values['variable_name'] = str(response.variable_name)
