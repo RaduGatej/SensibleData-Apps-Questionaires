@@ -21,6 +21,7 @@ def home_refreshed(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def home(request):
+	return redirect(settings.ROOT_URL+'form/')
 	try:
 		sessions = Session.objects.filter(expire_date__gte=datetime.now())
 		for session in sessions:
@@ -72,9 +73,10 @@ def form(request):
 			else: #good answer
 				#pdb.set_trace();
 				if ans.endswith('[]'):
-					if request.POST.getlist(ans).length < request.POST['__required_answer_count']:
+					#pdb.set_trace()
+					if len(request.POST.getlist(ans)) < int(request.POST['__required_answer_count']):
 						unanswered = True;
-					answers[ans[:-2]] = ','.join(request.POST.getlist(ans))
+					answers[ans] = ','.join(request.POST.getlist(ans))
 					
 				else:
 					if not ans.startswith('_'):
@@ -109,10 +111,10 @@ def form(request):
 	progress = int(math.ceil(progress));
 	if progress < 3:
 		di['int_progress'] = '';
-	elif progress < 10:
+	elif progress < 7:
 		di['int_progress'] = str(int(progress)) + '%';
 	else: 
-		di['int_progress'] = 'approx. ' + str(int(progress)) + '%';
+		di['int_progress'] = 'ca. ' + str(int(progress)) + '%';
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;
