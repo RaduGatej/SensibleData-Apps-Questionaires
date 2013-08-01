@@ -123,12 +123,13 @@ def validate(string):
 				print 'ERROR: missing list of answers'
 				error = True;
 	if parts[ANSWER_TYPE] != 'grid':
-		if parts[VARIABLE_NAME] == '':
-			print 'ERROR: variable name is missing';
-			error = True
 		if parts[VARIABLE_LABEL] == '':
 			print 'ERROR: variable label is missing';
 			error = True
+		elif parts[VARIABLE_NAME] == '':
+			print 'WARNING: variable name is missing, making it the same as label';
+			parts[VARIABLE_NAME] = parts[VARIABLE_LABEL]
+		
 	
 	if error:
 		return None
@@ -137,6 +138,7 @@ def validate(string):
 	
 def makequestion(primary_content, secondary_content, additional_content,\
 				inclusion_condition, answer_type, variable_name, answers, extra_param):
+	print 'Inclusion condition: ' + inclusion_condition
 	if answer_type == 'radio':
 		return RadioQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
@@ -172,7 +174,7 @@ def htmlize(string):
     return re.sub('[^a-z_0-9]','',string.strip().lower().replace(' ','_'));
     
 #### Class definitions
-class Formwidget:
+class Formwidget(object):
 	def __init__(self, primary_content, secondary_content, additional_content, \
 				inclusion_condition, answer_type, variable_name, answers, extra_param):
 		self.primary_content = primary_content;
@@ -273,6 +275,12 @@ class ListQuestion(Question):
 		return resp
 		
 class ChecklistQuestion(Question):
+	def __init__(self, primary_content, secondary_content, additional_content, \
+				inclusion_condition, answer_type, variable_name, answers, extra_param):
+		super( ChecklistQuestion, self).__init__(primary_content, secondary_content, additional_content, \
+				inclusion_condition, answer_type, variable_name, answers, extra_param)
+		self.variable_name = self.variable_name + '[]'
+	
 	def render(self):
 		resp = self.prerender();
 		if self.answer != []:
@@ -280,7 +288,7 @@ class ChecklistQuestion(Question):
 		resp += '<input type="hidden" name="__required_answer_count" value="' + self.extra_param + '" />\n'
 		for answer in self.answers:
 			resp += '\t<label class="checkbox">\n'
-			resp += '\t\t<input type="checkbox" name="' + self.variable_name + '[]" '
+			resp += '\t\t<input type="checkbox" name="' + self.variable_name + '" '
 			resp += 'value="' + htmlize(answer) + '" '
 			if self.answer != []:
 				if htmlize(answer) in self.answer:
@@ -345,10 +353,10 @@ class NumberQuestion(Question):
 			mmax = '0'
 			extra_parts = str(self.extra_param).split(';')
 			if len(extra_parts) > 1:
-				mmin = extra_parts[0]
-				mmax = extra_parts[1]
+				mmin = extra_parts[0].strip()
+				mmax = extra_parts[1].strip()
 			else:
-				mmax = extra_parts[0]
+				mmax = extra_parts[0].strip()
 				
 			resp += '" '
 			resp += 'type="number" '
@@ -463,7 +471,21 @@ class NumberCheckQuestion(Question):
 		
 		resp += parts[0] + ' ';		
 		resp += '<input type="number" name="' + self.variable_name + '" '
-		resp += 'min="0" max="' + self.extra_param + '" '
+		mmin = '0'
+		mmax = '0'
+		extra_parts = str(self.extra_param).split(';')
+		if len(extra_parts) > 1:
+			mmin = extra_parts[0].strip()
+			mmax = extra_parts[1].strip()
+		else:
+			mmax = extra_parts[0].strip()
+			
+		resp += '" '
+		resp += 'type="number" '
+		resp += 'min="' + mmin + '" '
+		resp += 'max="' + mmax + '" ';
+		resp += 'placeholder="' + mmin + '-' + mmax + '" '
+
 		resp += 'id="numberfield" onchange="numberEntered();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" '
 		if self.answer != []:
 			if numeric_answer:

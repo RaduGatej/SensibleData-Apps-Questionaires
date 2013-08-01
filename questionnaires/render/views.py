@@ -21,6 +21,7 @@ def home_refreshed(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def home(request):
+	return redirect(settings.ROOT_URL+'form/')
 	try:
 		sessions = Session.objects.filter(expire_date__gte=datetime.now())
 		for session in sessions:
@@ -72,9 +73,10 @@ def form(request):
 			else: #good answer
 				#pdb.set_trace();
 				if ans.endswith('[]'):
-					if request.POST.getlist(ans).length < request.POST['__required_answer_count']:
+					#pdb.set_trace()
+					if len(request.POST.getlist(ans)) < int(request.POST['__required_answer_count']):
 						unanswered = True;
-					answers[ans[:-2]] = ','.join(request.POST.getlist(ans))
+					answers[ans] = ','.join(request.POST.getlist(ans))
 					
 				else:
 					if not ans.startswith('_'):

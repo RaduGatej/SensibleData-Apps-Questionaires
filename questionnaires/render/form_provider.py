@@ -109,9 +109,17 @@ def get_user_progress(user_id, survey_version):
 	max_index = 0;
 	#pdb.set_trace()
 	for entry in entries:
-		curr_index = variables.index(entry.variable_name)
-		if curr_index > max_index:
-			max_index = curr_index
+		varname = ''
+		if entry.variable_name.endswith('[]'):
+			varname = entry.variable_name[:-2]
+		else:
+			varnname = entry.variable_name
+		try:
+			curr_index = variables.index(entry.variable_name)
+			if curr_index > max_index:
+				max_index = curr_index
+		except ValueError:
+			print "ERROR: " + entry.variable_name + " is in the DB but not in the survey!";
 	
 	answered = len(entries);
 	
@@ -200,16 +208,18 @@ def get_response(user_id, survey_version, variable_name):
 	else:
 		return None
 
-def check_condition(user_id, survey_version, condition):
-	if (condition == None) | (condition == ''):
+def check_condition(user_id, survey_version, mcondition):
+	#pdb.set_trace()
+	
+	if (mcondition == None) | (mcondition == ''):
 		return True;
 	#pdb.set_trace()
 	equal = False;
-	parts = condition.split('==')
+	parts = mcondition.split('==')
 	if len(parts) > 1: # condition equal
 		equal = True;
 	else:
-		parts = condition.split('!=')
+		parts = mcondition.split('!=')
 		
 	for i, part in enumerate(parts):
 		parts[i] = part.strip();
