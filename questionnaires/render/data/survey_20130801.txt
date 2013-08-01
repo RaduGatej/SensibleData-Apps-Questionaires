@@ -3,18 +3,18 @@ Type	Primary content	Secondary content	Additional content	Inclusion condition	An
 									
 header	Introduktion	WE NEED TO WRITE THIS				a0_h	introduction		
 question		Er du mand eller kvinde?			radio	a1	sex	Mand; Kvinde	
-question		Hvilket år er du født?			number	a2	birthyear	19___	44; 96
+question		Hvilket år er du født?			number	a2	birthyear	19___	99
 question		Bor du alene?			radio	a3	live_alone	Ja; Nej	
 header		 Nu følger nogle spørgsmål, som handler om dit nye studie på DTU. 				a4_h	new_study		
-question		Kender du andre af de nye studerende på DTU i forvejen?	Her tænkes på nye studerende på alle studieretninger inklusiv din egen.		radio	a4	know_other	Ja; Nej	
-question		Hvor mange?		know_other=='ja'	number	a4a	know_other_number	Antal____	1; 100
-question		 I forbindelse med møde af nye studiekammerater, betyder det noget for et evt. venskab og samarbejde, at personen er fagligt kompetent, dvs. at han/hun er dygtig og/eller er hårdtarbejdende?<br> Mine studiekammeraters faglighed er: 			radio	a5	homophily_competent	 meget vigtig for mig; vigtig for mig; ikke så vigtig for mig; er ligegyldig; ved ikke 	
-question		 Lægger du vægt på, at de studiekammerater du vil omgås med fra DTU, er nogen som du hygger dig med? Muligheden for at hygge mig sammen med mine studiekammerater er: 			radio	a6	homophily_socialize	 meget vigtig for mig; vigtig for mig; ikke så vigtig for mig; er ligegyldig; ved ikke 	
-question		 Hvad mener du, er de vigtigste egenskaber ved nye studiekammarater? Faglige evner eller hvor meget I hygger jer?<br>Mine studiekammeraters 			radio	a7	homophily_importance	 faglighed er meget vigtigere end hvor meget vi hygger os; faglighed er vigtigere end hvor meget vi hygger os; faglighed er lige så vigtig som hvor meget vi hygger os; hvor meget vi hygger os er vigtigere end faglighed; hvor meget vi hygger os er meget vigtigere end faglighed; ved ikke 	
-question		 I mødet med nye studiekammerater, har det så nogen betydning for et eventuelt venskab og samarbejde, at personen ikke er af samme køn som dig selv?<br>At en studiekammerat ikke er af samme køn, som mig har 			radio	a8	homophily_sex	 stor positiv betydning for et evt. venskab og samarbejde; lille positiv betydning for et evt. venskab og samarbejde; ingen betydning for et evt. venskab og samarbejde; lille negativ betydning for et evt. venskab og samarbejde; stor negativ betydning for et evt. venskab og samarbejde; ved ikke 	
-question		 I mødet med nye studiekammerater, har det så nogen betydning for et eventuelt venskab og samarbejde, at personen har haft samme opvækst som dig?<br>At en studiekammerat har haft samme opvækst som dig betyder: 			radio	a9	homophily_upbringing	 noget positivt for et evt. venskab og samarbejde; intet for et evt. venskab og samarbejde; noget negativt for et evt. venskab og samarbejde; ved ikke 	
-question		Har nogle af følgende områder i personens opvækst betydning for et eventuelt venskab eller samarbejde?	Sæt gerne flere krydser.	homophily_upbringing=='noget positivt for et evt. venskab og samarbejde' | 'noget negativt for et evt. venskab og samarbejde' 	checklist	a9a	homophily_upbringing_family	 Familiens økonomiske baggrund; Familiens uddannelsesmæssige baggrund; Familiens politiske tilhørsforhold; Etnisk oprindelse; Religion; ’Ingen af disse områder har betydning’  	1
-question		Her bedes du vurdere din evne til at kunne klare faglige udfordringer:			grid	a10	self_efficacy	Helt uenig; Uenig; Hverken enig eller uenig; Enig; Helt enig	
+question		Kender du andre af de nye studerende på DTU i forvejen?	Her tænkes på nye studerende på alle studieretninger på DTU inklusiv din egen.		radio	a4	know_other	Ja; Nej	
+question		Hvor mange?		a4=='ja'	number	a4a	know_other_number	Antal____	100
+question		 I forbindelse med møde af nye studiekammerater, betyder det noget for et evt. venskab og samarbejde at personen er fagligt kompetent, dvs. at han/hun er dygtig og/eller er hårdtarbejdende? Mine studiekammeraters faglighed er: 			radio	a5	homophily_competent	 meget vigtig for mig; vigtig for mig; ikke så vigtig for mig; er ligegyldig; ved ikke 	
+question		 Lægger du vægt på at de studiekammerater du vil omgås med fra DTU, er nogen som du hygger dig med? Muligheden for at hygge mig sammen med mine studiekammerater er: 			radio	a6	homophily_socialize	 meget vigtig for mig; vigtig for mig; ikke så vigtig for mig; er ligegyldig; ved ikke 	
+question		Hvad mener du er vigtigst for dig for evt. studiekammerater; faglige evner eller hvor meget I hygger jer? Mine studiekammeraters:			radio	a7	homophily_importance	 faglighed er meget vigtigere end hvor meget vi hygger os; faglighed er vigtigere end hvor meget vi hygger os; faglighed er lige så vigtig som hvor meget vi hygger os; hvor meget vi hygger os er vigtigere end faglighed; hvor meget vi hygger os er meget vigtigere end faglighed; ved ikke 	
+question		 Ved møde af studiekammerater, har det nogen betydning for et evt. venskab og samarbejde at personen ikke er af samme køn som dig selv? At en studiekammerat ikke er af samme køn som mig har: 			radio	a8	homophily_sex	 stor positiv betydning for et evt. venskab og samarbejde; lille positiv betydning for et evt. venskab og samarbejde; ingen betydning for et evt. venskab og samarbejde; lille negativ betydning for et evt. venskab og samarbejde; stor negativ betydning for et evt. venskab og samarbejde; ved ikke 	
+question		 Vurderer du at i mødet med nye studiekammerater, at det har nogen betydning for evt. venskab og samarbejde at personen har haft samme opvækst som dig? At en studiekammerat ikke har haft samme opvækst som dig betyder: 			radio	a9	homophily_upbringing	 noget positivt for et evt. venskab og samarbejde; intet for et evt. venskab og samarbejde; noget negativt for et evt. venskab og samarbejde; ved ikke 	
+question		Har nogle af følgende områder indenfor personens opvækst betydning for et evt. venskab eller samarbejde?	Sæt gerne flere krydser	a9=='noget positivt for et evt. venskab og samarbejde' | 'noget negativt for et evt. venskab og samarbejde' 	checklist	a9a	homophily_upbringing_family	 Familiens økonomiske baggrund; Familiens uddannelsesmæssige baggrund; Familiens politiske tilhørsforhold; Etnisk oprindelse; Religion; ’Ingen af disse områder har betydning’  	1
+question					grid	a10	self_efficacy	Helt uenig; Uenig; Hverken enig eller uenig; Enig; Helt enig	
 subquestion		 Normalt er jeg i stand til at løse svære, faglige opgaver, hvis jeg prøver hårdt nok 			radio	a10a	self_efficacy_problems	Helt uenig; Uenig; Hverken enig eller uenig; Enig; Helt enig	
 subquestion		 Jeg ved, at jeg kan holde fast i og nå mine mål på mit studie 			radio	a10b	self_efficacy_goal	Helt uenig; Uenig; Hverken enig eller uenig; Enig; Helt enig	
 subquestion		 Jeg ved, at jeg kan bevare roen til eksamen, fordi jeg har viden nok til at løse opgaverne 			radio	a10c	self_efficacy_calm	Helt uenig; Uenig; Hverken enig eller uenig; Enig; Helt enig	
@@ -22,14 +22,8 @@ subquestion		 Jeg ved, at jeg kan bestå eksamen, hvis jeg arbejder hårdt nok i
 subquestion		 Mottoet ‘hvis andre kan, så kan jeg også’ passer på mig, når det gælder mit studie 			radio	a10e	self_efficacy_motto	Helt uenig; Uenig; Hverken enig eller uenig; Enig; Helt enig	
 question		 Hvor vigtig er din faglige karriere for dig i forhold til andre ting i dit liv såsom venner, familie, fritid? 			radio	a11	ambition_career	 Min faglige karriere er klart det vigtigste; Min faglige karriere er nok lidt mere vigtig end andre ting; Min faglige karriere er lige så vigtig som andre ting; Min faglige karriere er nok ikke lige så vigtig som andre ting; Andre ting er klart vigtigere en min faglige karriere; ved ikke 	
 question		Hvor meget betyder dine karakterer for dig?			radio	a12	ambition_mark	 Mine karakterer er meget vigtige for mig; Mine karakterer er vigtige for mig; Mine karakterer er ikke så vigtige for mig; Jeg er helt ligeglad med hvilke karakterer jeg får; Ved ikke 	
-question		 Hvor vigtige tror du, at dine karakterer på det første år, er for det job du godt kunne tænke dig, når du er færdig med uddannelsen? 			radio	a13	ambition_job	 Det er afgørende at jeg får rigtig gode karakterer for at kunne få det job jeg gerne vil have; Det er muligvis vigtigt at jeg får gode karakterer for at kunne få det job jeg gerne vil have; Mine karakterer på første år er nok ikke særligt vigtige for at jeg kan få det job jeg gerne vil have; Mine karakterer på første år betyder slet ikke noget for at jeg kan få det job jeg gerne vil have; Jeg ved ikke hvilket job jeg kunne tænke mig efter uddannelsen; Ved ikke 	
-question		 Tænk på din adgangsgivende uddannelse til DTU (Gymnasiet, HTX, HHX, HF, VUC…). Hvor vil du placere dig selv i klassen på den adgangsgivende uddannelse med hensyn til faglig begavelse?<br>Jeg var: 			radio		homophily_talent	 Den klogeste; I den klogere halvdel; Omtrent som gennemsnittet; I den mindre kloge halvdel; Den mindst kloge; Selvstuderende/havde ingen klasse 	
-question		 Tænk på din adgangsgivende uddannelse til DTU (Gymnasiet, HTX, HHX, HF, VUC…). Hvor vil du placere dig selv i klassen på den adgangsgivende uddannelse med hensyn til flittighed?<br>Jeg var: 			radio		homophily_diligence	 Den flittigste; I den flittigere halvdel; Omtrent som gennemsnittet; I den mindre flittige halvdel; Den mindst flittige; Selvstuderende/havde ingen klasse 	
-question		 Hvordan tror du, at du kommer til at placere dig på dit hold på DTU med hensyn til faglig begavelse?<br>Jeg tror, at jeg kommer til at være: 			radio		homophily_talent_dtu	 Den klogeste; I den klogere halvdel; Omtrent som gennemsnittet; I den mindre kloge halvdel; Den mindst kloge 	
-question		 Hvordan tror du, at du kommer til at placere dig på dit hold på DTU med hensyn til flittighed?<br>Jeg tror, at jeg kommer til at være: 			radio		homophily_diligence_dtu	 Den flittigste; I den flittigere halvdel; Omtrent som gennemsnittet; I den mindre flittige halvdel; Den mindst flittige 	
-question		 Tænk på din adgangsgivende uddannelse til DTU (Gymnasiet, HTX, HHX, HF, VUC…). Hvor vurderer du andres opfattelse af dig selv i din klasse på den adgangsgivende uddannelse?<br>Jeg var:  			radio		homophily_popularity	 Den mest populære; I den mere populære halvdel; Omtrent som gennemsnittet; I den mindre populære halvdel; Den mindst populære; Selvstuderende/havde ingen klasse 	
-question		 Hvordan tror du, at du kommer til at placere dig på dit hold på DTU?<br>Jeg tror at jeg kommer til at være: 			radio		homophily_popularity_dtu	 Den mest populære; I den mere populære halvdel; Omtrent som gennemsnittet; I den mindre populære halvdel; Den mindst populære 	
-header		Nu følger nogle spørgsmål om familie og venner.				a14_h	social_relation		
+question		 Hvor vigtige tror du at dine karakterer på det første år er for det job du godt kunne tænke dig, når du er færdig med uddannelsen? 			radio	a13	ambition_job	 Det er afgørende at jeg får rigtig gode karakterer for at kunne få det job jeg gerne vil have; Det er muligvis vigtigt at jeg får gode karakterer for at kunne få det job jeg gerne vil have; Mine karakterer på første år er nok ikke særligt vigtige for at jeg kan få det job jeg gerne vil have; Mine karakterer på første år betyder slet ikke noget for at jeg kan få det job jeg gerne vil have; Jeg ved ikke hvilket job jeg kunne tænke mig efter uddannelsen; Ved ikke 	
+header		Nu følger nogle spørgsmål om familie og venner				a14_h	social_relation		
 question		 Hvor ofte er du sammen med nogle af følgende personer, som <u>du ikke bor sammen med?</u> 			grid	a14	contact	Flere dage om ugen; Ca. én gang om ugen; Én til tre gange om måneden; Sjældnere end én gang om måneden; Aldrig; Har ingen; bor sammen med	
 subquestion		Kæreste/ægtefælle			radio	a14a	contact_partner	Flere dage om ugen; Ca. én gang om ugen; Én til tre gange om måneden; Sjældnere end én gang om måneden; Aldrig; Har ingen; bor sammen med	
 subquestion		Mor			radio	a14b	contact_mother	Flere dage om ugen; Ca. én gang om ugen; Én til tre gange om måneden; Sjældnere end én gang om måneden; Aldrig; Har ingen; bor sammen med	
@@ -79,7 +73,7 @@ subquestion		Far			radio	a20c	conflicts_father	Altid; Ofte; Af og til; Sjældent
 subquestion		Søskende			radio	a20d	conflicts_zieblings	Altid; Ofte; Af og til; Sjældent; Aldrig; Har ingen	
 subquestion		Øvrig familie			radio	a20e	conflicts_other_family	Altid; Ofte; Af og til; Sjældent; Aldrig; Har ingen	
 subquestion		Venner			radio	a20f	conflicts_friends	Altid; Ofte; Af og til; Sjældent; Aldrig; Har ingen	
-header		 De følgende sætninger beskriver nogle udsagn om menneskers personlighed. Brug skalaerne til at angive, hvordan du vurderer, de enkelte udsagn beskriver dig. Vurder dig selv som du mener, du generelt er nu, ikke som du ville ønske, du er i fremtiden.  				a21_h	bfi_h		
+header		 De følgende sætninger beskriver menneskers adfærd. Brug skalaerne til at angive, hvordan du vurderer, de enkelte udsagn beskriver dig. Vurder dig selv som du generelt er nu, ikke som du ville ønske, du er i fremtiden. Vurder dig selv så ærligt som muligt og i forhold til andre mennesker med samme alder og køn. Læs sætningerne grundigt inden du svarer. 				a21_h	bfi_h		
 question		 Jeg ser mig selv, som en der: 			grid	a21	bfi	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		er snakkesalig			radio	a21a	bfi_talk	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		ofte finder fejl ved andre			radio	a21b	bfi_error	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
@@ -89,7 +83,7 @@ subquestion		 er original, kommer med nye ideer 			radio	a21e	bfi_original	Meget
 subquestion		er reserveret			radio	a21f	bfi_reserved	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		er hjælpsom og uselvisk overfor andre			radio	a21g	bfi_helpfull	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		kan være noget skødesløs			radio	a21h	bfi_careless	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
-subquestion		 er afslappet, god til at håndtere stress 			radio	a21i	bfi_relaxed	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
+subquestion		 er afslappet, godt til at håndtere stress 			radio	a21i	bfi_relaxed	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		er nysgerrig og interesseret i mange forskellige ting			radio	a21j	bfi_currious	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		er fuld af energi			radio	a21k	bfi_energi	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		kommer op at skændes med andre			radio	a21l	bfi_fight	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
@@ -148,11 +142,10 @@ subquestion		 Hvor ofte føler du, at der er nogen, du kan tale med? 			radio	a2
 subquestion		 Hvor ofte føler du, at der er nogen, du kan henvende dig til? 			radio	a22t	loneliness_turn_to	Aldrig; Sjældent; Sommetider; Altid	
 question		 Sker det nogensinde, at du er alene, selvom du har mest lyst til at være sammen med andre? 			radio	a23	involuntary_alone	 Ja, ofte; Ja, engang imellem; ja, men sjældent; Nej 	
 header		De følgende spørgsmål handler om dit helbred.				a24_h	health		
-question		Hvor høj er du uden sko?			number	a24	height	_____cm	70; 250
-question		Hvad vejer du uden tøj?			number	a25	weight	_____kg	30; 250
+question		Hvor høj er du uden sko?			number	a24	height	_____Cm	250
+question		Hvad vejer du uden tøj?			number	a25	weight	_____Kg	500
 question		 Hvordan synes du, dit helbred er alt i alt? 			radio	a26	selfreported_health	Fremragende; Vældig godt; Godt; Mindre godt; Dårligt	
-question		 I løbet af de sidste 30 dage, hvor mange dage har du været helt ude af stand til, at udføre dine sædvanlige aktiviteter eller dit arbejde på grund af dit helbred? 			number	a41h	function_activity	Angiv antallet af dage _____	0; 30
-question		Har du indenfor de <u>sidste 14 dage</u> været generet af nogle af de her nævnte former for smerter og ubehag? Var du meget eller lidt generet af det?			grid	a27	symptoms	 Nej; Ja, lidt generet; Ja, meget generet 	
+question		Har du indenfor de <u>sidste 14 dage</u> haft følgende:			grid	a27	symptoms	 Nej; Ja, lidt generet; Ja, meget generet 	
 subquestion		Smerter/ubehag i skulder/nakke			radio	a27a	symptoms_shoulder	 Nej; Ja, lidt generet; Ja, meget generet 	
 subquestion		Smerter/ubehag i ryg og lænd			radio	a27b	symptoms_back	 Nej; Ja, lidt generet; Ja, meget generet 	
 subquestion		 Smerter/ubehag i arme, ben, knæ, hofter eller led 			radio	a27c	symptoms_leg	 Nej; Ja, lidt generet; Ja, meget generet 	
@@ -167,54 +160,54 @@ subquestion		 Fordøjelsesbesvær, tynd/hård mave 			radio	a27k	symptoms_indige
 subquestion		 Eksem, hududslet, kløe 			radio	a27l	symptoms_eczema	 Nej; Ja, lidt generet; Ja, meget generet 	
 subquestion		 Forkølelse, snue, hoste 			radio	a27m	symptoms_cold	 Nej; Ja, lidt generet; Ja, meget generet 	
 subquestion		 Åndedrætsbesvær, forpustethed  			radio	a27n	symptoms_breath	 Nej; Ja, lidt generet; Ja, meget generet 	
-question					grid	a28	physical_function	Kan ikke; Kan med stort besvær; Kan med noget besvær; Kan med lidt besvær; Kan uden besvær 	
-subquestion		Kan du motionere i en time?			radio	a28a	physical_function_exercise	Kan ikke; Kan med stort besvær; Kan med noget besvær; Kan med lidt besvær; Kan uden besvær 	
-subquestion		Kan du udføre to timers fysisk arbejde?			radio	a28b	physical_function_physical	Kan ikke; Kan med stort besvær; Kan med noget besvær; Kan med lidt besvær; Kan uden besvær 	
-subquestion		Kan du løbe 3 km i hurtigt tempo?			radio	a28c	physical_function_run	Kan ikke; Kan med stort besvær; Kan med noget besvær; Kan med lidt besvær; Kan uden besvær 	
-subquestion		Kan du løfte 10 kg over skulderhøjde?			radio	a28d	physical_function_lift	Kan ikke; Kan med stort besvær; Kan med noget besvær; Kan med lidt besvær; Kan uden besvær 	
-subquestion		Kan du løbe 8 km?			radio	a28e	physical_function_run_8	Kan ikke; Kan med stort besvær; Kan med noget besvær; Kan med lidt besvær; Kan uden besvær 	
+question					grid	a28	physical_function	Kan ikke; kan med stort besvær; kan med noget besvær; kan med lidt besvær; kan uden besvær 	
+subquestion		Kan du motionere i en time?			radio	a28a	physical_function_exercise	Kan ikke; kan med stort besvær; kan med noget besvær; kan med lidt besvær; kan uden besvær 	
+subquestion		Kan du udføre to timers fysisk arbejde?			radio	a28b	physical_function_physical	Kan ikke; kan med stort besvær; kan med noget besvær; kan med lidt besvær; kan uden besvær 	
+subquestion		Kan du løbe 3 km i hurtigt tempo?			radio	a28c	physical_function_run	Kan ikke; kan med stort besvær; kan med noget besvær; kan med lidt besvær; kan uden besvær 	
+subquestion		Kan du løfte 10 kg over skulderhøjde?			radio	a28d	physical_function_lift	Kan ikke; kan med stort besvær; kan med noget besvær; kan med lidt besvær; kan uden besvær 	
+subquestion		Kan du løbe 8 km?			radio	a28e	physical_function_run_8	Kan ikke; kan med stort besvær; kan med noget besvær; kan med lidt besvær; kan uden besvær 	
 header		De næste spørgsmål handler om din livsstil.				a29_h	life_style		
 question		Ryger du?			radio	a29	smoke_freq	 Ja, dagligt; Ja, men ikke dagligt; Nej, men jeg har røget tidligere; Nej, jeg har aldrig røget 	
-question		 Hvor gammel var du, da du prøvede: 		 smoke_freq !=  'Nej, jeg har aldrig røget' 	grid	a29a	smoke_debut	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
-subquestion		At ryge din første cigaret?		 smoke_freq !=  'Nej, jeg har aldrig røget' 	radio	a29a1	smoke_first_cigarette	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
-subquestion		At ryge cigaretter dagligt?		 smoke_freq=='Ja, dagligt' 	radio	a29a2	smoke_daily	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
-question		Hvor meget ryger du i gennemsnit om dagen?		 smoke_freq=='Ja, dagligt' 	multi_number	a29b	smoke_volume		
-subquestion				 smoke_freq=='Ja, dagligt' 	number	a29b1	smoke_volume_cigarette	Antal cigaretter___	0; 99
-subquestion				 smoke_freq=='Ja, dagligt' 	number	a29b2	smoke_volume_cerut	Antal cerutter___	0; 99
-subquestion				 smoke_freq=='Ja, dagligt' 	number	a29b3	smoke_volume_cigar	Antal cigarer___	0; 99
-subquestion				 smoke_freq=='Ja, dagligt' 	number	a29b4	smoke_volume_pibe	Antal pibestop___	0; 99
-question		Hvor gammel var du første gang du drak mindst en genstand?			number;radio	a30	alcohol_debut	Jeg var ca. ___år; Jeg har aldrig drukket alkohol	5; 50
-question		Hvor mange gange er du blevet fuld af at drikke alkohol i løbet af  <u>de sidste 30 dage</u>?	 Det er individuelt hvor meget alkohol, der skal til, for at man bliver fuld. Med fuld menes derfor situationer, hvor du har drukket så meget alkohol, at du har følt dig fuld. 	alcohol_debut != 'Jeg har aldrig drukket alkohol'	radio	a30a	alcohol_drunk	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6-9 gange; 10+ gange	
-question		Hvor mange genstande drak du på hver af dagene i sidste uge?	 Angiv 0 på de dage, hvor du ikke drak alkohol<br>1 flaske øl = 1 genstand<br>1 stærk øl = 1 1/4 genstand<br>1 glas vin = 1 genstand<br>1 flaske vin = 6 genstande<br>1 blandet drik = 1 genstand<br>1 shot = 1/2 genstand<br>1 alkoholsodavand = 1 genstand<br>1 flaske spiritus (70 cl.) = 19 genstande<br>  	alcohol_debut != 'Jeg har aldrig drukket alkohol'	multi_number	a30b	alcohol_volume		
-subquestion					number	a30b1	alcohol_volume_monday	Antal genstande mandag____	0; 99
-subquestion					number	a30b2	alcohol_volume_tuesday	Antal genstande tirsdag____	0; 99
-subquestion					number	a30b3	alcohol_volume_wednesday	Antal genstande onsdag____	0; 99
-subquestion					number	a30b4	alcohol_volume_thursday	Antal genstande torsdag____	0; 99
-subquestion					number	a30b5	alcohol_volume_friday	Antal genstande fredag____	0; 99
-subquestion					number	a30b6	alcohol_volume_saturday	Antal genstande lørdag____	0; 99
-subquestion					number	a30b7	alcohol_volume_sunday	Antal genstande søndag____	0; 99
-question		 Tænk tilbage på <u>de sidste 30 dage</u>. Ved hvor mange lejligheder (fester, hyggeaftener, familiesammenkomster eller lign.) har du…? 		alcohol_debut != 'Jeg har aldrig drukket alkohol'	grid	a30c	alcohol	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
-subquestion		Drukket alkohol i weekenden		alcohol_debut != 'Jeg har aldrig drukket alkohol'	radio	a30c1	alcohol_weekend	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
-subquestion		Drukket dig meget fuld		alcohol_debut != 'Jeg har aldrig drukket alkohol'	radio	a30c2	alcohol_very_drunk	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
-subquestion		 Drukket dig fuld på en hverdagsaften/dag, hvor du skulle i skole eller på dit fuldtidsjob dagen efter 		alcohol_debut != 'Jeg har aldrig drukket alkohol'	radio	a30c3	alcohol_everyday	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
-subquestion		Drukket mere end 5 genstande på en dag/aften		alcohol_debut != 'Jeg har aldrig drukket alkohol'	radio	a30c4	alcohol_binge5	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
-subquestion		Drukket mere end 10 genstande på en dag/aften		alcohol_debut != 'Jeg har aldrig drukket alkohol'	radio	a30c5	alcohol_binge10	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
+question		 Hvor gammel var du, da du prøvede: 			grid	a29a	smoke_debut	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
+subquestion		At ryge din første cigaret?		 a29=='Ja, dagligt' | 'Ja, men ikke dagligt' | 'Nej, men jeg har røget tidligere'  	radio	a29a1	smoke_first_cigarette	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
+subquestion		At ryge cigaretter dagligt?		 a29=='Ja, dagligt' 	radio	a29a2	smoke_daily	9 år eller yngre; 10 år; 11 år; 12 år; 13 år; 14 år; 15 år; 16 eller mere	
+question		Hvor meget ryger du i gennemsnit om dagen?		 a29=='Ja, dagligt' 	multi_number	a29b	smoke_volume		99; 99; 99
+subquestion				 a29=='Ja, dagligt' 	number	a29b1	smoke_volume_cigarette	Antal cigaretter___	99
+subquestion				 a29=='Ja, dagligt' 	number	a29b2	smoke_volume_cerut	Antal cerutter___	99
+subquestion				 a29=='Ja, dagligt' 	number	a29b3	smoke_volume_cigar	Antal cigarer___	99
+subquestion				 a29=='Ja, dagligt' 	number	a29b4	smoke_volume_pibe	Antal pibestop___	99
+question		Hvor gammel var du første gang du drak mindst en genstand?			number;radio	a30	alcohol_debut	Jeg var ca. ___år; Jeg har aldrig drukket alkohol	50
+question		Hvor mange gange er du blevet fuld af at drikke alkohol i løbet af  <u>de sidste 30 dage</u>?	 Det er individuelt hvor meget alkohol, der skal til, for at man bliver fuld. Med fuld menes derfor situationer, hvor du har drukket så meget alkohol, at du har følt dig fuld. 	a30 != 'Jeg har aldrig drukket alkohol'	radio	a30a	alcohol_drunk	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6-9 gange; 10+ gange	
+question		Hvor mange genstande drak du på hver af dagene i sidste uge?	1 flaske øl = 1 genstand; 1 stærk øl = 1 1/4 genstand; 1 glas vin = 1 genstand; 1 flaske vin = 6 genstande; 1 blandet drik = 1 genstand; 1 shot = 1/2 genstand; 1 alkoholsodavand = 1 genstand; 1 flaske spiritus (70 cl.) = 19 genstande 	a30 != 'Jeg har aldrig drukket alkohol'	multi_number	a30b	alcohol_volume		
+subquestion			 Angiv 0 på de dage, hvor du ikke drak alkohol 		number	a30b1	alcohol_volume_monday	Antal genstande mandag____	99
+subquestion					number	a30b2	alcohol_volume_tuesday	Antal genstande tirsdag____	1;99
+subquestion					number	a30b3	alcohol_volume_wednesday	Antal genstande onsdag____	99
+subquestion					number	a30b4	alcohol_volume_thursday	Antal genstande torsdag____	99
+subquestion					number	a30b5	alcohol_volume_friday	Antal genstande fredag____	99
+subquestion					number	a30b6	alcohol_volume_saturday	Antal genstande lørdag____	99
+subquestion					number	a30b7	alcohol_volume_sunday	Antal genstande søndag____	99
+question		 Tænk tilbage på <u>de sidste 30 dage</u>. Ved hvor mange lejligheder (fester, hyggeaftener, familiesammenkomster eller lign.) har du…? 		a30 != 'Jeg har aldrig drukket alkohol'	grid	a30c	alcohol	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
+subquestion		Drukket alkohol i weekenden		a30 != 'Jeg har aldrig drukket alkohol'	radio	a30c1	alcohol_weekend	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
+subquestion		Drukket dig meget fuld		a30 != 'Jeg har aldrig drukket alkohol'	radio	a30c2	alcohol_very_drunk	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
+subquestion		 Drukket dig fuld på en hverdagsaften/dag, hvor du skulle i skole eller på dit fuldtidsjob dagen efter 		a30 != 'Jeg har aldrig drukket alkohol'	radio	a30c3	alcohol_everyday	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
+subquestion		Drukket mere end 5 genstande på en dag/aften		a30 != 'Jeg har aldrig drukket alkohol'	radio	a30c4	alcohol_binge5	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
+subquestion		Drukket mere end 10 genstande på en dag/aften		a30 != 'Jeg har aldrig drukket alkohol'	radio	a30c5	alcohol_binge10	0 gange; 1 gange; 2 gange; 3 gange; 4-5 gange; 6+ gange	
 question		 Indenfor <u>den sidste måned</u>, hvor mange timer om ugen har du været fysisk aktiv? Udover sport og motion, medregn også hus- og havearbejde, gå- og cykelture – også til og fra uddannelse og arbejde. 			radio	a31	physical_activity	Ingen; Ca. ½ time om ugen; Ca. 1-2 timer om ugen; Ca. 3-4 timer om ugen; Ca. 5-6 timer om ugen; 7 timer om ugen eller mere	
 question		Har du nogensinde prøvet ét eller flere af følgende stoffer?			grid	a32	drugs	 Nej; Ja, inden for den seneste måned; Ja, men ikke inden for den seneste måned 	
 subquestion		Hash eller pot (marihuana)			radio	a32a	drugs_marihuana	 Nej; Ja, inden for den seneste måned; Ja, men ikke inden for den seneste måned 	
 subquestion		 Andre stoffer (f.eks. kokain, amfetamin, ecstasy, svampe) 			radio	a32b	drugs_other	 Nej; Ja, inden for den seneste måned; Ja, men ikke inden for den seneste måned 	
-question		Hvor mange gange har du røget hash eller pot (marihuana)?		 drugs_marihuana=='Ja, inden for den seneste måned' | 'Ja, men ikke inden for den seneste måned' 	grid	a32c	drugs_marihuana_freq	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
-subquestion		I hele dit liv		 drugs_marihuana=='Ja, inden for den seneste måned' | 'Ja, men ikke inden for den seneste måned' 	radio	a32c1	drugs_life	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
-subquestion		I de sidste 12 måneder		 drugs_marihuana=='Ja, inden for den seneste måned' | 'Ja, men ikke inden for den seneste måned' 	radio	a32c2	drugs_12months	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
-subquestion		I de sidste 30 dage		 drugs_marihuana=='Ja, inden for den seneste måned' 	radio	a32c3	drugs_30days	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
-question		Har du inden for de <u>sidste 14 dage</u> taget piller eller medicin..?			grid	a33	medicine	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
-subquestion		mod hovedpine			radio	a33a	medicine_headache	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
-subquestion		mod smerter andre steder			radio	a33b	medicine_pain	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
-subquestion		mod søvnproblemer			radio	a33c	medicine_sleep	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
-subquestion		mod nedtrykthed			radio	a33d	medicine_depressed	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
-subquestion		mod nervøsitet			radio	a33e	medicine_nervous	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
-subquestion		der fremmer din koncentrationsevne			radio	a33f	medicine_concentration	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
-subquestion		der fremmer din fysiske præstation			radio	a33g	medicine_physical	 Ja, flere gange dagligt; Ja, 1 gang dagligt; Ja, 2-6 gange om ugen; Ja, 1 gang om ugen; Ja, sjældnere; Nej, slet ikke 	
+question		Hvor mange gange har du røget hash eller pot (marihuana)?		 a32a=='Ja, inden for den seneste måned' | 'Ja, men ikke inden for den seneste måned' 	grid	a32c	drugs_marihuana_freq	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
+subquestion		I hele dit liv		 a32a=='Ja, inden for den seneste måned' | 'Ja, men ikke inden for den seneste måned' 	radio	a32c1	drugs_life	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
+subquestion		I de sidste 12 måneder		 a32a=='Ja, inden for den seneste måned' | 'Ja, men ikke inden for den seneste måned' 	radio	a32c2	drugs_12months	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
+subquestion		I de sidste 30 dage		 a32a=='Ja, inden for den seneste måned' 	radio	a32c3	drugs_30days	1-2; 3-5; 6-9; 10-19; 20-39; 40 eller flere gange	
+question		Har du inden for de <u>sidste 14 dage</u> taget piller eller medicin..?			grid	a33	medicine	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
+subquestion		mod hovedpine			radio	a33a	medicine_headache	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
+subquestion		mod smerte andre steder			radio	a33b	medicine_pain	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
+subquestion		mod søvnproblemer			radio	a33c	medicine_sleep	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
+subquestion		mod nedtrykthed			radio	a33d	medicine_depressed	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
+subquestion		mod nervøsitet			radio	a33e	medicine_nervous	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
+subquestion		der fremmer din koncentrationsevne			radio	a33f	medicine_concentration	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
+subquestion		der fremmer din fysiske præstation			radio	a33g	medicine_physical	 ja, flere gange dagligt; ja, 1 gang dagligt; ja, 2-6 gange om ugen; ja, 1 gang om ugen; ja, sjældnere; nej, slet ikke 	
 question					grid	a34	sleep	Hver nat eller næsten hver nat; Flere gange om ugen; Flere gange om måneden; Flere gange om året; Aldrig	
 subquestion		Hvor tit sover du dårligt og uroligt?			radio	a34a	sleep_uncalm	Hver nat eller næsten hver nat; Flere gange om ugen; Flere gange om måneden; Flere gange om året; Aldrig	
 subquestion		Hvor tit har du svært ved at falde i søvn?			radio	a34b	sleep_falling	Hver nat eller næsten hver nat; Flere gange om ugen; Flere gange om måneden; Flere gange om året; Aldrig	
@@ -223,13 +216,14 @@ subquestion		Hvor tit vågner du flere gange om natten og har svært ved at fald
 question		De følgende to spørgsmål handler om <u>de sidste 4 uger</u>.			multi_number	a35	sleep_time	Klokken _____	
 subquestion		 Hvornår sover du normalt på hverdage? (angiv venligst præcist klokkeslæt, fx 22.40) 			number	a35a	sleep_time_falling	Klokken _____	time
 subquestion		 Hvornår vågner du normalt om morgenen på hverdage? (angiv venligst præcist klokkeslæt, fx 07.15) 			number	a35b	sleep_time_wake	Klokken _____	time
-question		 Her følger 5 spørgsmål, hvor du skal vurdere tilfredsheden med dit liv. 			grid	a36	satisfaction	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
+question		 Her følger 5 spørgsmål, hvor du skal vurdere tilfredsheden med dit liv. Du bedes svare så ærligt som muligt. 			grid	a36	satisfaction	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		I de fleste henseender er mit liv tæt på mit ideal 			radio	a36a	satisfaction_ideal	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		Jeg har fremragende betingelser for mit liv			radio	a36b	satisfaction_condition	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		Jeg er tilfreds med mit liv			radio	a36c	satisfaction_satisfied	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		 Indtil videre har jeg fået de ting, der er vigtige for mig i livet 			radio	a36d	satisfaction_gain	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 subquestion		 Hvis jeg kunne leve mit liv om igen, ville jeg stort set ikke ændre noget som helst 			radio	a36e	satisfaction_change	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
-question		 I det følgende er 10 udsagn som vedrører din selvfølelse. Marker det mest passende for hvert af de 10 udsagn nedenfor, afhængig af om du er: Helt enig, Enig, Uenig eller Stærkt uenig. 			grid	a37	selfesteem	Helt enig; Enig; Uenig; Stærkt uenig	
+header		I det følgende er 10 udsagn som vedrører din selvfølelse. Du bedes svare så ærligt som muligt.				a37_h	selfesteem_h		
+question		 Marker det mest passende for hvert af de 10 udsagn nedenfor,afhængig af om du er: Helt enig, Enig, Uenig eller Stærkt uenig. 			grid	a37	selfesteem	Helt enig; Enig; Uenig; Stærkt uenig	
 subquestion		Jeg er stort set tilfreds med mig selv			radio	a37a	selfesteem_satisfied	Helt enig; Enig; Uenig; Stærkt uenig	
 subquestion		Nogle gange synes jeg at jeg ikke er god til noget			radio	a37b	selfesteem_good	Helt enig; Enig; Uenig; Stærkt uenig	
 subquestion		Jeg synes at jeg har flere gode kvaliteter			radio	a37c	selfesteem_qualities	Helt enig; Enig; Uenig; Stærkt uenig	
@@ -240,31 +234,33 @@ subquestion		 Jeg føler at jeg er en værdifuld person, i det mindste på samme
 subquestion		Jeg ville ønske at jeg havde mere respekt for mig selv			radio	a37h	selfesteem_respect	Helt enig; Enig; Uenig; Stærkt uenig	
 subquestion		Alt i alt er jeg tilbøjelig til at føle mig mislykket			radio	a37i	selfesteem_failure	Helt enig; Enig; Uenig; Stærkt uenig	
 subquestion		Jeg har en positiv indstilling til mig selv			radio	a37j	selfesteem_positive	Helt enig; Enig; Uenig; Stærkt uenig	
-question		 De næste spørgsmål drejer sig om dine følelser og tanker inden for <u>den sidste måned</u>. Ved hvert punkt skal du angive, hvor ofte du har haft den pågældende følelse eller tanke. 			grid	a38	stress	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
+question		 De næste spørgsmål drejer sig om dine følelser og tanker inden for <u>den sidste måned</u>. Ved hvert punkt skal du angive med et kryds, hvor ofte du har haft den pågældende følelse eller tanke. 			grid	a38	stress	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		 Hvor ofte inden for den sidste måned er du blevet oprevet over noget, der skete uventet? 			radio	a38a	stress_upset	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		 Hvor ofte inden for den sidste måned har du følt, at du var ude af stand til at kontrollere de betydningsfulde ting i dit liv? 			radio	a38b	stress_important	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		Hvor ofte inden for den sidste måned har du følt dig nervøs og “stresset”?			radio	a38c	stress_stress	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		Hvor ofte inden for den sidste måned har du følt dig sikker på dine evner til at klare dine personlige problemer?			radio	a38d	stress_coping	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		 Hvor ofte inden for den sidste måned har du følt, at tingene gik som du ønskede det? 			radio	a38e	stress_wish	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
-subquestion		 Hvor ofte inden for den sidste måned har du oplevet, at du  <u>ikke<u> kunne overkomme alt det du skulle? 			radio	a38f	stress_overcome	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
+subquestion		 Hvor ofte inden for den sidste måned har du oplevet, at du ikke kunne overkomme alt det du skulle? 			radio	a38f	stress_overcome	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		 Hvor ofte inden for den sidste måned har du været i stand til at håndtere ting, som irriterer dig? 			radio	a38g	stress_irritate	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		 Hvor ofte inden for den sidste måned har du følt, at du havde styr på tingene? 			radio	a38h	stress_control	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		 Hvor ofte inden for den sidste måned er du blevet vred over ting, du ikke havde indflydelse på? 			radio	a38i	stress_angry	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
 subquestion		 Hvor ofte inden for den sidste måned har du følt, at vanskelighederne hobede sig så meget op, at du ikke kunne klare dem? 			radio	a38j	stress_difficulties	Aldrig; Næsten aldrig; Ind imellem; Ret ofte; Meget ofte	
-question		De følgende spørgsmål handler om hvordan du har haft det gennem <u> de sidste to uger</u>. Hvor stor en del af tiden..?			grid	a39	mdi	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
+header		De følgende spørgsmål handler om hvordan du har haft det gennem <u> de sidste to uger</u>.				a39_h	mdi_h		
+question		Hvor stor en del af tiden..?			grid	a39	mdi	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		 Har du følt dig trist til mode, ked af det? 			radio	a39a	mdi_depressed	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du manglet interesse for dine daglige gøremål?			radio	a39b	mdi_interest	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du følt at du manglede energi og kræfter?			radio	a39c	mdi_energy	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du haft mindre selvtillid?			radio	a39d	mdi_confidence	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
-subquestion		Har du haft dårlig samvittighed eller skyldfølelse?			radio	a39e	mdi_guilty	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
+subquestion		Har du haft dårlig samvittighed elelr skyldfølelese?			radio	a39e	mdi_guilty	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		 Har du følt, at livet ikke var værd at leve? 			radio	a39f	mdi_life	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
-subquestion		 Har du haft besvær med at koncentrere dig, f.eks. at læse avis eller følge med i fjernsyn? 			radio	a39g	mdi_concentration	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
+subquestion		 Har du haft besvær med at koncentrere dig, f.eks. At læse avis eller følge med i fjernsyn? 			radio	a39g	mdi_concentration	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du følt dig rastløs?			radio	a39h	mdi_restless	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du følt dig mere stille?			radio	a39i	mdi_quiet	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du haft besvær med at sove om natten? 			radio	a39j	mdi_sleep	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du haft nedsat appetit?			radio	a39k	mdi_low_appetite	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
 subquestion		Har du haft øget appetit?			radio	a39l	mdi_high_appetite	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
-question		 Følgende kommer nogle ord, som du skal vurdere, hvordan passer på dig. Vurder på en skala fra 1 til 4, hvor 1 er aldrig og 4 er altid. Når du tænker på dig selv og hvordan du normalt føler, i hvilken grad følger du dig generelt: 			grid	a40	panas	aldrig 1; 2; 3; 4 altid	
+header		 Følgende kommer nogle ord, som du skal vurdere, hvordan passer på dig. 				a40_h	panas_h	Hele tiden; Det meste af tiden; Lidt over halvdelen af tiden;Lidt under halvdelen af tiden; Lidt af tiden; På intet tidspunkt	
+question		 Når du tænker på dig selv og hvordan du normalt føler, i hvilken grad følger du dig generelt: 			grid	a40	panas	aldrig 1; 2; 3; 4 altid	
 subquestion		oprevet			radio	a40a	panas_upset	aldrig 1; 2; 3; 4 altid	
 subquestion		fjendtlig			radio	a40b	panas_hostile	aldrig 1; 2; 3; 4 altid	
 subquestion		opmærksom			radio	a40c	panas_attention	aldrig 1; 2; 3; 4 altid	
@@ -275,7 +271,8 @@ subquestion		målbevidst 			radio	a40g	panas_goal	aldrig 1; 2; 3; 4 altid
 subquestion		nærværende			radio	a40h	panas_present	aldrig 1; 2; 3; 4 altid	
 subquestion		bange			radio	a40i	panas_afraid	aldrig 1; 2; 3; 4 altid	
 subquestion		aktiv			radio	a40j	panas_active	aldrig 1; 2; 3; 4 altid	
-question		 Tænk tilbage på de <u>sidste 30 dage</u> og besvar følgende spørgsmål, mens du tænker på hvor svært du havde ved at udføre følgende aktiviteter.<br/> I løbet af de sidste 30 dage, hvor svært har du haft ved: 			grid	a41	function	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
+header		 Tænk tilbage på de <u>sidste 30 dage</u> og besvar følgende spørgsmål, mens du tænker på hvor svært du havde ved at udføre følgende aktiviteter.  				a41_h	function_h		
+question		 I løbet af de sidste 30 dage, hvor svært har du haft ved: 			grid	a41	function	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
 subquestion		At koncentrere dig om at lave noget i ti minutter?			radio	a41a	function_concentration	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
 subquestion		At være alene i et par dage?			radio	a41b	function_alone	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
 subquestion		At have med mennesker at gøre som du ikke kender?			radio	a41c	function_human	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
@@ -283,44 +280,37 @@ subquestion		At få nye venner?			radio	a41d	function_freinds	Slet ikke; Lidt; N
 subquestion		At varetage dine praktiske pligter i hjemmet?			radio	a41e	function_duties	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
 subquestion		Dit daglige arbejde eller din skolegang/uddannelse?			radio	a41f	function_education	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
 subquestion		Hvor stort et problem har du haft ved at deltage i aktiviteter i dit lokalområde (for eksempel festlige sammenkomster eller andre aktiviteter) på lige fod med andre?  			radio	a41g	function_area	Slet ikke; Lidt; Noget; Meget; Virkelig meget/kan ikke	
-question		 Nu bedes du svare på en skala fra 1 til 5. Nogle mennesker synes, at det offentlige skal gøre alt, hvad det kan, for at hæve levestandarden for fattige danskere; de svarer til 1 på skalaen.<br>Andre mennesker mener, at det ikke er det offentliges ansvar, og at den enkelte skal klare sig selv; de svarer til 5 på skalaen.<br>Hvor vil du placere dig selv? 			scale	a45	politic_poverty	1; 2; 3; 4; 5	
+subquestion		 I løbet af de sidste 30 dage, hvor mange dage har du været helt ude af stand til, at udføre dine sædvanlige aktiviteter eller dit arbejde på grund af dit helbred? 			number	a41h	function_activity	Angiv antallet af dage _____	30
+header		De følgende spørgsmål handler om dine holdninger til politik og samfundet.				a42_h	politic_h		
+question		 Kommunalpolitik[ken i min kommune] er undertiden så kompliceret, at en person som mig ikke forstår, hvad der foregår 			radio	a43	politic_local	Helt enig; Delvist enig; Hverken enig eller uenig; Delvist uenig; Helt uenig	
+question		 Jeg har en nogenlunde forståelse af de vigtigste politiske spørgsmål, som vedrører min kommune 			radio	a44	politic_issue	Helt enig; Delvist enig; Hverken enig eller uenig; Delvist uenig; Helt uenig	
+question		 Jeg vil nu bede dig om at svare på en skala fra 1 til 5.  Nogle mennesker synes, at det offentlige skal gøre alt, hvad det kan, for at hæve levestandarden for fattige danskere; de svarer til 1 på skalaen. Andre mennesker mener, at det ikke er det offentliges ansvar, og at den enkelte skal klare sig selv; de svarer til 5 på skalaen. Hvor vil du placere dig selv? 			scale	a45	politic_poverty	1; 2; 3; 4; 5	
 question		 Nogle mennesker mener, at det kræver hårdt arbejde at klare sig godt. Andre mener, at det mest er et spørgsmål om held, eller at hjælp fra andre er vigtigt. Hvad, mener du, er vigtigst?  			radio	a46	politic_do_well	 Hårdt arbejde; Held og hjælp; Lige vigtigt 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_1	 Mange af de ulykkelige ting der sker i folks liv er delvist fordi de er uheldige; Folks ulykke er et resultat af de fejl de laver 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_2	 En af de primære årsager til at vi har krige er at folk ikke er tilstrækkeligt interesserede i politik; Der vil altid være krige uanset hvor meget folk prøver at forebygge det 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_3	 I det lange løb får folk den respekt de fortjener i denne verden; Desværre bliver et individs værdi ofte overset uanset hvor meget  han eller hun prøver 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_4	 Forestillingen om at lærere er unfair i forhold til studerende er nonsens; De fleste studerende forstår ikke i hvor høj grad deres karakterer er påvirket af tilfældigheder 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_5	 Man kan ikke blive en effektiv leder uden ”held i sprøjten; Dygtige mennesker, der ikke bliver ledere har ikke udnyttet deres muligheder 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_6	 Nogle mennesker kan bare ikke lide en uansat hvad man gør; Folk der ikke kan få andre til at lide dem forstår ikke hvordan man finder ud af det med andre 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_7	 Jeg oplever ofte at tingene går deres egen gang; At overlade ting til skæbnen har aldrig fungeret ligeså godt for mig som at tage en beslutning om at gøre noget 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_8	 Når der er tale om en velforberedt studerende kan man sjældent, om nogensinde, tale om en unfair eksamen; Ofte er eksamensspørgsmål så langt fra pensum, at forberedelse reelt ikke giver mening 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_9	 Det at få succes er et spørgsmål om hårdt arbejde. Held har intet, eller kun meget lidt at gøre med det; At få et godt job handler mest om at være på det rigtige sted på det rigtige tidspunkt 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_10	 Den gennemsnitlige borger kan have indflydelse på politiske beslutninger; Verden køres af nogle få mennesker med magt, og der er ikke meget almindelige mennesker kan gøre ved det 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_11	 Når jeg laver planer, er jeg næsten sikker på, at jeg kan få dem til at fungere; Det er ikke altid klogt at planlægge for langt ud i fremtiden, da mange ting alligevel ender med at blive afgjort tilfældigt 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_12	 Jeg får hvad jeg vil have. Det har intet, eller kun meget lidt, med held at gøre; Tit kan man ligeså godt slå plat eller krone, når man skal tage en beslutning 	
-question		Markér ud for den sætning der bedst passer på dig.			radio		locus_of_control_13	 Hvad der sker for mig, skyldes det jeg selv gør; Nogen gange føler jeg, at jeg ikke har nok kontrol over den retning mit liv tager 	
-question		 I det følgende kommer 18 spørgsmål som vedrører hvordan du opfatter dig selv og andre. Anfør venligst, hvilke af følgende udsagn som passer til dig. Du skal svare på en skala på seks trin (fra 1 =   Passer slet ikke   til 6 =   Passer fuldstændigt  ). 			grid	a47	narcissism	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		Jeg er fantastisk			radio	a47a	narcissism_fantastic	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+header		I det følgende kommer 18 spørgsmål som vedrører hvordan du opfatter dig selv og andre. Du bedes svare så ærligt som muligt.				a47_h	narcissism_h		
+question		 Anfør venligst, hvilke af følgende udsagn som passer til dig. Du skal svare på en skala på seks trin (fra 1 =   Passer slet ikke   til 6 =   Passer fuldstændigt  ). 			grid	a47	narcissism	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		Jeg er fantastisk.			radio	a47a	narcissism_fantastic	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		Jeg vil engang blive berømt			radio	a47b	narcissism_famous	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		Jeg viser andre hvor speciel en person jeg er			radio	a47c	narcissism_special	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		 Jeg bliver irriteret, når andre tager scenen fra mig 			radio	a47d	narcissism_irritation	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		Jeg nyder meget mine succeser			radio	a47e	narcissism_sucess	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		Jeg nyder meget mine succeser.			radio	a47e	narcissism_sucess	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		 Jeg nyder for mig selv, når mine modstandere mislykkes 			radio	a47f	narcissism_opponents	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		I samtaler formår jeg det meste af tiden at tiltrække andres opmærksomhed til mig			radio	a47g	narcissism_attention	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		I samtaler formår jeg det meste af tiden at tiltrække andres opmærksomhed til mig.			radio	a47g	narcissism_attention	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		Jeg fortjener at blive betragtet som en stor personlighed			radio	a47h	narcissism_personality	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		 Jeg ønsker, at mine konkurrenter mislykkes 			radio	a47i	narcissism_competitor	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		 Jeg ønsker, at mine konkurrenter mislykkes. 			radio	a47i	narcissism_competitor	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		Jeg nyder når andre mennesker er ringere end mig			radio	a47j	narcissism_people	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		 Jeg bliver ofte irriteret, når jeg bliver kritiseret 			radio	a47k	narcissism_critisism	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		 Jeg har det skidt med, når andre er i centrum for begivenhederne 			radio	a47l	narcissism_centre	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		De fleste mennesker vil ikke opnå noget			radio	a47m	narcissism_gain	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		Andre mennesker er ikke noget værd			radio	a47n	narcissism_worth	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		 Jeg bliver ofte irriteret, når jeg bliver kritiseret. 			radio	a47k	narcissism_critisism	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		 Jeg har det skidt med, når andre er i centrum for begivenhederne. 			radio	a47l	narcissism_centre	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		De fleste mennesker vil ikke opnå noget.			radio	a47m	narcissism_gain	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		Andre mennesker er ikke noget værd.			radio	a47n	narcissism_worth	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		Det giver mig stor styrke at være en helt særlig person			radio	a47o	narcissism_strength	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		Jeg formår at være midtpunkt for opmærksomhed med mine fremragende bidrag			radio	a47p	narcissism_excellent	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-subquestion		De fleste mennesker er nogle tabere			radio	a47q	narcissism_looser	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		Jeg formår at være midtpunkt for opmærksomhed med mine fremragende bidrag.			radio	a47p	narcissism_excellent	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
+subquestion		De fleste mennesker er nogle tabere.			radio	a47q	narcissism_looser	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
 subquestion		Jeg er for det meste aldeles behændig i omgangen med andre			radio	a47r	narcissism_slick	Passer slet ikke 1; 2; 3; 4; 5; 6 Passer fuldstændigt	
-question		Spiller du online rollespil (f.eks. World of Warcraft)? 			radio	a50	online_roleplay	Aldrig; 1-7 timer om ugen; 7-14 timer om ugen; 14-21 timer om ugen; 21-28 timer om ugen; over 28 timer om ugen	
+question		Spiller du online rollespil (MMO's; f.eks. World of Warcraft)?” 			radio	a50	online_roleplay	Aldrig; 1-7 timer om ugen; 7-14 timer om ugen; 14-21 timer om ugen; 21-28 timer om ugen; over 28 timer om ugen	
 question		 Jeg tror på noget åndeligt/spirituelt/guddommeligt, som har betydning for mig: 			radio	a51	religion	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
 question		I forhold til andre har jeg et attraktivt udseende: 			radio	a52	selfrated_appearance	Meget uenig; Uenig; Hverken enig eller uenig; Enig; Meget enig	
-question		I hvilken udstrækning er du enig i udsagnet: De fleste folk er til at stole på?			radio		trust_other	Helt uenig; Delvist uenig; Hverken enig eller uenig; Delvist enig; Helt enig 	
-question		 Forestil dig, at vi gav dig 100 kroner. Du har nu mulighed for at dele pengene mellem dig selv og en anden, anonym person. Du må beholde alle de penge, du ikke giver til den anden person. Hvor meget ville du give til den anden person? 			radio		give_money	DKK 0; DKK 25; DKK 50; DKK 75; DKK 100	
-question		 Du er nu færdig med at besvare dette spørgeskema, og vi er meget glade for dit bidrag. Nogle af de spørgsmål, som du har besvaret, vil vi eventuelt gerne kunne belyse yderligere ved personlige interview. Vi vil derfor gerne spørge dig, om vi må kontakte dig igen på et senere tidspunkt med henblik på et interview? 			radio	a53	later_contact	Ja; Nej	
-question		 Har du spørgsmål til undersøgelsen, er du velkommen til at skrive på email: nedi@sund.ku.dk. Hvis du har nogle kommentarer, ris eller ros til spørgeskemaet, så skriv venligst her: 			textarea	a54	comments		
+question		I hvilken udstrækning er du enig i udsagnet "De fleste folk er til at stole på?"<br/>[1 - Helt uenig, 3 - Hverken enig eller uenig, 5 - Helt enig]			scale	our_1	our_stole	1; 2; 3; 4; 5;	
+
+question		Forestil dig at vi gav dig 100 kroner. Du har nu mulighed for at dele pengene mellem dig selv og en anden, anonym person. Du må beholde alle de penge du ikke giver til den anden person. Hvor meget ville du give til den anden person?			radio	our_2	our_money	DKK0; DKK25; DKK50; DKK75; DKK100;	
+question		Du er nu færdig med at besvare spørgeskemaet. Mange tak for din hjælp. Må vi have lov til at kontakte dig på et senere tidspunkt i forbindelse med din besvarelse af spørgeskemaet?			radio	a53	later_contact	Ja; Nej	
+question		 Har du nogle kommentarer, ris eller ros til spørgeskemaet, så skriv venligst her: 			textarea	a54	comments		

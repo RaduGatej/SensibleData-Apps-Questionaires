@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
 	<noscript>
-		<meta http-equiv="refresh" content="0; url=/noscript" />
+		<meta http-equiv="refresh" content="0; url={% url "noscript" %}" />
 	</noscript>
     <meta charset="utf-8">
     <title>SensibleDTU: Questionnaires</title>
@@ -17,7 +17,7 @@
     		NodeList;
     		HTMLCollection;
     	} catch (err) {
-    		window.location = "/changebrowser";
+		window.location = "{% url "changebrowser" %}";
     	}
     </script>
     <style type="text/css">
@@ -105,7 +105,7 @@
     <footer class="row">
         <div class="span6">
 			<p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires">SensibleDTU: Questionnaires</a>
-			<span class="label label-info">0.0.6</span></p>
+			<span class="label label-info">0.0.7</span></p>
         </div>
 
 		 <div class="span6" style="text-align:right">

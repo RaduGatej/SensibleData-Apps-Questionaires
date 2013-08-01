@@ -6,7 +6,7 @@ import pdb
 import codecs
 
 def preprocess_survey(filename):
-	pdb.set_trace()
+	#pdb.set_trace()
 	path = settings.SURVEY_DIR + filename;
 	# Step 1: read the "straight from excel file and remove carriage returns in quotes"
 	raw = codecs.open(path, 'r','utf-16').read();
@@ -18,12 +18,13 @@ def preprocess_survey(filename):
 		else: #if odd, remove carriage returns
 			prepreprocessed.append(part.replace("\r",""));
 	prepreprocessed = " ".join(prepreprocessed);
-	pdb.set_trace()
+	#pdb.set_trace()
 	
 	# Step 2: add our questions two questions before the end
 	lines = prepreprocessed.split("\r\n");
-	ourquestions = codecs.open(settings.SURVEY_DIR + settings.OUR_QUESTIONS,'r','utf-16').readlines();
-	processed_lines = lines[:-2] + ourquestions + lines[-2:]
+	#ourquestions = codecs.open(settings.SURVEY_DIR + settings.OUR_QUESTIONS,'r','utf-16').readlines();
+	#processed_lines = lines[:-2] + ourquestions + lines[-2:]
+	processed_lines = lines
 	
 	# Step 3: save to the final output file
 	output = "\r\n".join(processed_lines);

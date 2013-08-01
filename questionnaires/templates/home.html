@@ -2,10 +2,10 @@
 
 {% block content %}
 <div class="page-header">
-	        <h1>Welcome to SensibleDTU: Questionnaires</h1>
+	        <h1>Velkommen til SensibleDTU: Questionnaires</h1>
 		</div>
 
-		<p class="lead">An application for filling out questionnaires. Have fun!</p>
+		<p class="lead">Her kan du udfylde spørgeskemaerne i forbindelse med opstart af studiet. Tryk på start for at komme igang.</p>
 
 	{% if user.is_authenticated %}
 		<p><a class="btn btn-primary" href="{% url 'form' %}">Start <i class="icon-chevron-right icon-white"></i></a></p>

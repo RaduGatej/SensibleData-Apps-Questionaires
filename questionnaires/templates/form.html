@@ -96,10 +96,11 @@
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
-								if (document.forms["myform"]["__required_answer_count"] > -1) {
+								if (document.forms["myform"]["__required_answer_count"].value > -1) {
 									counter +=1;
-									if (counter >= document.forms["myform"]["__required_answer_count"]) {
+									if (counter >= document.forms["myform"]["__required_answer_count"].value) {
 										answered = true;
+										break;
 									}
 								} else {
 									answered = true;
@@ -172,7 +173,7 @@
 		{% else %}
 			<div class="alert alert-error" id="answer_alert" style="display:none">
 		{% endif %}
-				Besvare spørgsmålet, før du fortsætter.
+				Besvar spørgsmålet, før du fortsætter.
 			</div>
     	<form action="form" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
 			<fieldset>
