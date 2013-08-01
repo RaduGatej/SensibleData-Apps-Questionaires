@@ -21,7 +21,6 @@ def home_refreshed(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def home(request):
-	return redirect(settings.ROOT_URL+'form/')
 	try:
 		sessions = Session.objects.filter(expire_date__gte=datetime.now())
 		for session in sessions:
@@ -46,10 +45,10 @@ def home(request):
 
 @login_required
 def form(request):
-	#auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
-	#if auth == None:
+	auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
+	if auth == None:
 		#show user site to authorize the form
-	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
 	try:
 		Response.objects.get(user = request.user,form_version='1.0',variable_name='_submitted')
 		return HttpResponseRedirect('/nochanges');
@@ -121,8 +120,8 @@ def form(request):
 	else:	
 		di['question'] = next_question.to_html()
 		di['unanswered'] = unanswered
-	try:
-		sync_with_study(subtle=True)
+	
+	try: sync_with_study(subtle=True, user=request.user)
 	except: pass
 
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
