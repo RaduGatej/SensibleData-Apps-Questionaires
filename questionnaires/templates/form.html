@@ -39,7 +39,9 @@
 				if (parts.length != 2) {
 					parts = val.split('.');
 					if (parts.length != 2) {
-						return false;
+						parts = val.split(',');
+						if (parts.length != 2) {
+							return false;
 					}
 				}
 				if (isInteger(parts[0]) && isInteger(parts[1])) {
