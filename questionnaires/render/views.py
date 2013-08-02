@@ -51,7 +51,7 @@ def form(request):
 		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
 	try:
 		Response.objects.get(user = request.user,form_version='1.0',variable_name='_submitted')
-		return HttpResponseRedirect('/nochanges');
+		return HttpResponseRedirect(settings.ROOT_URL+'nochanges/');
 	except Exception:
 		pass
 	 
