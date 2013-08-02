@@ -3,19 +3,19 @@
 {% block content %}
 	<script>
 		var actor;
-		
+
 		function isNumber(n) {
-  			return !isNaN(parseFloat(n)) && isFinite(n);
+			return !isNaN(parseFloat(n)) && isFinite(n);
 		}
-		
+
 		function isInteger(n) {
 			if (!isNaN(n)) {
 				return n.indexOf(".") == -1;
 			}
 			return false;
 		}
-	
-		
+
+
 		function isValidInputForNumberField(field) {
 			if (field.value.length > 0) {
 				if (isNumber(field.value)) {
@@ -32,7 +32,7 @@
 				return false;
 			}	
 		}
-		
+
 		function isValidValueForTimeField(val) {
 			if (val.length > 3) {
 				parts = val.split(':');
@@ -42,6 +42,7 @@
 						parts = val.split(',');
 						if (parts.length != 2) {
 							return false;
+						}
 					}
 				}
 				if (isInteger(parts[0]) && isInteger(parts[1])) {
@@ -54,12 +55,12 @@
 			}
 			return false;
 		}
-		
+
 		function markRowSuccess(event) {
 			row = document.getElementById(event.name);
 			row.className = 'success';
 		}
-		
+
 		function validateForm()
 		{
 			if (actor == 'prev') {
@@ -109,7 +110,7 @@
 									break;
 								}
 							}
-							
+					
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].max !== undefined) {
 							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]][inner_idx])) {
@@ -154,9 +155,9 @@
 			}
 			if (!answered) {
 				document.getElementById("answer_alert").style.display = "block";
- 				return false;
+				return false;
 			}
-		
+
 		}
 	</script>
 		<!-- progress bar goes here -->
