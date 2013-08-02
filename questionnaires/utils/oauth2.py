@@ -48,6 +48,9 @@ def generateState(user):
 @csrf_exempt
 @login_required
 def grant(request):
+	error = request.GET.get('error', '')
+	if not error == '':
+		return redirect(settings.ROOT_URL+'quit/&status=auth_error')
 	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri=SECURE_CONFIG.SERVICE_MY_REDIRECT, request_uri=SECURE_CONFIG.SERVICE_TOKEN_URI)
 	if 'error' in token:
                 return HttpResponse(json.dumps(token))
