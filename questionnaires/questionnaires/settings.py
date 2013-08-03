@@ -34,7 +34,6 @@ def failure_handler_function(request, message, status=None, template_name=None, 
 	from django.shortcuts import redirect
 	from django.http import HttpResponse
 	registration = request.REQUEST.get('registration', False)
-	#TODO
 	if registration: return redirect('login')
 	return redirect('openid_failed')
 
