@@ -11,6 +11,6 @@ def do_login(request):
 	if f.firstLogin:
 		f.firstLogin = False
 		f.save()
-		return redirect('request_attributes')
-	identity.getAttributes(request.user, ['email'])
+	#	return redirect('request_attributes')
+	identity.getAttributes(request.user, ['first_name'])
 	return redirect('home')
