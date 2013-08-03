@@ -2,10 +2,17 @@
 
 {% block content %}
 
-    <div class="well">
-        <h1>You have not yet authorized this application...</h1>
-        <p><a class="btn btn-primary" href="{% url 'authorize' %}">Authorize &raquo;</a></p>
-    </div>
+{% if status == 'error' %}
+<div class="alert alert-error">
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+	<strong>Error</strong> {{ message }}
+</div>
+{% endif %}
 
+	<div class="page-header">
+		<h1>Please allow this application to submit your data first.</h1>
+	</div>
+
+	<p><a class="btn btn-success btn-large" href="{% url 'authorize' %}">Allow <i class="icon-chevron-right icon-white"></i></a></p>
 
 {% endblock %}
