@@ -37,8 +37,8 @@ def home(request):
 		if f.firstLogin:
 			f.firstLogin = False
 			f.save()
-			return redirect('request_attributes')
-		identity.getAttributes(request.user, ['email'])
+			#return redirect('request_attributes')
+		identity.getAttributes(request.user, ['first_name'])
 
 	return redirect(settings.ROOT_URL+'form/')
 
@@ -48,7 +48,9 @@ def form(request):
 	auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
 	if auth == None:
 		#show user site to authorize the form
-		return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+		status = request.GET.get('status', '')
+		message = request.GET.get('message', '')
+		return render_to_response('start_auth.html', {'status': status, 'message': message}, context_instance=RequestContext(request))
 	try:
 		Response.objects.get(user = request.user,form_version='1.0',variable_name='_submitted')
 		return HttpResponseRedirect('/nochanges');
