@@ -7,6 +7,7 @@ ROOT_URL = '/apps/questionnaire/'
 SURVEY_DIR = ROOT_DIR + 'render/data/'
 SURVEY_FILE = 'survey.txt'
 OUR_QUESTIONS = 'additional_questions.txt'
+DO_AUTH = False
 
 DATABASES = {
     'default': {

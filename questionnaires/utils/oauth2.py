@@ -48,21 +48,29 @@ def generateState(user):
 @csrf_exempt
 @login_required
 def grant(request):
+	error = request.GET.get('error', '')
+	if not error == '':
+		return redirect(settings.ROOT_URL+'quit/&status=auth_error')
 	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri=SECURE_CONFIG.SERVICE_MY_REDIRECT, request_uri=SECURE_CONFIG.SERVICE_TOKEN_URI)
 	if 'error' in token:
-                return HttpResponse(json.dumps(token))
+				r = redirect('form')
+				r['Location'] += '?status=error&message='+token['error']
+				return r
 
 	if saveToken(request.user, token):
 		return redirect('home')
 	else:
-		#TODO push to auth_error
-		return redirect('home')
+		r = redirect('form')
+		r['Location'] += '?status=error&message=something went wrong in the process (code 5784)'
+		return r
 
 def exchangeCodeForToken(request, client_id, client_secret, redirect_uri, request_uri):
 	state = request.REQUEST.get('state', '')
 	code = request.REQUEST.get('code', '')
 	scope = request.REQUEST.get('scope', '')
-	if not validateState(request.user, state): return {'error':'state user does not match'}
+	if not validateState(request.user, state): return {'error': 'something went wrong in the process (code 8438)'}
+	try: Scope.objects.get(scope=scope)
+	except Scope.DoesNotExist: return {'error':'something went wrong in the process (code 7843)'}
 	values = {}
 	values['code'] = code
 	values['grant_type'] = 'authorization_code'

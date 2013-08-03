@@ -212,7 +212,7 @@ class Question(Formwidget):
 			resp = '';
 
 		if len(self.secondary_content) > 0:
-			resp += '<p style="width:80%">' + self.secondary_content + '</p>\n';
+			resp += '<p style="width:80%"><strong>' + self.secondary_content + '</strong></p>\n';
 		
 		if len(self.additional_content) > 0:
 			resp += '<div class="alert alert-info">' + self.additional_content + '</div>';

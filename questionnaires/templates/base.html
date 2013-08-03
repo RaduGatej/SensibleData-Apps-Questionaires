@@ -6,6 +6,9 @@
 	<noscript>
 		<meta http-equiv="refresh" content="0; url={% url "noscript" %}" />
 	</noscript>
+<link rel="icon"
+	type="image/png"
+	href="{% static "img/favicon.png" %}">
     <meta charset="utf-8">
     <title>SensibleDTU: Questionnaires</title>
     <meta name="description" content="">
@@ -64,15 +67,16 @@
 		<i class="icon-user icon-white"></i>
 			{% if user.first_name != '' %}
 		    {{ user.first_name }}
-			{% elif user.email != '' %}
-		    {{ user.email }}
 			{% else %}
-		    {{ user.username }}
+			My Profile
 			{% endif %}
 		    <span class="caret"></span>
 		  </a>
 		  <ul class="dropdown-menu">
-		    <li><a href={% url 'logout' %}>Logout</a></li>
+			  <li><a href="{% url 'logout' %}"><i class="icon-road"></i> Logout</a></li>
+			  {% if not user.first_name %}
+			  <li><a href="{% url 'request_attributes' %}"><i class="icon-user"></i> Set my name</a></li>
+			{% endif %}
 		  </ul>
 	{% else %}
 	<div class="nav-collapse collapse">
@@ -105,12 +109,12 @@
     <footer class="row">
         <div class="span6">
 			<p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires">SensibleDTU: Questionnaires</a>
-			<span class="label label-info">0.0.7</span></p>
+			<span class="label label-info">0.1.0</span></p>
         </div>
 
 		 <div class="span6" style="text-align:right">
 			         <p>
-					         &copy; <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Platform/master/COPYRIGHT">Technical University of Denmark</a> 2013
+					         &copy; <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Service/master/sensible_data_service/documents/legal_notices">Technical University of Denmark</a> 2013
 							         |
 									         <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Platform/master/LICENSE">software license</a>
 											         </p>

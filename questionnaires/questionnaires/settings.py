@@ -18,6 +18,7 @@ SURVEY_DIR = LOCAL_SETTINGS.SURVEY_DIR
 SURVEY_FILE = LOCAL_SETTINGS.SURVEY_FILE
 OUR_QUESTIONS = LOCAL_SETTINGS.OUR_QUESTIONS
 DATABASES = LOCAL_SETTINGS.DATABASES
+DO_AUTH = LOCAL_SETTINGS.DO_AUTH
 
 MANAGERS = ADMINS
 
@@ -34,7 +35,6 @@ def failure_handler_function(request, message, status=None, template_name=None, 
 	from django.shortcuts import redirect
 	from django.http import HttpResponse
 	registration = request.REQUEST.get('registration', False)
-	#TODO
 	if registration: return redirect('login')
 	return redirect('openid_failed')
 
@@ -46,7 +46,7 @@ APPEND_SLASH = True
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['.sensible.dtu.dk']
+ALLOWED_HOSTS = []
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

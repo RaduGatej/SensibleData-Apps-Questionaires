@@ -3,19 +3,19 @@
 {% block content %}
 	<script>
 		var actor;
-		
+
 		function isNumber(n) {
-  			return !isNaN(parseFloat(n)) && isFinite(n);
+			return !isNaN(parseFloat(n)) && isFinite(n);
 		}
-		
+
 		function isInteger(n) {
 			if (!isNaN(n)) {
 				return n.indexOf(".") == -1;
 			}
 			return false;
 		}
-	
-		
+
+
 		function isValidInputForNumberField(field) {
 			if (field.value.length > 0) {
 				if (isNumber(field.value)) {
@@ -32,14 +32,17 @@
 				return false;
 			}	
 		}
-		
+
 		function isValidValueForTimeField(val) {
 			if (val.length > 3) {
 				parts = val.split(':');
 				if (parts.length != 2) {
 					parts = val.split('.');
 					if (parts.length != 2) {
-						return false;
+						parts = val.split(',');
+						if (parts.length != 2) {
+							return false;
+						}
 					}
 				}
 				if (isInteger(parts[0]) && isInteger(parts[1])) {
@@ -52,12 +55,12 @@
 			}
 			return false;
 		}
-		
+
 		function markRowSuccess(event) {
 			row = document.getElementById(event.name);
 			row.className = 'success';
 		}
-		
+
 		function validateForm()
 		{
 			if (actor == 'prev') {
@@ -107,7 +110,7 @@
 									break;
 								}
 							}
-							
+					
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].max !== undefined) {
 							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]][inner_idx])) {
@@ -152,9 +155,9 @@
 			}
 			if (!answered) {
 				document.getElementById("answer_alert").style.display = "block";
- 				return false;
+				return false;
 			}
-		
+
 		}
 	</script>
 		<!-- progress bar goes here -->
@@ -163,8 +166,9 @@
 		</div>        
 		<!-- deciding on the heading -->
 		{% if last_page %}
-			<h1>The end</h1>
-			<p>Congratulations! You have answered all the questions in this survey. You can now press the Quit button to go back to the main page. </p>
+			<h1>Tak for deltagelse!</h1>
+			<p>Tak! Du har besvaret alle spørgsmålene. Gennemgå dine svar, eller tryk på "Indsend besvarelse" for at afslutte.</p>
+			<p>Du vil ikke være i stand til at ændre dine svar, efter du har trykket "Indsend besvarelse"!</p>
 		{% endif %}
 		
 		<!-- display the error message -->
@@ -175,7 +179,7 @@
 		{% endif %}
 				Besvar spørgsmålet, før du fortsætter.
 			</div>
-    	<form action="form" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
+    	<form action="" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
 			<fieldset>
 				{% csrf_token %}
 				

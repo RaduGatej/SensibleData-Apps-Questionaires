@@ -21,16 +21,16 @@ def home_refreshed(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def home(request):
-	return redirect(settings.ROOT_URL+'form/')
-	try:
-		sessions = Session.objects.filter(expire_date__gte=datetime.now())
-		for session in sessions:
-			data = session.get_decoded()
-			try: user = User.objects.filter(id=data.get('_auth_user_id', None))[0]
-			except: continue
-			if request.user == user:
-				session.delete()
-	except: pass
+	if settings.DO_AUTH:
+		try:
+			sessions = Session.objects.filter(expire_date__gte=datetime.now())
+			for session in sessions:
+				data = session.get_decoded()
+				try: user = User.objects.filter(id=data.get('_auth_user_id', None))[0]
+				except: continue
+				if request.user == user:
+					session.delete()
+		except: pass
 
 	if request.user.is_authenticated():
 		try: f = FirstLogin.objects.get(user=request.user)
@@ -38,21 +38,24 @@ def home(request):
 		if f.firstLogin:
 			f.firstLogin = False
 			f.save()
-			return redirect('request_attributes')
-		identity.getAttributes(request.user, ['email'])
+			#return redirect('request_attributes')
+		identity.getAttributes(request.user, ['first_name'])
 
 	return redirect(settings.ROOT_URL+'form/')
 
 
 @login_required
 def form(request):
-	#auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
-	#if auth == None:
-		#show user site to authorize the form
-	#	return render_to_response('start_auth.html', {}, context_instance=RequestContext(request))
+	if settings.DO_AUTH:
+		auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
+		if auth == None:
+			#show user site to authorize the form
+			status = request.GET.get('status', '')
+			message = request.GET.get('message', '')
+			return render_to_response('start_auth.html', {'status': status, 'message': message}, context_instance=RequestContext(request))
 	try:
 		Response.objects.get(user = request.user,form_version='1.0',variable_name='_submitted')
-		return HttpResponseRedirect('/nochanges');
+		return HttpResponseRedirect(settings.ROOT_URL+'nochanges/');
 	except Exception:
 		pass
 	 
@@ -90,7 +93,7 @@ def form(request):
 		elif '_quit' in request.POST:
 			r = Response(user = request.user,form_version='1.0',variable_name='_submitted',response='true');
 			r.save()
-			return HttpResponseRedirect('/quit');
+			return HttpResponseRedirect(settings.ROOT_URL+'quit/');
 		else:
 			if len(required_vars) > 0:
 				for v in required_vars:
@@ -121,8 +124,8 @@ def form(request):
 	else:	
 		di['question'] = next_question.to_html()
 		di['unanswered'] = unanswered
-	try:
-		sync_with_study(subtle=True)
+	
+	try: sync_with_study(subtle=True, user=request.user)
 	except: pass
 
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
