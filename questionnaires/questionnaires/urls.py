@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^sensible/', include('django_sensible.urls')),
     url(r'^openid/', include('django_openid_auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^oauth2/', include('utils.oauth2_urls')),

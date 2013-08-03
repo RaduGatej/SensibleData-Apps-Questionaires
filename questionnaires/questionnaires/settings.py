@@ -154,6 +154,7 @@ INSTALLED_APPS = (
     'utils',
     'bootstrap_toolkit',
     'south',
+	'django_sensible',
 )
 
 # A sample logging configuration. The only tangible logging
