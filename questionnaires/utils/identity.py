@@ -28,7 +28,7 @@ def attributesRedirect(request):
 	if 'error' in token:
 		return redirect('home')
 	oauth2.saveToken(request.user, token)
-	getAttributes(request.user, ['email', 'first_name', 'cas.student_id'])
+	getAttributes(request.user, ['first_name'])
 	return redirect('home')
 
 @login_required
