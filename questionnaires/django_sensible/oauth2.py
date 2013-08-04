@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 import uuid
 import hashlib
 from .models import *
-from utils import SECURE_CONFIG
+import SECURE_CONFIG
 from django.shortcuts import redirect
 import urllib, urllib2
 import json
@@ -26,12 +26,12 @@ def authorize(request):
 				session.delete()
 	except: pass
 
-	return redirect(settings.ROOT_URL+'oauth2/authorize_refreshed/')
+	return redirect(settings.SENSIBLE_URL+'oauth2/authorize_refreshed/')
 
 @login_required
 def authorizeRefreshedUser(request):
 	state = generateState(request.user)
-	url = SECURE_CONFIG.SERVICE_URL + SECURE_CONFIG.AUTH_ENDPOINT + SECURE_CONFIG.CONNECTOR
+	url = settings.SERVICE_URL + settings.AUTH_ENDPOINT + settings.CONNECTOR
 	url += '/auth/grant/?'
 	url += 'scope='+','.join([s.scope for s in Scope.objects.filter(type=Type.objects.get(type='data'))])
 	url += '&client_id='+SECURE_CONFIG.CLIENT_ID
@@ -51,7 +51,7 @@ def grant(request):
 	error = request.GET.get('error', '')
 	if not error == '':
 		return redirect(settings.ROOT_URL+'quit/&status=auth_error')
-	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri=SECURE_CONFIG.SERVICE_MY_REDIRECT, request_uri=SECURE_CONFIG.SERVICE_TOKEN_URI)
+	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri=settings.SERVICE_MY_REDIRECT, request_uri=settings.SERVICE_TOKEN_URL)
 	if 'error' in token:
 				r = redirect('form')
 				r['Location'] += '?status=error&message='+token['error']
