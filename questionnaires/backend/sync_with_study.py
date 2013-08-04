@@ -1,10 +1,11 @@
 from render.models import Response
-from utils import SECURE_CONFIG
+from django_sensible import SECURE_CONFIG
 import json
 import urllib
-from utils import oauth2
-from utils.models import Scope
+from django_sensible import oauth2
+from django_sensible.models import Scope
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 def sync_with_study(subtle=False, user=None):
 	if not user == None:
@@ -29,7 +30,7 @@ def sync_with_study(subtle=False, user=None):
 
 		token = oauth2.getToken(response.user, Scope.objects.get(scope='connector_questionnaire.input_form_data'))
 
-		r = oauth2.query(SECURE_CONFIG.SERVICE_UPLOAD_URI, token, '&doc='+values, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, SECURE_CONFIG.APPLICATION_URI[:-1]+reverse('grant'), SECURE_CONFIG.SERVICE_REFRESH_TOKEN_URI)
+		r = oauth2.query(settings.SERVICE_UPLOAD_URL, token, '&doc='+values, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, settings.APPLICATION_URL[:-1]+reverse('grant'), settings.SERVICE_REFRESH_TOKEN_URL)
 		if 'ok' in r:
 			response.synced_with_study = True
 			response.save()
