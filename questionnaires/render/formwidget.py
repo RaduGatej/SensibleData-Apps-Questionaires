@@ -235,7 +235,7 @@ class Header(Formwidget):
 
 	def render(self):
 		resp = '<h2>' + self.primary_content + "</h2>\n"
-		resp += '<p style="width:80%">' + self.secondary_content + '</p>\n'
+		resp += '<div style="width:85%;text-align: justify; text-justify: newspaper">' + self.secondary_content + '</div>\n'
 		
 		#resp += '<input type="hidden" name="require_answer" value="no"/>\n'
 		resp += '<input type="hidden" name="' + self.variable_name + '" value="1"/>\n'
