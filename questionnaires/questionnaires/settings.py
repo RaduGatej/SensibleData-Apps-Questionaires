@@ -1,7 +1,8 @@
 # Django settings for questionnaires project.
 
 import os
-import LOCAL_SETTINGS
+import LOCAL_settings
+import django_sensible.settings
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,36 +12,47 @@ ADMINS = (
 )
 
 
-BASE_DIR = LOCAL_SETTINGS.BASE_DIR
-ROOT_DIR = LOCAL_SETTINGS.ROOT_DIR
-ROOT_URL = LOCAL_SETTINGS.ROOT_URL
-SURVEY_DIR = LOCAL_SETTINGS.SURVEY_DIR
-SURVEY_FILE = LOCAL_SETTINGS.SURVEY_FILE
-OUR_QUESTIONS = LOCAL_SETTINGS.OUR_QUESTIONS
-DATABASES = LOCAL_SETTINGS.DATABASES
-DO_AUTH = LOCAL_SETTINGS.DO_AUTH
+BASE_DIR = LOCAL_settings.BASE_DIR
+DATABASES = LOCAL_settings.DATABASES
+ROOT_DIR = LOCAL_settings.ROOT_DIR
+ROOT_URL = LOCAL_settings.ROOT_URL
+BASE_URL = LOCAL_settings.BASE_URL
+APPLICATION_URL = LOCAL_settings.APPLICATION_URL
+SURVEY_DIR = LOCAL_settings.SURVEY_DIR
+SURVEY_FILE = LOCAL_settings.SURVEY_FILE
+OUR_QUESTIONS = LOCAL_settings.OUR_QUESTIONS
+DO_AUTH = LOCAL_settings.DO_AUTH
+
+SENSIBLE_URL = LOCAL_settings.SENSIBLE_URL
+
+SERVICE_URL = django_sensible.settings.SERVICE_URL
+CONNECTOR = django_sensible.settings.CONNECTOR
+SERVICE_UPLOAD_URL = django_sensible.settings.SERVICE_UPLOAD_URL
+SERVICE_TOKEN_URL = django_sensible.settings.SERVICE_TOKEN_URL
+SERVICE_REFRESH_TOKEN_URL = django_sensible.settings.SERVICE_REFRESH_TOKEN_URL
+SERVICE_MY_REDIRECT = SENSIBLE_URL+django_sensible.settings.IDP_MY_REDIRECT_SUFFIX
+AUTH_ENDPOINT = django_sensible.settings.AUTH_ENDPOINT
+
+
+#idp settings
+IDP_URL = django_sensible.settings.IDP_URL
+IDP_AUTHORIZATION_URL = django_sensible.settings.IDP_AUTHORIZATION_URL
+
+SERVICE_MY_REDIRECT = SENSIBLE_URL + django_sensible.settings.SERVICE_MY_REDIRECT_SUFFIX
+IDP_MY_REDIRECT = SENSIBLE_URL+django_sensible.settings.IDP_MY_REDIRECT_SUFFIX
+
+LOGIN_URL = SENSIBLE_URL + django_sensible.settings.LOGIN_URL_SUFFIX
+LOGIN_REDIRECT_URL = ROOT_URL
+OPENID_SSO_SERVER_URL = django_sensible.settings.OPENID_SSO_SERVER_URL
+OPENID_USE_EMAIL_FOR_USERNAME = django_sensible.settings.OPENID_USE_EMAIL_FOR_USERNAME
+AUTHENTICATION_BACKENDS = django_sensible.settings.AUTHENTICATION_BACKENDS
+
+OPENID_CREATE_USERS = django_sensible.settings.OPENID_CREATE_USERS
+OPENID_UPDATE_DETAILS_FROM_SREG = django_sensible.settings.OPENID_UPDATE_DETAILS_FROM_SREG
+OPENID_RENDER_FAILURE = django_sensible.settings.OPENID_RENDER_FAILURE
+
 
 MANAGERS = ADMINS
-
-LOGIN_URL = ROOT_URL+'openid/login/'
-LOGIN_REDIRECT_URL = ROOT_URL
-OPENID_SSO_SERVER_URL = LOCAL_SETTINGS.OPENID_SSO_SERVER_URL
-OPENID_USE_EMAIL_FOR_USERNAME = False
-AUTHENTICATION_BACKENDS = (
-            'django_openid_auth.auth.OpenIDBackend',
-            'django.contrib.auth.backends.ModelBackend',
-        )
-
-def failure_handler_function(request, message, status=None, template_name=None, exception=None):
-	from django.shortcuts import redirect
-	from django.http import HttpResponse
-	registration = request.REQUEST.get('registration', False)
-	if registration: return redirect('login')
-	return redirect('openid_failed')
-
-OPENID_CREATE_USERS = True
-OPENID_UPDATE_DETAILS_FROM_SREG = False
-OPENID_RENDER_FAILURE = failure_handler_function
 
 APPEND_SLASH = True
 
@@ -112,7 +124,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = LOCAL_SETTINGS.SECRET_KEY
+SECRET_KEY = LOCAL_settings.SECRET_KEY
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -148,13 +160,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'django_openid_auth',
     'render',
     'backend',
-    'utils',
-    'bootstrap_toolkit',
-    'south',
+	'django_sensible',
 )
+
+INSTALLED_APPS += django_sensible.settings.INSTALLED_APPS
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

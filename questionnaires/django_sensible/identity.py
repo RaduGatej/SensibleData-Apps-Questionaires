@@ -7,11 +7,12 @@ import oauth2
 import json
 from .models import *
 import urllib, urllib2
+from django.conf import settings
 
 @login_required
 def requestAttributes(request):
-	url = SECURE_CONFIG.IDP_AUTHORIZATION_URI
-	url += "redirect_uri="+SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect')
+	url = settings.IDP_AUTHORIZATION_URL
+	url += "redirect_uri="+settings.IDP_MY_REDIRECT
 	url += "&client_id="+SECURE_CONFIG.IDP_CLIENT_ID
 	url += "&response_type=code"
 	try:
@@ -24,8 +25,9 @@ def requestAttributes(request):
 
 @login_required
 def attributesRedirect(request):
-	token = oauth2.exchangeCodeForToken(request, SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?')
+	token = oauth2.exchangeCodeForToken(request, SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, settings.IDP_MY_REDIRECT, settings.IDP_URL+'oauth2/oauth2/token/?')
 	if 'error' in token:
+		return HttpResponse(token)
 		return redirect('home')
 	oauth2.saveToken(request.user, token)
 	getAttributes(request.user, ['first_name'])
@@ -49,7 +51,7 @@ def getAttributes(user, attributes):
 	if len(tokens) == 0:
 		return json.dumps({'error':'no token available'})
 	
-	response = oauth2.query(SECURE_CONFIG.IDP_URI + 'openid/attributes/', list(tokens)[0], '&attributes='+','.join(attributes), SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, SECURE_CONFIG.BASE_URI[:-1]+reverse('attributes_redirect'), SECURE_CONFIG.IDP_URI+'oauth2/oauth2/token/?' )
+	response = oauth2.query(settings.IDP_URL + 'openid/attributes/', list(tokens)[0], '&attributes='+','.join(attributes), SECURE_CONFIG.IDP_CLIENT_ID, SECURE_CONFIG.IDP_CLIENT_SECRET, settings.IDP_MY_REDIRECT, settings.IDP_URL+'oauth2/oauth2/token/?' )
 	for attribute in response:
 		try:
 			s = 'user.'+attribute + '= response["%s"]'%attribute

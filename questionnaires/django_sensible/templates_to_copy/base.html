@@ -6,11 +6,8 @@
 	<noscript>
 		<meta http-equiv="refresh" content="0; url={% url "noscript" %}" />
 	</noscript>
-<link rel="icon"
-	type="image/png"
-	href="{% static "img/favicon.png" %}">
     <meta charset="utf-8">
-    <title>SensibleDTU: Questionnaires</title>
+    <title>SensibleDTU: BASE</title>
     <meta name="description" content="">
     <meta name="author" content="Arkadiusz Stopczynski">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,18 +45,13 @@
 				    <i class="icon-tasks"></i> Menu
 					          </button>
 
-			<div class="nav"><img src="{% static "img/red_logo5_40px.png" %}"></div>
-            <a class="brand" href="{% url 'home' %}">SensibleDTU: Questionnaires</a>
+            <a class="brand" href="{% url 'home' %}">SensibleDTU: BASE</a>
 	{% if user.is_authenticated %}
 	<div class="nav-collapse collapse">
 		            <ul class="nav">
 		<li class="divider-vertical"></li>
 	<li><a href="{% url 'home' %}" class=""><i class="icon-home"></i> Home</a></li>
 		<li class="divider-vertical"></li>
-	<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> About</a></li>
-	<li class="divider-vertical"></li>
-	<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Quit</a></li>
-	<li class="divider-vertical"></li>
 	</ul>
 	</div>
 	<ul class="nav pull-right action">
@@ -82,8 +74,6 @@
 	<div class="nav-collapse collapse">
 		            <ul class="nav">
 		<li class="divider-vertical"></li>
-	<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> About</a></li>
-	<li class="divider-vertical"></li>
 	<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Quit</a></li>
 	<li class="divider-vertical"></li>
 	</ul>
@@ -100,32 +90,32 @@
 
 <div class="container">
 
-    {% bootstrap_messages %}
+	{% bootstrap_messages %}
 
-    {% block content %}Empty page{% endblock %}
+	{% block content %}Empty page{% endblock %}
 
-    <p><hr></p>
+	<p><hr></p>
 
-    <footer class="row">
-        <div class="span6">
-			<p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Apps-Questionaires">SensibleDTU: Questionnaires</a>
-			<span class="label label-important">0.1.0-devel</span></p>
-        </div>
+	<footer class="row">
+	<div class="span6">
+		<p>This is <a href="https://github.com/MIT-Model-Open-Data-and-Identity-System/django-sensible">SensibleDTU: BASE</a>
+		<span class="label label-important">x.x.x</span></p>
+	</div>
 
-		 <div class="span6" style="text-align:right">
-			         <p>
-					         &copy; <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Service/master/sensible_data_service/documents/legal_notices">Technical University of Denmark</a> 2013
-							         |
-									         <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Platform/master/LICENSE">software license</a>
-											         </p>
-													     </div>
+	<div class="span6" style="text-align:right">
+		<p>
+		&copy; <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Service/master/sensible_data_service/documents/legal_notices">Technical University of Denmark</a> 2013
+		|
+		<a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Platform/master/LICENSE">software license</a>
+		</p>
+	</div>
 
-														 <div class="span">
-															        <p><a rel="license" href="https://creativecommons.org/licenses/by/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/3.0/80x15.png" /></a> <span xmlns:dct="https://purl.org/dc/terms/" property="dct:title"></span> licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a>.</p>
-																       </div>	
+	<div class="span">
+		<p><a rel="license" href="https://creativecommons.org/licenses/by/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/3.0/80x15.png" /></a> <span xmlns:dct="https://purl.org/dc/terms/" property="dct:title"></span> licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a>.</p>
+	</div>	
 
 
-    </footer>
+	</footer>
 
 </div> <!-- container -->
 
