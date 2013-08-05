@@ -19,7 +19,7 @@ def get_previous_question(user_id, survey_version, current_name):
 	questions = get_questions_list();
 	if current_name == '__goodbye':
 		for i in range(1,len(questions)):
-			conditioned_question = get_conditioned_question(questions[-i])
+			conditioned_question = get_conditioned_question(user_id, survey_version, questions[-i])
 			if conditioned_question != None:
 				return return_question(user_id, survey_version, conditioned_question)
 			#if check_condition(user_id, survey_version, questions[-i].inclusion_condition):
