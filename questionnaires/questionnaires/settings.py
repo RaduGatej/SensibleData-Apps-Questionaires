@@ -162,7 +162,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'render',
     'backend',
-	'django_sensible',
+    'django_sensible',
 )
 
 INSTALLED_APPS += django_sensible.settings.INSTALLED_APPS
