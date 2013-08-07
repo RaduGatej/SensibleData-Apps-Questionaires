@@ -34,13 +34,13 @@ def is_number(s):
 		return False
 
 def parsefile(filename):
-	print filename
+	#print filename
 	widgets = [];
 	idx = 0;
 	line_idx = 0;
 	for line in open(filename):
 		line_idx +=1;
-		print line_idx;
+		#print line_idx;
 		line = line.replace('"','')
 		if line.startswith('Type'):
 			#header line, create Survey with meta data
@@ -49,13 +49,13 @@ def parsefile(filename):
 			#survey.save();
 			continue
 		elif line.strip() == '':
-			print 'skipping empty line'
+			#print 'skipping empty line'
 			continue
 		#print line
 		
 		widget = parseline(line);
 		if widget is None:
-			print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
+		#	print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
 			continue
 		idx +=1;
 		if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion):
@@ -127,7 +127,7 @@ def validate(string):
 			print 'ERROR: variable label is missing';
 			error = True
 		elif parts[VARIABLE_NAME] == '':
-			print 'WARNING: variable name is missing, making it the same as label';
+		#	print 'WARNING: variable name is missing, making it the same as label';
 			parts[VARIABLE_NAME] = parts[VARIABLE_LABEL]
 		
 	
@@ -138,7 +138,7 @@ def validate(string):
 	
 def makequestion(primary_content, secondary_content, additional_content,\
 				inclusion_condition, answer_type, variable_name, answers, extra_param):
-	print 'Inclusion condition: ' + inclusion_condition
+	#print 'Inclusion condition: ' + inclusion_condition
 	if answer_type == 'radio':
 		return RadioQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);

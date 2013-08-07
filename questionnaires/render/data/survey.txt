@@ -147,8 +147,8 @@ subquestion		 Hvor ofte føler du, at der er nogen, du kan tale med? 			radio	a2
 subquestion		 Hvor ofte føler du, at der er nogen, du kan henvende dig til? 			radio	a22t	loneliness_turn_to	Aldrig; Sjældent; Sommetider; Altid	
 question		 Sker det nogensinde, at du er alene, selvom du har mest lyst til at være sammen med andre? 			radio	a23	involuntary_alone	 Ja, ofte; Ja, engang imellem; Ja, men sjældent; Nej 	
 header		De følgende spørgsmål handler om dit helbred.				a24_h	health		
-question		Hvor høj er du uden sko?			number	a24	height	_____cm	70; 250
-question		Hvad vejer du uden tøj?			number	a25	weight	_____kg	30; 250
+question		Hvor høj er du uden sko? (afrund venligst til nærmeste hele centimeter)			number	a24	height	_____cm	70; 250
+question		Hvad vejer du uden tøj? (afrund venligst til nærmeste hele kilogram)			number	a25	weight	_____kg	30; 250
 question		 Hvordan synes du, dit helbred er alt i alt? 			radio	a26	selfreported_health	Fremragende; Vældig godt; Godt; Mindre godt; Dårligt	
 question		 I løbet af de sidste 30 dage, hvor mange dage har du været helt ude af stand til, at udføre dine sædvanlige aktiviteter eller dit arbejde på grund af dit helbred? 			number	a41h	function_activity	Angiv antallet af dage _____	0; 30
 question		Har du indenfor de <u>sidste 14 dage</u> været generet af nogle af de her nævnte former for smerter og ubehag? Var du meget eller lidt generet af det?			grid	a27	symptoms	 Nej; Ja, lidt generet; Ja, meget generet 	
