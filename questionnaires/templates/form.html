@@ -10,7 +10,7 @@
 
 		function isInteger(n) {
 			if (!isNaN(n)) {
-				return n.indexOf(".") == -1;
+				return (n.indexOf(".") == -1) && (n.indexOf(",") == -1)
 			}
 			return false;
 		}

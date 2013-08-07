@@ -12,3 +12,5 @@ LOCAL_*
 questionnaires/render/db_formatter.py
 
 questionnaires/output.csv
+
+*.xls
