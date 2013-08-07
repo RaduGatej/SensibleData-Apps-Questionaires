@@ -135,9 +135,9 @@ def get_user_progress(user_id, survey_version):
 		if entry.variable_name.endswith('[]'):
 			varname = entry.variable_name[:-2]
 		else:
-			varnname = entry.variable_name
+			varname = entry.variable_name
 		try:
-			curr_index = variables.index(entry.variable_name)
+			curr_index = variables.index(varname)
 			if curr_index > max_index:
 				max_index = curr_index
 		except ValueError:
@@ -148,7 +148,7 @@ def get_user_progress(user_id, survey_version):
 	#check how many questions in total
 	total = get_survey_length(survey_version);
 	#print "answered " + str(answered) + '/' + str(total);
-	print "at " + str(max_index) + '/' + str(len(variables));
+	#print "at " + str(max_index) + '/' + str(len(variables));
 	#return answered*100/total;
 	return float(max_index)*100/len(variables)
 
