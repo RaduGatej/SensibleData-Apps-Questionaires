@@ -93,7 +93,8 @@ def form(request):
 		elif '_quit' in request.POST:
 			r = Response(user = request.user,form_version='1.0',variable_name='_submitted',response='true');
 			r.save()
-			return HttpResponseRedirect(settings.SENSIBLE_URL+'quit/');
+			return nochanges(request)
+			#return HttpResponseRedirect(settings.SENSIBLE_URL+'quit/');
 		else:
 			if len(required_vars) > 0:
 				for v in required_vars:

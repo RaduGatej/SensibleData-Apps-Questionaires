@@ -3,7 +3,15 @@
 {% block content %}
 <h1>The end!</h1>
 <div class="alert alert-success">
-  <strong>You have submitted your answers!</strong> Thank you for participating in the survey.
+  <strong>Du har nu indsendt dine svar!</strong> Tak fordi du udfyldte spørgeskemaet.<br/> <h4>Tryk på knappen for at booke tid til udlevering af telefonen.</h4>
+
+
+<form action="https://www.sensible.dtu.dk/" method="GET">
+<input type="hidden" name="wpgform_qv" value="1555"/>
+<div style="text-align:center;">
+<input type="submit" value="Sign up" class="btn btn-primary btn-large"></input>  
+</div>
+</form>
 </div>
 
 {% endblock %}
