@@ -14,3 +14,5 @@ questionnaires/render/db_formatter.py
 questionnaires/output.csv
 
 *.xls
+
+questionnaires/render/data/survey copy.txt
