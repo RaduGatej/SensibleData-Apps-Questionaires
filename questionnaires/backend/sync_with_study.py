@@ -23,7 +23,7 @@ def sync_with_study(subtle=False, user=None):
 		values = {}
 		values['form_version'] = str(response.form_version)
 		values['variable_name'] = str(response.variable_name)
-		values['response'] = str(response.response)
+		values['response'] = str(response.response.encode('utf-8'))
 		values['last_answered'] = str(response.last_answered)
 
 		values = urllib.quote(json.dumps(values))
