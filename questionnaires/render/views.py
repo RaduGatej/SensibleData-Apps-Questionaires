@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django_sensible import oauth2, identity
 from django_sensible.models import Scope, FirstLogin
-from render.models import Response
+from render.models import Response, Survey
 from django.shortcuts import render_to_response, redirect
 import formwidget
 from django.template import RequestContext
@@ -16,6 +16,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 import json
 from datetime import datetime
+import re
 
 def home_refreshed(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
@@ -53,8 +54,10 @@ def form(request):
 			status = request.GET.get('status', '')
 			message = request.GET.get('message', '')
 			return render_to_response('sensible/start_auth.html', {'status': status, 'message': message}, context_instance=RequestContext(request))
+	survey_version = ''
+	if request.POST: survey_version = request.POST.get('__survey_version','')
 	try:
-		Response.objects.get(user = request.user,form_version='1.0',variable_name='_submitted')
+		Response.objects.get(user = request.user,form_version=survey_version,variable_name='_submitted')
 		return HttpResponseRedirect(settings.ROOT_URL+'nochanges/');
 	except Exception:
 		pass
@@ -67,7 +70,8 @@ def form(request):
 		answers = {};
 		required_vars = [];
 		for ans in request.POST.keys():
-			if ans == '__required_vars': # list of required answers
+			if ans == '__survey_version': pass
+			elif ans == '__required_vars': # list of required answers
 				required_vars = request.POST[ans].split(",");
 			elif (ans == str('csrfmiddlewaretoken')) | (ans == str('__question_name')): # token or question_name
 				continue
@@ -77,21 +81,21 @@ def form(request):
 				#pdb.set_trace();
 				if ans.endswith('[]'):
 					#pdb.set_trace()
-					if len(request.POST.getlist(ans)) < int(request.POST['__required_answer_count']):
+					if len(request.POST.getlist(ans)) < int(float(request.POST['__required_answer_count'])):
 						unanswered = True;
-					answers[ans] = ','.join(request.POST.getlist(ans))
+					answers[ans] = {'answer':','.join(request.POST.getlist(ans))}
 					
 				else:
 					if not ans.startswith('_'):
-						answers[ans] = request.POST[ans];
+						answers[ans] = {'answer':request.POST[ans]}
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
-		set_answers(answers, request.user, '1.0')
+		set_answers(answers, request.user, survey_version)
 		if '_prev' in request.POST:
-			next_question = form_provider.get_previous_question(request.user,'1.0',request.POST['__question_name']);
+			next_question = form_provider.get_previous_question(request.user,survey_version,request.POST['__question_name']);
 		elif '_from_top' in request.POST:
-			next_question = form_provider.get_first_question(request.user,'1.0');
+			next_question = form_provider.get_first_question(request.user,survey_version);
 		elif '_quit' in request.POST:
-			r = Response(user = request.user,form_version='1.0',variable_name='_submitted',response='true');
+			r = Response(user = request.user,form_version=survey_version,variable_name='_submitted',response='true');
 			r.save()
 			return nochanges(request)
 			#return HttpResponseRedirect(settings.SENSIBLE_URL+'quit/');
@@ -103,15 +107,20 @@ def form(request):
 						break
 				
 			if '_next' in request.POST:
-				next_question = form_provider.get_next_question(request.user,'1.0',request.POST['__question_name']);
+				next_question = form_provider.get_next_question(request.user,survey_version,request.POST['__question_name']);
 			elif '_next_new' in request.POST:
-				next_question = form_provider.get_next_unanswered_question(request.user,'1.0');	
+				next_question = form_provider.get_next_unanswered_question(request.user,survey_version);	
 	else:
-		next_question = form_provider.get_next_unanswered_question(request.user,'1.0');
+		survey_version = form_provider.get_survey_version(request.user)
+		if survey_version is not None:
+			next_question = form_provider.get_next_unanswered_question(request.user,survey_version)
+		else:
+			return HttpResponseRedirect(settings.ROOT_URL+'nochanges/')		
 
 	di = {}
-	progress = form_provider.get_user_progress(request.user,'1.0');
+	progress = form_provider.get_user_progress(request.user,survey_version);
 	di['progress'] = str(progress);
+	di['survey_version'] = survey_version
 	progress = int(math.ceil(progress));
 	if progress < 3:
 		di['int_progress'] = '';
@@ -126,14 +135,70 @@ def form(request):
 		di['question'] = next_question.to_html()
 		di['unanswered'] = unanswered
 	
-	try: sync_with_study(subtle=True, user=request.user)
-	except: pass
+	#try: sync_with_study(subtle=True, user=request.user)
+	#except: pass
 
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
 
+
+
+# answers_dict = dict with variable_names as keys and answers in dicts
+def get_human_values(answers_dict, survey_version):	
+	s = Survey.objects.get(form_version=survey_version)
+	survey = json.loads(s.content)
+	variables = answers_dict.keys()
+	for q in survey:
+	
+		if 'data' in q.keys() and len(q['data']) > 0:
+			for subq in q['data']:
+				if subq['variable_name'] in variables:
+					answer = None
+					human_question = q['primary_content'] + '\n' + q['secondary_content'] + '\n' + q['additional_content'] + '\n' + subq['primary_content'] + '\n' + subq['secondary_content'] + '\n' + subq['additional_content']
+					if 'number' in subq['answer_type']:
+						answer = answers_dict[subq['variable_name']]['answer']
+					else:
+						for a in subq['answers']:
+							if a['htmlized'] == answers_dict[subq['variable_name']]['answer']:
+								answer = a['raw']
+					answers_dict[subq['variable_name']]['human_question'] = human_question
+					if answer is None:
+						answers_dict[subq['variable_name']]['human_answer'] = answers_dict[subq['variable_name']]['answer']
+					else:
+						answers_dict[subq['variable_name']]['human_answer'] = answer
+
+
+		elif q['variable_name'] in variables:
+			human_question = q['primary_content'] + '\n' + q['secondary_content'] + '\n' + q['additional_content']
+			answer = None
+			if 'header' in q['type'] or 'number' in q['answer_type']:
+				answer = answers_dict[q['variable_name']]['answer']
+			else:
+				# if it is a list question, there can be multiple answers separated by commas
+				parts = answers_dict[q['variable_name']]['answer'].split(',')
+				if len(parts) > 0:
+					answer = []
+					for a in q['answers']:
+						if a['htmlized'] in parts:
+							answer.append(a['raw'])
+				else:	
+					for a in q['answers']:
+						if a['htmlized'] == answers_dict[q['variable_name']]['answer']:
+							answer = a['raw']
+			answers_dict[q['variable_name']]['human_question'] = human_question
+			if answer is None:
+				answers_dict[q['variable_name']]['human_answer'] = answers_dict[q['variable_name']]['answer']
+			elif type(answer) == list:
+				answers_dict[q['variable_name']]['human_answer'] = ','.join(answer)
+			else:
+				answers_dict[q['variable_name']]['human_answer'] = answer
+			break
+	return answers_dict
+
 def set_answers(answer_dict, user, survey_version):
+	answer_dict = get_human_values(answer_dict, survey_version)
 	for var in answer_dict.keys():
-		form_provider.set_answer(user, survey_version, var, answer_dict[var])
+		o = answer_dict[var]
+		form_provider.set_answer(user, survey_version, var, o['answer'], o['human_question'], o['human_answer'])
 
 def nochanges(request):
 	return render_to_response('nochanges.html', {}, context_instance=RequestContext(request))

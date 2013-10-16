@@ -52,14 +52,14 @@
             <a class="brand" href="{% url 'home' %}">SensibleDTU: Questionnaires</a>
 	{% if user.is_authenticated %}
 	<div class="nav-collapse collapse">
-		            <ul class="nav">
+	<ul class="nav">
 		<li class="divider-vertical"></li>
-	<li><a href="{% url 'home' %}" class=""><i class="icon-home"></i> Home</a></li>
+		<li><a href="{% url 'home' %}" class=""><i class="icon-home"></i> Home</a></li>
 		<li class="divider-vertical"></li>
-	<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> About</a></li>
-	<li class="divider-vertical"></li>
-	<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Quit</a></li>
-	<li class="divider-vertical"></li>
+		<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> About</a></li>
+		<li class="divider-vertical"></li>
+		<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Quit</a></li>
+		<li class="divider-vertical"></li>
 	</ul>
 	</div>
 	<ul class="nav pull-right action">

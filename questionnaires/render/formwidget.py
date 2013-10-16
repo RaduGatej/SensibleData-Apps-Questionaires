@@ -1,7 +1,10 @@
 import re
 from django.conf import settings
 import pdb
-
+import csv
+import json
+import xlrd
+from utils import htmlize
 #indices of columns in the Excel file
 ELEMENT_TYPE = 0;
 PRIMARY_CONTENT = 1;
@@ -33,7 +36,60 @@ def is_number(s):
 	except ValueError:
 		return False
 
-def parsefile(filename):
+def xls_to_csv(infile, outfile):
+	wb = xlrd.open_workbook(infile)
+	sheet = wb.sheet_by_index(0)
+	
+	csv_output = open(outfile,'wb')
+		
+	wr = csv.writer(csv_output, quoting=csv.QUOTE_MINIMAL)
+	for r in xrange(sheet.nrows):
+		wr.writerow([unicode(entry).encode('utf-8') for entry in sheet.row_values(r)])
+	
+	csv_output.close()
+	return outfile
+
+def parse_csv(filename):
+	widgets = []
+	idx = 0
+	line_idx = 0
+	with open(filename, 'rb') as mycsv:
+		reader = csv.reader(mycsv, delimiter = ',')
+		for row in reader:
+			line_idx +=1
+			print line_idx
+			if row[0] == 'Type': continue # skipping header line
+			elif row[0] == '': continue # skipping empty line
+			widget = parserow(row)
+			if widget is None:
+				print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
+				continue
+			idx +=1
+			if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion):
+				widgets[-1].add_subquestion(widget)
+			else:
+				widgets.append(widget)
+	return widgets
+
+def parse_xls(infile):
+	outfile = infile + '.csv'
+	return parse_csv(xls_to_csv(infile, outfile))
+
+def parse_json(jsonstring):
+	widgets = []
+	obj = json.loads(jsonstring)
+	for w in obj:
+		widgets.append(makewidget_fromdict(w))
+	return widgets
+	
+# reads a file and returns a list of widgets
+def parse_file(infile):
+	if infile.endswith('.xls'):
+		return parse_xls(infile)
+	elif infile.endswith('.csv'):
+		return parse_csv(infile)
+
+def parse_txt(filename):
 	#print filename
 	widgets = [];
 	idx = 0;
@@ -69,13 +125,25 @@ def parsefile(filename):
 			f.write(line.replace('\r','\r\n'))
 		f.close();
 		widgets = parsefile(filename + '.tmp')
+	#for w in widgets:
+	#	print w.to_dict()
 	return widgets
+
+def makewidget_fromdict(mdict):
+	if mdict['type'] == 'header':
+		return Header.fromdict(mdict)
+	elif mdict['type'] == 'question':
+		return makequestion_fromdict(mdict)
+	elif mdict['type'] == 'subquestion':
+		if mdict['answer_type'] == 'radio':
+			return SubQuestion.fromdict(mdict)
+		elif mdict['answer_type'] == 'number':
+			return NumberSubquestion.fromdict(mdict)
+	else:
+		return None	
 				
-
-
-
-def parseline(string):
-	parts = validate(string)
+def parserow(row):
+	parts = validate_row(row)
 	if parts == None:
 		return None;
 	
@@ -101,6 +169,39 @@ def parseline(string):
 	else:
 		#raise Exception('',parts[ELEMENT_TYPE] + ' is not a valid element type!');
 		return None
+
+def validate_row(parts):
+	#pdb.set_trace()
+	#print (parts)
+	if len(parts) < NUMBER_OF_COLUMNS:
+		parts += ['' for e in xrange(NUMBER_OF_COLUMNS-len(parts))]
+	
+	error = False;
+	
+	if parts[ELEMENT_TYPE] not in ['header','question','subquestion']:
+		print 'ERROR: ' + parts[ELEMENT_TYPE] + ' is not a valid element type!';
+		error = True;
+	if parts[ELEMENT_TYPE] in ['question','subquestion']:
+		if parts[ANSWER_TYPE] not in ['radio','number','checklist','grid','multi_number','scale','textarea', 'number;radio']:
+			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
+			error = True;
+		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea']:
+			if parts[ANSWERS] == '':
+				print 'ERROR: missing list of answers'
+				error = True;
+	if parts[ANSWER_TYPE] != 'grid':
+		if parts[VARIABLE_LABEL] == '':
+			print 'ERROR: variable label is missing';
+			error = True
+		elif parts[VARIABLE_NAME] == '':
+		#	print 'WARNING: variable name is missing, making it the same as label';
+			parts[VARIABLE_NAME] = parts[VARIABLE_LABEL]
+		
+	
+	if error:
+		return None
+	else:
+		return parts
 		
 def validate(string):
 	parts = string.strip().split('\t');
@@ -170,8 +271,30 @@ def makequestion(primary_content, secondary_content, additional_content,\
 		raise Exception('',answer_type + ' is not a valid answer type!');
 		return None
 
-def htmlize(string):
-    return re.sub('[^a-z_0-9-:]','',string.strip().lower().replace(' ','_'));
+def makequestion_fromdict(mdict):
+	answer_type = mdict['answer_type']
+	if answer_type == 'radio':
+		return RadioQuestion.fromdict(mdict);
+	elif answer_type == 'number':
+		return NumberQuestion.fromdict(mdict);
+	elif answer_type == 'dropdown':
+		return ListQuestion.fromdict(mdict);
+	elif answer_type == 'scale':
+		return ScaleQuestion.fromdict(mdict);
+	elif answer_type == 'number;radio':
+		return NumberCheckQuestion.fromdict(mdict);
+	elif answer_type == 'textarea':
+		return FreeTextQuestion.fromdict(mdict);
+	elif answer_type == 'multi_number':
+		return MultiNumberQuestion.fromdict(mdict);
+	elif answer_type == 'checklist':
+		return ChecklistQuestion.fromdict(mdict);
+	elif answer_type == 'grid':
+		return GridQuestion.fromdict(mdict);
+	else:
+		raise Exception('',answer_type + ' is not a valid answer type!');
+		return None
+
     
 #### Class definitions
 class Formwidget(object):
@@ -189,9 +312,19 @@ class Formwidget(object):
 		for answer in answers:
 			ans = answer.strip();
 			if ans != '':
-				self.answers.append(answer.strip());
+				self.answers.append({"raw":ans,"htmlized":htmlize(ans)});
 		self.extra_param = extra_param;
 		self.data = [];
+
+	@classmethod
+	def fromdict(cls, mdict):
+		o = cls(mdict['primary_content'],mdict['secondary_content'],mdict['additional_content'],\
+			mdict['inclusion_condition'],mdict['answer_type'],mdict['variable_name'],'',mdict['extra_param'])
+		o.answers = mdict['answers']
+		for d in mdict['data']:
+			o.data.append(makewidget_fromdict(d))
+		return o
+
 	def render(self):
 		return "<p></p>";
 
@@ -199,7 +332,26 @@ class Formwidget(object):
 		#return '<div class="formwidget">\n' + self.render() + '\n</div>';
 		resp = '<input type="hidden" name="__question_name" value="' + self.variable_name + '" />\n';
 		return resp + self.render();
-
+	
+	def to_dict(self):
+		resp = {}
+		resp['type'] = self.__class__.__name__.lower()
+		resp['primary_content'] = self.primary_content
+		resp['secondary_content'] = self.secondary_content
+		resp['additional_content'] = self.additional_content
+		resp['inclusion_condition'] = self.inclusion_condition
+		resp['answer_type'] = self.answer_type
+		resp['variable_name'] = self.variable_name
+		resp['answers'] = []
+		for answer in self.answers:
+			resp['answers'].append(answer)
+		resp['extra_param'] = self.extra_param
+		
+		resp['data'] = []
+		for d in self.data:
+			resp['data'].append(d.to_dict())
+		return resp	
+	
 	def set_answer(self, answer):
 		self.answer = answer;
 
@@ -219,6 +371,11 @@ class Question(Formwidget):
 
 		return resp + self.list_required_vars();
 
+	def to_dict(self):
+		o = super(Question, self).to_dict()
+		o['type'] = 'question'
+		return o
+
 	def list_required_vars(self):
 		resp = '<input type="hidden" name="__required_vars" value="' + self.variable_name + '" />\n'
 		return resp;
@@ -232,6 +389,21 @@ class Header(Formwidget):
 		self.additional_content = additional_content;
 		self.variable_name = variable_name;
 		self.inclusion_condition = inclusion_condition;
+
+	@classmethod
+	def fromdict(cls, mdict):
+		return cls(mdict['primary_content'],mdict['secondary_content'],mdict['additional_content'],\
+			mdict['inclusion_condition'],mdict['variable_name'])
+	
+	def to_dict(self):
+		resp = {}
+		resp['type'] = self.__class__.__name__.lower()
+		resp['primary_content'] = self.primary_content
+		resp['secondary_content'] = self.secondary_content
+		resp['additional_content'] = self.additional_content
+		resp['variable_name'] = self.variable_name
+		resp['inclusion_condition'] = self.inclusion_condition
+		return resp
 
 	def render(self):
 		resp = '<h2>' + self.primary_content + "</h2>\n"
@@ -247,12 +419,12 @@ class RadioQuestion(Question):
 		for answer in self.answers:
 			resp += '<label class="radio">\n';
 			resp += '\t<input type="radio" name="' + self.variable_name + \
-					'" value="' + htmlize(answer) +'" '
+					'" value="' + answer['htmlized'] +'" '
 			if self.answer != []:
-				if self.answer == htmlize(answer):
+				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
 			resp += 'onclick="document.getElementById(\'next_button\').click();" '
-			resp += '/>' + answer + '\n'
+			resp += '/>' + answer['raw'] + '\n'
 			resp += '</label>\n';
 		return resp;
 
@@ -265,11 +437,11 @@ class ListQuestion(Question):
 		# add empty answer as default
 		resp += '\t<option value=""></option>\n';
 		for answer in self.answers:
-	 		resp += '\t<option value="' + htmlize(answer) + '" '
+	 		resp += '\t<option value="' + answer['htmlized'] + '" '
 			if (self.answer != []):
-				if self.answer == htmlize(answer):
+				if self.answer == answer['htmlized']:
 					resp += 'selected="selected"' 
-			resp += '>' + answer + '</option>\n'
+			resp += '>' + answer['raw'] + '</option>\n'
 		resp += '</select>\n';
 
 		return resp
@@ -279,7 +451,8 @@ class ChecklistQuestion(Question):
 				inclusion_condition, answer_type, variable_name, answers, extra_param):
 		super( ChecklistQuestion, self).__init__(primary_content, secondary_content, additional_content, \
 				inclusion_condition, answer_type, variable_name, answers, extra_param)
-		self.variable_name = self.variable_name + '[]'
+		if not self.variable_name.endswith('[]'):
+			self.variable_name = self.variable_name + '[]'
 	
 	def render(self):
 		resp = self.prerender();
@@ -289,12 +462,12 @@ class ChecklistQuestion(Question):
 		for answer in self.answers:
 			resp += '\t<label class="checkbox">\n'
 			resp += '\t\t<input type="checkbox" name="' + self.variable_name + '" '
-			resp += 'value="' + htmlize(answer) + '" '
+			resp += 'value="' + answer['htmlized'] + '" '
 			if self.answer != []:
-				if htmlize(answer) in self.answer:
+				if answer['htmlized'] in self.answer:
 					resp += ' checked '
 			resp +=' />'
-			resp += answer + '\n'
+			resp += answer['raw'] + '\n'
 			resp += '\t</label>\n'
     		
 		return resp
@@ -324,8 +497,8 @@ class NumberQuestion(Question):
 			resp += '<div class="span4">'
 		else:
 			resp += '<div class="span12">'
-		self.answers = re.sub('_+','_',self.answers[0])
-		parts = self.answers.split('_');
+		self.answers[0]['raw'] = re.sub('_+','_',self.answers[0]['raw'])
+		parts = self.answers[0]['raw'].split('_');
 		#pdb.set_trace()
 		if len(parts) > 1: #there was the underscore, so we prepend/append
 			for i, part in enumerate(parts):
@@ -341,7 +514,7 @@ class NumberQuestion(Question):
 				resp += '\t<span class="add-on '
 				resp += '">' + parts[0] + '</span>'
 			
-		resp += '<input name="' + htmlize(self.variable_name) + '" '
+		resp += '<input name="' + self.variable_name + '" '
 		resp += 'class="input-small ';
 		if self.extra_param == 'time':
 			resp += 'time" ';
@@ -393,6 +566,7 @@ class NumberQuestion(Question):
 #equal to the number of answers +1. The only border in the table is the horizontal line between the notes
 #and radio buttons.
 class ScaleQuestion(Question):
+	
 	def prerender(self):
 		resp = '';
 		if len(self.primary_content) > 0:
@@ -415,7 +589,7 @@ class ScaleQuestion(Question):
 			#	resp += 'left'
 			#else:
 			#	resp += 'center'
-			resp += answer + '</th>'
+			resp += answer['raw'] + '</th>'
 			
 		resp += '\n\t</tr>'
 		resp += '\t<tr>\n\t\t<td>' + self.secondary_content + '</td>'
@@ -428,8 +602,8 @@ class ScaleQuestion(Question):
 			#else:
 			#	resp += 'center'
 			#resp += '">'
-			resp += '<input type="radio" name="' + self.variable_name + '" value="' + answer + '" '
-			if self.answer == answer:
+			resp += '<input type="radio" name="' + self.variable_name + '" value="' + answer['htmlized'] + '" '
+			if self.answer == answer['htmlized']:
 				resp += ' checked '
 			resp += 'onclick="document.getElementById(\'next_button\').click();" '
 			resp += '/></td>'
@@ -457,8 +631,8 @@ class NumberCheckQuestion(Question):
 		resp += '<script type="text/javascript"> '
 		resp += "function checkboxClicked() {var numberfield = document.getElementById('numberfield');var checkbox = document.getElementById('checkboxfield');if (checkbox.checked == true) {numberfield.value = ',';numberfield.disabled = true;} else {numberfield.value = '';numberfield.disabled = false;}}function numberEntered() {var element = document.getElementById('checkboxfield');element.checked=false;}"
 		resp += '</script>\n'
-		self.answers[0] = re.sub('_+','_',self.answers[0])
-		parts = self.answers[0].split('_');
+		self.answers[0]['raw'] = re.sub('_+','_',self.answers[0]['raw'])
+		parts = self.answers[0]['raw'].split('_');
 		for i, part in enumerate(parts):
 			parts[i] = part.strip();
 			
@@ -497,23 +671,28 @@ class NumberCheckQuestion(Question):
 			resp += parts[1]
 		resp += '<label class="checkbox">\n'
 		resp += '<input type="checkbox" name="' + self.variable_name + '" '  
-		resp += 'value="' + htmlize(self.answers[1]) + '" '
+		resp += 'value="' + self.answers[1]['htmlized'] + '" '
 		if (self.answer != []) & (numeric_answer==False):
 			resp += 'checked '
 		resp += 'id="checkboxfield" onclick="checkboxClicked();"/>\n'
-		resp += self.answers[1]
+		resp += self.answers[1]['raw']
 		resp += '</label>'
 		return resp
 
 class SubQuestion(Formwidget):
+	def to_dict(self):
+		o = super(SubQuestion, self).to_dict()
+		o['type'] = 'subquestion'
+		return o
+
 	def render(self):
 		resp = ''
 		answered = False;
 		if self.answer_type == 'radio':
 			for answer in self.answers:
 				resp += '\t<td style="text-align:center;">'
-				resp += '<input type="radio" name="' + htmlize(self.variable_name) + '" value="' + htmlize(answer) + '"'
-				if self.answer == htmlize(answer):
+				resp += '<input type="radio" name="' + htmlize(self.variable_name) + '" value="' + answer['htmlized'] + '"'
+				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
 					answered = True;
 				resp += 'onclick="markRowSuccess(this)" '
@@ -564,7 +743,7 @@ class GridQuestion(Question):
 		resp += '\n<table class="table table-bordered table-hover">\n';
 		resp += '<tr>\n\t<th></th>';
 		for answer in self.answers:
-			resp +='\n\t<th style="width:8%;vertical-align:bottom;text-align:center;">' + answer + '</th>';
+			resp +='\n\t<th style="width:8%;vertical-align:bottom;text-align:center;">' + answer['raw'] + '</th>';
 		resp += '\n</tr>\n'
 		for sub in self.data:
 			resp += sub.render();

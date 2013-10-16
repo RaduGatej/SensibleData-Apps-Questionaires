@@ -2,12 +2,13 @@ from django.conf import settings
 #from render.models import Formelement
 #from render.models import Survey
 import pdb
+import hashlib
 
 import codecs
 
 def preprocess_survey(filename):
 	#pdb.set_trace()
-	path = settings.SURVEY_DIR + filename;
+	path = filename;
 	# Step 1: read the "straight from excel file and remove carriage returns in quotes"
 	raw = codecs.open(path, 'r','utf-16').read();
 	prepreprocessed = []
@@ -21,16 +22,22 @@ def preprocess_survey(filename):
 	#pdb.set_trace()
 	
 	# Step 2: add our questions two questions before the end
-	lines = prepreprocessed.split("\r\n");
+	#lines = prepreprocessed.split("\r\n");
 	#ourquestions = codecs.open(settings.SURVEY_DIR + settings.OUR_QUESTIONS,'r','utf-16').readlines();
 	#processed_lines = lines[:-2] + ourquestions + lines[-2:]
-	processed_lines = lines
+	#processed_lines = lines
 	
 	# Step 3: save to the final output file
-	output = "\r\n".join(processed_lines);
-	outfile = codecs.open(settings.SURVEY_DIR + settings.SURVEY_FILE,'w','utf-8');
+	
+	output = "\n".join(processed_lines);
+	
+	# Step 3.2: generate the version tag of the survey
+	version = hashlib.md5(output).hexdigest()
+	outfile = codecs.open(settings.SURVEY_DIR + version + '.txt','w','utf-8');
 	outfile.write(output);
 	outfile.close();
+	return version
+	
 
 def myvalidation():
 	Formelement.objects.create().full_clean()
