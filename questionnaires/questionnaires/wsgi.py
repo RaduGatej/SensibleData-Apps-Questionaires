@@ -16,9 +16,8 @@ framework.
 import os
 import sys
 
-sys.path.append('/home/sensibleDTU/sensible-dtu-apps/questionnaires/SensibleData-Apps-Questionaires/questionnaires')
-sys.path.append('/home/sensibleDTU/sensible-dtu-apps/questionnaires/SensibleData-Apps-Questionaires')
-sys.path.append('/home/sensibleDTU/sensible-dtu-apps/questionnaires')
+sys.path.append('/home/arks/sensibledtu_DEVEL/SensibleData-Apps-Questionnaires/questionnaires')
+sys.path.append('/home/arks/sensibledtu_DEVEL/SensibleData-Apps-Questionnaires')
 os.environ["DJANGO_SETTINGS_MODULE"] = "questionnaires.settings"
 
 
