@@ -4,10 +4,10 @@ INSTALLED_APPS = (
 	'south',
 )
 
-OPENID_SSO_SERVER_URL = "https://54.229.13.160/sensible-data/openid/xrds/"
+OPENID_SSO_SERVER_URL = "https://www.sensible.dtu.dk/sensible-data/openid/xrds/"
 
 #service config
-SERVICE_URL = 'https://54.229.13.160/sensible-dtu/'
+SERVICE_URL = 'https://www.sensible.dtu.dk/sensible-dtu/'
 AUTH_ENDPOINT = 'authorization_manager/'
 CONNECTOR = 'connector_questionnaire'
 SERVICE_TOKEN_URL = SERVICE_URL + 'connectors/' + CONNECTOR + '/auth/token/'
@@ -16,7 +16,7 @@ SERVICE_MY_REDIRECT_SUFFIX = 'oauth2/grant/'
 
 
 #idp settings
-IDP_URL = 'https://54.229.13.160/sensible-data/'
+IDP_URL = 'https://www.sensible.dtu.dk/sensible-data/'
 IDP_AUTHORIZATION_URL = IDP_URL+'oauth2/oauth2/authorize/?'
 IDP_MY_REDIRECT_SUFFIX = 'identity/attributes_redirect/'
 
