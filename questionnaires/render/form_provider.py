@@ -304,7 +304,8 @@ def check_condition(user_id, survey_version, mcondition):
 def get_survey_version(user):
 	try:
 		Response.objects.get(user=user, variable_name='_submitted', form_version='90920167766cb9d5d5767b692b9d3acb')
-		return 'f3a9ec5005dd1fb3ccbc9432ad8a731f' 
+		#return 'f3a9ec5005dd1fb3ccbc9432ad8a731f' 
+		return None
 	except Response.DoesNotExist:
 		return '90920167766cb9d5d5767b692b9d3acb'
 	
