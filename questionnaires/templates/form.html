@@ -182,7 +182,7 @@
     	<form action="" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
 			<fieldset>
 				{% csrf_token %}
-				
+				<input type="hidden" name="__survey_version" value="{{ survey_version }}" />
 				<!-- display the question? -->
 				{% if last_page %}
 					<input type="hidden" name="__question_name" value="__goodbye" />
