@@ -126,8 +126,8 @@ def form(request):
 		di['question'] = next_question.to_html()
 		di['unanswered'] = unanswered
 	
-	try: sync_with_study(subtle=True, user=request.user)
-	except: pass
+	#try: sync_with_study(subtle=True, user=request.user)
+	#except: pass
 
 	return render_to_response('form.html', di, context_instance=RequestContext(request))
 
