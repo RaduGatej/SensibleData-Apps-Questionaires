@@ -25,7 +25,8 @@ def sync_with_study(subtle=False, user=None):
 		values['variable_name'] = str(response.variable_name)
 		values['response'] = str(response.response.encode('utf-8'))
 		values['last_answered'] = str(response.last_answered)
-
+		values['human_readable_question'] = str(response.human_readable_question.encode('utf-8'))
+		values['human_readable_response'] = str(response.human_readable_response.encode('utf-8'))
 		values = urllib.quote(json.dumps(values))
 
 		token = oauth2.getToken(response.user, Scope.objects.get(scope='connector_questionnaire.input_form_data'))
