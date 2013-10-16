@@ -1,5 +1,5 @@
 import formwidget as fw
-from render.models import Response
+from render.models import Response, Survey
 from django.conf import settings
 import pdb
 
@@ -11,12 +11,12 @@ def DEBUG():
 		pdb.set_trace()
 
 def get_first_question(user_id, survey_version):
-	questions = get_questions_list();
+	questions = get_questions_list(survey_version);
 	return return_question(user_id, survey_version, questions[0]);
 
 def get_previous_question(user_id, survey_version, current_name):
 	#pdb.set_trace()
-	questions = get_questions_list();
+	questions = get_questions_list(survey_version);
 	if current_name == '__goodbye':
 		for i in range(1,len(questions)):
 			conditioned_question = get_conditioned_question(user_id, survey_version, questions[-i])
@@ -49,7 +49,7 @@ def get_previous_question(user_id, survey_version, current_name):
 
 def get_next_question(user_id, survey_version, current_name):
 	
-	questions = get_questions_list();
+	questions = get_questions_list(survey_version);
 	now_is_the_time = False;
 	for question in questions:	
 		if now_is_the_time:
@@ -78,7 +78,7 @@ def get_next_question(user_id, survey_version, current_name):
 			
 
 def get_next_unanswered_question(user_id,survey_version):
-	for question in get_questions_list():
+	for question in get_questions_list(survey_version):
 		if needs_answer(user_id, survey_version, question):
 			return return_question(user_id, survey_version, get_conditioned_question(user_id, survey_version, question))
 	#pdb.set_trace()
@@ -200,7 +200,7 @@ def get_current_question(user_id, survey_version):
 		return questions[0]
 '''	
 
-def set_answer(user_id, survey_version, variable_name, response):
+def set_answer(user_id, survey_version, variable_name, response, human_readable_question, human_readable_response):
 	#saving the question index
 	#entries = Progress.objects.filter(user_id = user_id, form_version=survey_version, question_index=question_index);
 	#if len(entries) > 0:
@@ -216,10 +216,13 @@ def set_answer(user_id, survey_version, variable_name, response):
                 variable_name = variable_name)
 	if len(entries) > 0:
 		entries[0].response = response;
+		entries[0].human_readable_response = human_readable_response
 		entries[0].save();
 	else:
 		r = Response(user = user_id, form_version=survey_version, \
-				variable_name = variable_name, response=response);
+				variable_name = variable_name, response=response,\
+				human_readable_question = human_readable_question,\
+				human_readable_response = human_readable_response);
 		r.save();
 
 def get_response(user_id, survey_version, variable_name):
@@ -297,8 +300,22 @@ def check_condition(user_id, survey_version, mcondition):
 
 	return not equal;
 
-def get_questions_list():
-	return fw.parsefile(SURVEY_PATH)
+# to be implemented correctly
+def get_survey_version(user):
+	try:
+		Response.objects.get(user=user, variable_name='_submitted', form_version='90920167766cb9d5d5767b692b9d3acb')
+		#return 'f3a9ec5005dd1fb3ccbc9432ad8a731f' 
+		return None
+	except Response.DoesNotExist:
+		return '90920167766cb9d5d5767b692b9d3acb'
+	
+
+def get_questions_list(survey_version):
+	try:
+		s = Survey.objects.get(form_version = survey_version)
+		return fw.parse_json(s.content)
+	except Survey.DoesNotExist:
+		return []
 	
 				
 
