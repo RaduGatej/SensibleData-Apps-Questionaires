@@ -311,8 +311,11 @@ def get_survey_version(user):
 	
 
 def get_questions_list(survey_version):
-	s = Survey.objects.get(form_version = survey_version)
-	return fw.parse_json(s.content)
+	try:
+		s = Survey.objects.get(form_version = survey_version)
+		return fw.parse_json(s.content)
+	except Survey.DoesNotExist:
+		return []
 	
 				
 
