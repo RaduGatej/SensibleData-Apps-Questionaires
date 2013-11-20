@@ -1,7 +1,9 @@
+import json
 import formwidget as fw
 from render.models import Response, Survey
 from django.conf import settings
 import pdb
+from LOCAL_surveys import SURVEYS
 
 SURVEY_PATH = settings.SURVEY_DIR + settings.SURVEY_FILE
 
@@ -157,22 +159,39 @@ def get_survey_length(survey_version):
 	#return len(open(settings.ROOT_DIR + 'render/data/sample_new.txt').readlines());
 	resp = 0;
 	previous = ''
-	for line in open(SURVEY_PATH):
-		if line.startswith('header') | line.startswith('question'):
-			resp +=1
-		elif line.startswith('subquestion'):
-			if previous.startswith('subquestion'):
-				resp +=1
-		previous = line
-		
+	s = Survey.objects.get(form_version = survey_version)
+	content = json.loads(s.content)
+	for question in content:
+		try:
+			if len(question['data']) > 0: resp += len(question['data'])
+			else: resp +=1
+		except Exception: resp +=1 #headers don't have data
 	return resp
+	#for line in open(SURVEY_PATH):
+	#	if line.startswith('header') | line.startswith('question'):
+	#		resp +=1
+	#	elif line.startswith('subquestion'):
+	#		if previous.startswith('subquestion'):
+	#			resp +=1
+	#	previous = line
+	#	
+	#return resp
 	
 def get_ordered_variable_names(survey_version):
 	resp = [];
-	for line in open(SURVEY_PATH):
-		if line.startswith('header') | line.startswith('question') | line.startswith('subquestion'):
-			resp.append(line.split('\t')[fw.VARIABLE_LABEL].strip())
-		
+	s = Survey.objects.get(form_version = survey_version)
+	content = json.loads(s.content)
+	for q in content:
+		try:
+			if len(q['data']) > 0:
+				for sq in q['data']:
+					resp.append(sq['variable_name'])
+			else: resp.append(q['variable_name'])
+		except Exception: resp.append(q['variable_name']) # headers don't have data
+	#for line in open(SURVEY_PATH):
+	#	if line.startswith('header') | line.startswith('question') | line.startswith('subquestion'):
+	#		resp.append(line.split('\t')[fw.VARIABLE_LABEL].strip())
+	#	
 	return resp	
 
 '''
@@ -302,12 +321,34 @@ def check_condition(user_id, survey_version, mcondition):
 
 # to be implemented correctly
 def get_survey_version(user):
-	try:
-		Response.objects.get(user=user, variable_name='_submitted', form_version='90920167766cb9d5d5767b692b9d3acb')
-		#return 'f3a9ec5005dd1fb3ccbc9432ad8a731f' 
-		return None
-	except Response.DoesNotExist:
-		return '90920167766cb9d5d5767b692b9d3acb'
+	submit_responses = Response.objects.filter(user=user, variable_name='_submitted')
+	response_dates = {}
+	for response in submit_responses:
+		response_dates[response.form_version] = response.last_answered
+	# if they already answered the second questionnaire, return none
+	if SURVEYS[1] in response_dates.keys(): return None
+	# if they answered none, return the first one
+	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0]
+	# if they answered first one, but not the second one, check when they did and what day it is today
+	if response_dates[SURVEYS[0]].year < 2014 and response_dates[SURVEYS[0]].month < 12:
+		return SURVEYS[1]
+	# add handling the date of giving the questionnaire to other users
+
+
+	return None
+#	try:
+#		a = Response.objects.get(user=user, variable_name='_submitted', form_version='90920167766cb9d5d5767b692b9d3acb')
+#		# if answered before November 1st, return new questionniare
+#		answered = a.last_answered;
+#		if answered.year < 2014 and answered.month < 12:
+#			return 'c6107a28c3651190fc77b36785e49a43'
+#		else:
+#			# TODO add comparison to todays date - if it's after second deployment date, serve the new one
+#			return None
+#		#return 'f3a9ec5005dd1fb3ccbc9432ad8a731f' 
+#		return None
+#	except Response.DoesNotExist:
+#		return '90920167766cb9d5d5767b692b9d3acb'
 	
 
 def get_questions_list(survey_version):

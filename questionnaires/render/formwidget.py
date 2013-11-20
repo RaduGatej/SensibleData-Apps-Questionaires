@@ -453,6 +453,7 @@ class ChecklistQuestion(Question):
 				inclusion_condition, answer_type, variable_name, answers, extra_param)
 		if not self.variable_name.endswith('[]'):
 			self.variable_name = self.variable_name + '[]'
+		if len(self.extra_param) == 0: self.extra_param = '1'
 	
 	def render(self):
 		resp = self.prerender();
