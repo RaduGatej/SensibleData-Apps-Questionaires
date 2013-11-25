@@ -4,8 +4,8 @@ from render.models import Response, Survey
 from django.conf import settings
 import pdb
 from LOCAL_surveys import SURVEYS
-
-SURVEY_PATH = settings.SURVEY_DIR + settings.SURVEY_FILE
+import datetime
+#SURVEY_PATH = settings.SURVEY_DIR + settings.SURVEY_FILE
 
 _DEBUG = False
 def DEBUG():
@@ -328,9 +328,9 @@ def get_survey_version(user):
 	# if they already answered the second questionnaire, return none
 	if SURVEYS[1] in response_dates.keys(): return None
 	# if they answered none, return the first one
-	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0]
-	# if they answered first one, but not the second one, check when they did and what day it is today
-	if response_dates[SURVEYS[0]].year < 2014 and response_dates[SURVEYS[0]].month < 12:
+	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0] 
+	# if they answered first one, but not the second one, check if they did it before October 25th
+	if response_dates[SURVEYS[0]] < datetime.datetime(2013, 10, 25):
 		return SURVEYS[1]
 	# add handling the date of giving the questionnaire to other users
 
