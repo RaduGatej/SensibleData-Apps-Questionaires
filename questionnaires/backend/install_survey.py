@@ -29,6 +29,7 @@ def install_survey(filename, title = '', prerequisite = ''):
 	except Survey.DoesNotExist:
 		s = Survey(form_version = digest, title=title, content=data, prerequisite=prerequisite)
 		s.save()
+	print digest
 	
 	
 	#print doc
