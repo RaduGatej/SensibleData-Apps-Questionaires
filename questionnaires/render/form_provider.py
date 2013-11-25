@@ -5,6 +5,8 @@ from django.conf import settings
 import pdb
 from LOCAL_surveys import SURVEYS
 import datetime
+from django.utils import timezone
+
 #SURVEY_PATH = settings.SURVEY_DIR + settings.SURVEY_FILE
 
 _DEBUG = False
@@ -330,7 +332,7 @@ def get_survey_version(user):
 	# if they answered none, return the first one
 	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0] 
 	# if they answered first one, but not the second one, check if they did it before October 25th
-	if response_dates[SURVEYS[0]] < datetime.datetime(2013, 10, 25):
+	if response_dates[SURVEYS[0]] < timezone.make_aware(datetime.datetime(2013, 10, 25), timezone.get_default_timezone()):
 		return SURVEYS[1]
 	# add handling the date of giving the questionnaire to other users
 
