@@ -114,19 +114,26 @@ def get_next_unanswered_question(user_id,survey_version):
 def get_autocomplete_data_for_user_from_source(user_id, source_type, source_link):
 	autocomplete_data = {}
 	if source_type == 'file':
-		autocomplete_data = json.loads(open(settings.ROOT_DIR + source_link, "r").read())
+		try:
+			autocomplete_data = json.loads(open(settings.ROOT_DIR + source_link, "r").read())
+		except Exception, e:
+			print "Error accessing autocomplete items source file: " + str(e)
 	return autocomplete_data.get(unicode(user_id), [])
 
 
 def pseudonyms_to_facebook_names(response):
-	facebook_names_to_pseudonyms = json.loads(open(settings.ROOT_DIR + settings.FACEBOOK_NAMES_FILE).read())
+	facebook_names_to_pseudonyms = {}
+	try:
+		facebook_names_to_pseudonyms = json.loads(open(settings.ROOT_DIR + settings.FACEBOOK_NAMES_FILE).read())
+	except Exception, e:
+		print "Error accessing pseudonyms file: " + str(e)
 	pseudonyms_to_facebook_names_dict = {v: k for k, v in facebook_names_to_pseudonyms.items()}
 	response_pseudonyms = response.split(";")
 	facebook_names = []
 	for pseudonym in response_pseudonyms:
 		facebook_name = pseudonyms_to_facebook_names_dict.get(pseudonym)
 		if not facebook_name:
-			facebook_name = simplecrypt.decrypt(settings.FACEBOOK_NAMES_ENCRYPTION_PASSWORD, pseudonym)
+			facebook_name = simplecrypt.decrypt(settings.FACEBOOK_NAMES_ENCRYPTION_PASSWORD, pseudonym.decode("hex"))
 		facebook_names.append(facebook_name)
 	return "\r\n".join(facebook_names)
 
@@ -253,12 +260,17 @@ def get_current_question(user_id, survey_version):
 def process_facebook_names_response(response):
 	names = response.split("\r\n")
 	names = [name for name in names if len(name) > 0]
-	facebook_names_to_pseudonyms = json.loads(open(settings.ROOT_DIR + settings.FACEBOOK_NAMES_FILE).read())
+	facebook_names_to_pseudonyms = {}
+	try:
+		facebook_names_to_pseudonyms = json.loads(open(settings.ROOT_DIR + settings.FACEBOOK_NAMES_FILE).read())
+	except Exception, e:
+		print "Error accessing facebook names file: " + str(e)
+
 	friends_pseudonyms = []
 	for name in names:
 		pseudonym = facebook_names_to_pseudonyms.get(name)
 		if not pseudonym:
-			pseudonym = simplecrypt.encrypt(settings.FACEBOOK_NAMES_ENCRYPTION_PASSWORD, name)
+			pseudonym = simplecrypt.encrypt(settings.FACEBOOK_NAMES_ENCRYPTION_PASSWORD, name).encode("hex")
 		friends_pseudonyms.append(pseudonym)
 	return ";".join(friends_pseudonyms)
 
@@ -274,6 +286,7 @@ def set_answer(user_id, survey_version, variable_name, response, human_readable_
 	#	r.save();
 
 	#saving the actual answer
+	print user_id
 	entries = Response.objects.filter(user = user_id, form_version=survey_version, \
                 variable_name = variable_name)
 	if variable_name == 'friends_name':
@@ -371,6 +384,7 @@ def get_survey_version(user):
 	for response in submit_responses:
 		response_dates[response.form_version] = response.last_answered
 	# if they already answered the second questionnaire, return none
+	return SURVEYS[3]
 	if SURVEYS[1] in response_dates.keys(): return None
 	# if they answered none, return the first one
 	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0]
