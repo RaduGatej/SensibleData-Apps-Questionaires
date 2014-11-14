@@ -4,6 +4,7 @@ from render.models import Response, Survey
 from django.conf import settings
 import pdb
 from LOCAL_surveys import SURVEYS
+import simplecrypt
 import datetime
 from django.utils import timezone
 
@@ -110,18 +111,52 @@ def get_next_unanswered_question(user_id,survey_version):
 	#else:
 	#	return return_question(user_id, survey_version, questions[0]);
 
+def get_autocomplete_data_for_user_from_source(user_id, source_type, source_link):
+	autocomplete_data = {}
+	if source_type == 'file':
+		try:
+			autocomplete_data = json.loads(open(settings.ROOT_DIR + source_link, "r").read())
+		except Exception, e:
+			print "Error accessing autocomplete items source file: " + str(e)
+	return autocomplete_data.get(unicode(user_id), [])
+
+
+def pseudonyms_to_facebook_names(response):
+	facebook_names_to_pseudonyms = {}
+	try:
+		facebook_names_to_pseudonyms = json.loads(open(settings.ROOT_DIR + settings.FACEBOOK_NAMES_FILE).read())
+	except Exception, e:
+		print "Error accessing pseudonyms file: " + str(e)
+	pseudonyms_to_facebook_names_dict = {v: k for k, v in facebook_names_to_pseudonyms.items()}
+	response_pseudonyms = response.split(";")
+	facebook_names = []
+	for pseudonym in response_pseudonyms:
+		facebook_name = pseudonyms_to_facebook_names_dict.get(pseudonym)
+		if not facebook_name:
+			facebook_name = simplecrypt.decrypt(settings.FACEBOOK_NAMES_ENCRYPTION_PASSWORD, pseudonym.decode("hex"))
+		facebook_names.append(facebook_name)
+	return "\r\n".join(facebook_names)
+
 
 def return_question(user_id, survey_version, question):
 	#set_current_question(user_id, survey_version, question.variable_name)
-	DEBUG();
+	DEBUG()
 	if isinstance(question, fw.GridQuestion):
 		for sub in question.data:
-			var_name = sub.variable_name;
+			var_name = sub.variable_name
 			response = get_response(user_id, survey_version, var_name)
 			if response != None:
 				sub.set_answer(response)	
 	elif isinstance(question, fw.Header):
 		pass
+	elif isinstance(question, fw.AutocompleteItemsQuestion):
+		data_source_type, data_source_link = question.get_data_source_link()
+		question.set_autocomplete_items(get_autocomplete_data_for_user_from_source(user_id, data_source_type, data_source_link))
+		response = get_response(user_id, survey_version, question.variable_name)
+		if response is not None:
+			if question.variable_name == "friends_name":
+				response = pseudonyms_to_facebook_names(response)
+			question.set_answer(response)
 	else:
 		response = get_response(user_id, survey_version, question.variable_name)
 		if response != None:
@@ -130,7 +165,7 @@ def return_question(user_id, survey_version, question):
 
 def get_user_progress(user_id, survey_version):
 	# check how many answers already given
-	entries = Response.objects.filter(user = user_id, form_version=survey_version);
+	entries = Response.objects.filter(user = user_id, form_version=survey_version)
 	variables = get_ordered_variable_names(survey_version)
 	max_index = 0;
 	#pdb.set_trace()
@@ -219,7 +254,26 @@ def get_current_question(user_id, survey_version):
 				return question
 	else:
 		return questions[0]
-'''	
+'''
+
+
+def process_facebook_names_response(response):
+	names = response.split("\r\n")
+	names = [name for name in names if len(name) > 0]
+	facebook_names_to_pseudonyms = {}
+	try:
+		facebook_names_to_pseudonyms = json.loads(open(settings.ROOT_DIR + settings.FACEBOOK_NAMES_FILE).read())
+	except Exception, e:
+		print "Error accessing facebook names file: " + str(e)
+
+	friends_pseudonyms = []
+	for name in names:
+		pseudonym = facebook_names_to_pseudonyms.get(name)
+		if not pseudonym:
+			pseudonym = simplecrypt.encrypt(settings.FACEBOOK_NAMES_ENCRYPTION_PASSWORD, name).encode("hex")
+		friends_pseudonyms.append(pseudonym)
+	return ";".join(friends_pseudonyms)
+
 
 def set_answer(user_id, survey_version, variable_name, response, human_readable_question, human_readable_response):
 	#saving the question index
@@ -230,21 +284,23 @@ def set_answer(user_id, survey_version, variable_name, response, human_readable_
 	#else:
 	#	r = Progress(user_id = user_id, form_version=survey_version, question_index=question_index);
 	#	r.save();
-	
 
 	#saving the actual answer
+	print user_id
 	entries = Response.objects.filter(user = user_id, form_version=survey_version, \
                 variable_name = variable_name)
+	if variable_name == 'friends_name':
+		response = process_facebook_names_response(response)
 	if len(entries) > 0:
-		entries[0].response = response;
+		entries[0].response = response
 		entries[0].human_readable_response = human_readable_response
-		entries[0].save();
+		entries[0].save()
 	else:
 		r = Response(user = user_id, form_version=survey_version, \
 				variable_name = variable_name, response=response,\
 				human_readable_question = human_readable_question,\
 				human_readable_response = human_readable_response);
-		r.save();
+		r.save()
 
 def get_response(user_id, survey_version, variable_name):
 	entries = Response.objects.filter(user = user_id, form_version=survey_version, \
@@ -328,11 +384,12 @@ def get_survey_version(user):
 	for response in submit_responses:
 		response_dates[response.form_version] = response.last_answered
 	# if they already answered the second questionnaire, return none
+	return SURVEYS[3]
 	if SURVEYS[1] in response_dates.keys(): return None
 	# if they answered none, return the first one
-	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0] 
-	# if they answered first one, but not the second one, check if they did it before December 20th
-	if response_dates[SURVEYS[0]] < timezone.make_aware(datetime.datetime(2013, 12, 20), timezone.get_default_timezone()):
+	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0]
+	# if they answered first one, but not the second one, check if they did it before October 25th
+	if response_dates[SURVEYS[0]] < timezone.make_aware(datetime.datetime(2013, 10, 25), timezone.get_default_timezone()):
 		return SURVEYS[1]
 	# add handling the date of giving the questionnaire to other users
 

@@ -15,7 +15,49 @@
 			return false;
 		}
 
+$(function () {
+    $("document").ready(function () {
 
+        function extractor(query) {
+            var result = /([^\n]+)$/.exec(query);
+            if(result && result[1])
+                return result[1].trim();
+            return '';
+        }
+
+        var items =  $("#autocomplete").data().source;
+
+       $("#autocomplete").typeahead({
+            source: function(query, process) {
+
+                return items;
+            },
+	        updater: function(item) {
+
+                var currentText = this.$element.val().replace(/[^\n]*$/,'');
+                var currentItems = currentText.split("\n");
+
+                var itemIndex = items.indexOf(item);
+                if (itemIndex > -1) items.splice(itemIndex, 1);
+
+                return this.$element.val().replace(/[^\n]*$/,'')+item+'\n';
+            },
+            matcher: function (item) {
+                var tquery = extractor(this.query);
+                if(!tquery) return false;
+                return ~item.toLowerCase().indexOf(tquery.toLowerCase())
+            },
+            highlighter: function (item) {
+                var query = extractor(this.query).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
+                return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+                    return '<strong>' + match + '</strong>'
+                })
+            }
+	    
+        });
+
+    });
+});
 		function isValidInputForNumberField(field) {
 			if (field.value.length > 0) {
 				if (isNumber(field.value)) {

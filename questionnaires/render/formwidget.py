@@ -182,10 +182,10 @@ def validate_row(parts):
 		print 'ERROR: ' + parts[ELEMENT_TYPE] + ' is not a valid element type!';
 		error = True;
 	if parts[ELEMENT_TYPE] in ['question','subquestion']:
-		if parts[ANSWER_TYPE] not in ['radio','number','checklist','grid','multi_number','scale','textarea', 'number;radio']:
+		if parts[ANSWER_TYPE] not in ['radio','number','checklist','grid','multi_number','scale','textarea', 'autocomplete_item_list', 'number;radio']:
 			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
 			error = True;
-		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea']:
+		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea', 'autocomplete_item_list']:
 			if parts[ANSWERS] == '':
 				print 'ERROR: missing list of answers'
 				error = True;
@@ -258,6 +258,8 @@ def makequestion(primary_content, secondary_content, additional_content,\
 	elif answer_type == 'textarea':
 		return FreeTextQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
+	elif answer_type == 'autocomplete_item_list':
+		return AutocompleteItemsQuestion(primary_content, secondary_content, additional_content, inclusion_condition, answer_type, variable_name, answers, extra_param)
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
@@ -285,6 +287,8 @@ def makequestion_fromdict(mdict):
 		return NumberCheckQuestion.fromdict(mdict);
 	elif answer_type == 'textarea':
 		return FreeTextQuestion.fromdict(mdict);
+	elif answer_type == 'autocomplete_item_list':
+		return AutocompleteItemsQuestion.fromdict(mdict)
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion.fromdict(mdict);
 	elif answer_type == 'checklist':
@@ -615,14 +619,36 @@ class ScaleQuestion(Question):
 
 class FreeTextQuestion(Question):
 	def render(self):
-		resp = self.prerender();	
-		resp += '<textarea name="' + self.variable_name + '" rows="4">' 
+		resp = self.prerender();
+		resp += '<textarea name="' + self.variable_name + '" rows="4">'
 		if self.answer != []:
 			resp += str(self.answer)
 		else:
 			resp += ' '
 		resp += '</textarea>\n'
 		return resp
+
+
+class AutocompleteItemsQuestion(Question):
+	def get_data_source_link(self):
+		return self.extra_param.split(";")[0], self.extra_param.split(";")[1]
+
+	def set_autocomplete_items(self, autocomplete_items):
+		self.autocomplete_items = autocomplete_items
+
+
+	def render(self):
+		resp = self.prerender()
+
+		htmlized_items = "'[" + ",".join(['"' + item.replace("'", "") + '"' for item in self.autocomplete_items]) + "]'"
+		resp += '<textarea id = "autocomplete" autocomplete="off" data-provide="typeahead" data-source=' + htmlized_items + ' name="' + self.variable_name + '" rows="4">'
+		if self.answer != []:
+			resp += self.answer
+		else:
+			resp += ' '
+		resp += '</textarea>\n'
+		return resp
+
 
 # lets the user insert a number of tick a box that they don't want to insert the number
 class NumberCheckQuestion(Question):
@@ -692,11 +718,11 @@ class SubQuestion(Formwidget):
 		if self.answer_type == 'radio':
 			for answer in self.answers:
 				resp += '\t<td style="text-align:center;">'
-				resp += '<input type="radio" name="' + htmlize(self.variable_name) + '" value="' + answer['htmlized'] + '"'
+				resp += '<input type="radio" name="' + self.variable_name + '" value="' + answer['htmlized'] + '"'
 				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
 					answered = True;
-				resp += 'onclick="markRowSuccess(this)" '
+				resp += ' onclick="markRowSuccess(this)" '
 				resp += '></td>\n'
 		pre = '\n<tr id="' + htmlize(self.variable_name) + '"'
 		if answered:

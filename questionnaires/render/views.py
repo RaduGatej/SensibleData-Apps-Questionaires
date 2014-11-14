@@ -201,7 +201,7 @@ def set_answers(answer_dict, user, survey_version):
 		form_provider.set_answer(user, survey_version, var, o['answer'], o['human_question'], o['human_answer'])
 
 def nochanges(request):
-	return render_to_response('nochanges.html', {}, context_instance=RequestContext(request))
+	return render_to_response('nochanges.html', {'BASE_URL':settings.BASE_URL}, context_instance=RequestContext(request))
 	
 def about(request):
 	return render_to_response('about.html', {}, context_instance=RequestContext(request))
