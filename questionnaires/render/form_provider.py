@@ -171,10 +171,10 @@ def get_user_progress(user_id, survey_version):
 	#pdb.set_trace()
 	for entry in entries:
 		varname = ''
-		if entry.variable_name.endswith('[]'):
-			varname = entry.variable_name[:-2]
-		else:
-			varname = entry.variable_name
+		#if entry.variable_name.endswith('[]'):
+		#	varname = entry.variable_name[:-2]
+		#else:
+		varname = entry.variable_name
 		try:
 			curr_index = variables.index(varname)
 			if curr_index > max_index:
@@ -383,14 +383,17 @@ def get_survey_version(user):
 	response_dates = {}
 	for response in submit_responses:
 		response_dates[response.form_version] = response.last_answered
-	# if they already answered the second questionnaire, return none
-	return SURVEYS[3]
-	if SURVEYS[1] in response_dates.keys(): return None
-	# if they answered none, return the first one
 	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0]
+	return None
+
+	# if they already answered the second questionnaire, return none
+#	return SURVEYS[3]
+#	if SURVEYS[1] in response_dates.keys(): return None
+	# if they answered none, return the first one
+#	if SURVEYS[0] not in response_dates.keys(): return SURVEYS[0]
 	# if they answered first one, but not the second one, check if they did it before October 25th
-	if response_dates[SURVEYS[0]] < timezone.make_aware(datetime.datetime(2013, 10, 25), timezone.get_default_timezone()):
-		return SURVEYS[1]
+#	if response_dates[SURVEYS[0]] < timezone.make_aware(datetime.datetime(2013, 10, 25), timezone.get_default_timezone()):
+#		return SURVEYS[1]
 	# add handling the date of giving the questionnaire to other users
 
 

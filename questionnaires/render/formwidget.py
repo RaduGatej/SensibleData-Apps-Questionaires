@@ -65,7 +65,7 @@ def parse_csv(filename):
 				print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
 				continue
 			idx +=1
-			if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion):
+			if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion) | isinstance(widget, RadioSubquestion):
 				widgets[-1].add_subquestion(widget)
 			else:
 				widgets.append(widget)
@@ -114,7 +114,7 @@ def parse_txt(filename):
 		#	print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
 			continue
 		idx +=1;
-		if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion):
+		if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion) | isinstance(widget, RadioSubquestion):
 			widgets[-1].add_subquestion(widget)
 		else:
 			widgets.append(widget);
@@ -137,6 +137,10 @@ def makewidget_fromdict(mdict):
 	elif mdict['type'] == 'subquestion':
 		if mdict['answer_type'] == 'radio':
 			return SubQuestion.fromdict(mdict)
+		elif mdict['answer_type'] == 'time':
+			return TimeSubquestion.fromdict(mdict)
+		elif mdict['answer_type'] == 'multi_radio':
+			return RadioSubquestion.fromdict(mdict)
 		elif mdict['answer_type'] == 'number':
 			return NumberSubquestion.fromdict(mdict)
 	else:
@@ -161,6 +165,16 @@ def parserow(row):
 							parts[ADDITIONAL_CONTENT], \
                             parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
                             parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
+		elif parts[ANSWER_TYPE] == 'multi_radio':
+			return RadioSubquestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], 
+							parts[ADDITIONAL_CONTENT], \
+                            parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
+                            parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
+		elif parts[ANSWER_TYPE] == 'time':
+			return TimeSubquestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], 
+							parts[ADDITIONAL_CONTENT], \
+                            parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
+                            parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
 		elif parts[ANSWER_TYPE] == 'number':
 			return NumberSubquestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], 
 							parts[ADDITIONAL_CONTENT], \
@@ -182,7 +196,7 @@ def validate_row(parts):
 		print 'ERROR: ' + parts[ELEMENT_TYPE] + ' is not a valid element type!';
 		error = True;
 	if parts[ELEMENT_TYPE] in ['question','subquestion']:
-		if parts[ANSWER_TYPE] not in ['radio','number','checklist','grid','multi_number','scale','textarea', 'autocomplete_item_list', 'number;radio']:
+		if parts[ANSWER_TYPE] not in ['radio','number','time','checklist','grid','multi_radio','multi_number','scale','textarea', 'autocomplete_item_list', 'number;radio','time']:
 			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
 			error = True;
 		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea', 'autocomplete_item_list']:
@@ -216,7 +230,7 @@ def validate(string):
 		print 'ERROR: ' + parts[ELEMENT_TYPE] + ' is not a valid element type!';
 		error = True;
 	if parts[ELEMENT_TYPE] in ['question','subquestion']:
-		if parts[ANSWER_TYPE] not in ['radio','number','checklist','grid','multi_number','scale','textarea', 'number;radio']:
+		if parts[ANSWER_TYPE] not in ['radio','number','time','checklist','grid','multi_radio','multi_number','scale','textarea', 'number;radio']:
 			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
 			error = True;
 		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea']:
@@ -259,13 +273,17 @@ def makequestion(primary_content, secondary_content, additional_content,\
 		return FreeTextQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
 	elif answer_type == 'autocomplete_item_list':
-		return AutocompleteItemsQuestion(primary_content, secondary_content, additional_content, inclusion_condition, answer_type, variable_name, answers, extra_param)
+		return AutocompleteItemsQuestion(primary_content, secondary_content, additional_content,\
+		 		inclusion_condition, answer_type, variable_name, answers, extra_param)
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
 	elif answer_type == 'checklist':
 		return ChecklistQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
+	elif answer_type == 'multi_radio':
+		return MultiRadioQuestion(primary_content, secondary_content, additional_content,\
+                inclusion_condition, answer_type, variable_name, answers, extra_param);		
 	elif answer_type == 'grid':
 		return GridQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
@@ -291,6 +309,8 @@ def makequestion_fromdict(mdict):
 		return AutocompleteItemsQuestion.fromdict(mdict)
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion.fromdict(mdict);
+	elif answer_type == 'multi_radio':
+		return MultiRadioQuestion.fromdict(mdict);
 	elif answer_type == 'checklist':
 		return ChecklistQuestion.fromdict(mdict);
 	elif answer_type == 'grid':
@@ -724,11 +744,26 @@ class SubQuestion(Formwidget):
 					answered = True;
 				resp += ' onclick="markRowSuccess(this)" '
 				resp += '></td>\n'
-		pre = '\n<tr id="' + htmlize(self.variable_name) + '"'
-		if answered:
-			pre += ' class="success"'
-		pre += '>\n\t<td>' + self.secondary_content + '</td>\n'	
-		resp = pre + resp;	
+			pre = '\n<tr id="' + htmlize(self.variable_name) + '"'
+			if answered:
+				pre += ' class="success"'
+			pre += '>\n\t<td>' + self.secondary_content + '</td>\n'	
+			resp = pre + resp;
+
+		# elif self.answer_type == 'number' and self.extra_param == 'time':
+		# 	resp += '<input type="hidden" name="__required_answer_count" value="' + str(len(self.answers)) + '" />'
+		# 	for answer in self.answers:
+		# 		resp += '\t<td style="text-align:center;">'
+		# 		resp += '<input name="' + self.variable_name + '[]" '
+		# 		resp += 'class="input-small time"';
+		# 		resp += 'type="text" '
+		# 		resp += 'isTime="true" '
+		# 		resp += 'placeholder="TT:MM" '
+		# 		if (self.answer != []):
+		# 			resp += 'value="' + str(self.answer) + '" '
+		# 		resp += '/></td>\n'
+		# 	pre = '\n<tr><td>' + self.secondary_content + '</td>\n'
+		# 	resp = pre + resp
 		
 		#elif self.answer_type == 'number':
 		#	for answer in self.answers:
@@ -752,7 +787,35 @@ class SubQuestion(Formwidget):
 	#			resp.append(self.variable_name + '_' + htmlize(answer));
 	#		return resp
 
-		
+class TimeSubquestion(SubQuestion):
+	def __init__(self, primary_content, secondary_content, additional_content, \
+				inclusion_condition, answer_type, variable_name, answers, extra_param):
+		super( TimeSubquestion, self).__init__(primary_content, secondary_content, additional_content, \
+				inclusion_condition, answer_type, variable_name, answers, extra_param)
+		if not self.variable_name.endswith('[]'):
+			self.variable_name = self.variable_name + '[]'
+
+	def render(self):
+		resp = '<input type="hidden" name="__required_answer_count" value="' + str(len(self.answers)) + '" />'
+		responses = []
+
+		if self.answer:
+			responses = self.answer.split(',')
+		if (len(responses) != len(self.answers)):
+			responses = ['' for a in self.answers]
+		for response, answer in zip(responses, self.answers):
+			resp += '\t<td style="text-align:center;">'
+			resp += '<input name="' + self.variable_name + '"'
+			resp += 'class="input-small time"';
+			resp += 'type="text" '
+			resp += 'isTime="true" '
+			resp += 'placeholder="TT:MM" '
+			resp += 'value="' + str(response) + '" '
+			resp += 'onblur="timeFieldChanged(this)" '
+			resp += '/></td>\n'
+		pre = '\n<tr><td>' + self.secondary_content + '</td>\n'
+		resp = pre + resp + '</tr>\n'
+		return resp	
 		
 class GridQuestion(Question):
 
@@ -804,3 +867,45 @@ class MultiNumberQuestion(GridQuestion):
 			
 		
 		return resp
+
+class RadioSubquestion(Question):
+	def to_dict(self):
+		o = super(Question, self).to_dict()
+		o['type'] = 'subquestion'
+		return o
+
+	def prerender(self):
+		if len(self.primary_content) > 0:
+			resp = '<h2>' + self.primary_content + '</h2>\n';
+		else:
+			resp = '';
+		resp += '<div class="row">'
+		
+		if len(self.secondary_content) > 0:
+			resp += '<div class=span8">' + self.secondary_content + '</div><br/>\n';
+		
+		if len(self.additional_content) > 0:
+			resp += '<div class="alert alert-info">' + self.additional_content + '</div><br/>';
+		return resp
+
+	def render(self):
+		resp = self.prerender();
+		for idx, answer in enumerate(self.answers):
+			resp += '<label style="margin-left:30px" class="radio">\n';
+			resp += '\t<input type="radio" name="' + self.variable_name + \
+					'" value="' + answer['htmlized'] +'" '
+			if self.answer != []:
+				if self.answer == answer['htmlized']:
+					resp += ' checked="checked" '
+			resp += '/>' + answer['raw'] + '\n'
+			resp += '</label>\n';
+		return resp + '</div>'
+
+
+class MultiRadioQuestion(GridQuestion):
+	def render(self):
+		resp = self.prerender()
+		for sub in self.data:
+			resp += sub.render() + '<br/>\n'
+		return resp
+

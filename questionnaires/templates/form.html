@@ -2,6 +2,8 @@
 
 {% block content %}
 	<script>
+	var goodBackColor = "#DFF0D8";
+	var badBackColor = "#F2DEDE";
 		var actor;
 
 		function isNumber(n) {
@@ -76,16 +78,13 @@ $(function () {
 		}
 
 		function isValidValueForTimeField(val) {
-			if (val.length > 3) {
+			if ((val.length > 3)  && (val.length < 6)) {
 				parts = val.split(':');
 				if (parts.length != 2) {
-					parts = val.split('.');
-					if (parts.length != 2) {
-						parts = val.split(',');
-						if (parts.length != 2) {
-							return false;
-						}
-					}
+					return false;
+				}
+				if ((parts[0].length > 2) || (parts[1].length != 2)) {
+					return false;
 				}
 				if (isInteger(parts[0]) && isInteger(parts[1])) {
 					var hours = parseInt(parts[0]);
@@ -103,6 +102,14 @@ $(function () {
 			row.className = 'success';
 		}
 
+		function timeFieldChanged(element) {
+			if (isValidValueForTimeField(element.value)) {
+				element.style.background = goodBackColor;
+			} else {
+				element.style.background = badBackColor;
+			}
+		}
+
 		function validateForm()
 		{
 			if (actor == 'prev') {
@@ -116,6 +123,7 @@ $(function () {
 				return true;
 			}
 			required_vars = required_vars.split(',');
+			var var_counter = 0;
 			for (var idx=0; idx<required_vars.length; idx++) {
 				// check if radio group:
 				var nodelist = false;
@@ -126,6 +134,7 @@ $(function () {
 				}
 				if (nodelist) {
 					var answered = false;
+					
 					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
 						var counter = 0;
 						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "radio") {
@@ -153,6 +162,22 @@ $(function () {
 								}
 							}
 					
+						}
+						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "text") {
+							timeFieldChanged(document.forms["myform"][required_vars[idx]][inner_idx]);
+							if (!isValidValueForTimeField(document.forms['myform'][required_vars[idx]][inner_idx].value)) {
+								answered = false;
+								break;
+							}
+							// if we reached till the end and it still did not break, it means we're golden
+							if (inner_idx == document.forms["myform"][required_vars[idx]].length-1) {
+								var_counter +=1
+
+								if (var_counter == required_vars.length) {
+									answered = true;
+									break;
+								}
+							}
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].max !== undefined) {
 							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]][inner_idx])) {

@@ -147,14 +147,16 @@ def get_human_values(answers_dict, survey_version):
 	s = Survey.objects.get(form_version=survey_version)
 	survey = json.loads(s.content)
 	variables = answers_dict.keys()
+	#pdb.set_trace()
 	for q in survey:
 	
 		if 'data' in q.keys() and len(q['data']) > 0:
 			for subq in q['data']:
 				if subq['variable_name'] in variables:
+					#pdb.set_trace()
 					answer = None
 					human_question = q['primary_content'] + '\n' + q['secondary_content'] + '\n' + q['additional_content'] + '\n' + subq['primary_content'] + '\n' + subq['secondary_content'] + '\n' + subq['additional_content']
-					if 'number' in subq['answer_type']:
+					if 'number' or 'time' in subq['answer_type']:
 						answer = answers_dict[subq['variable_name']]['answer']
 					else:
 						for a in subq['answers']:
