@@ -96,14 +96,46 @@ $(function () {
 			}
 			return false;
 		}
+		function pad(n, width, z) {
+ 			z = z || '0';
+  			n = n + '';
+  			return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+		}
 
 		function markRowSuccess(event) {
 			row = document.getElementById(event.name);
 			row.className = 'success';
 		}
 
+		function processTimeField(element) {
+			if (element.value == "") {return false;}
+			element.value = element.value.replace('.',':').replace(',',':')
+			if (element.value.split(':').length == 1) { //there is no separator
+				var val = parseInt(element.value);
+				if (isNumber(val) && val <= 6) {
+					element.value = val + ':00';
+					return true;
+				} else {
+					return false;
+				}
+			} else { // there is a separator
+				var parts = element.value.split(':');
+
+				if (isNumber(parts[0]) && isNumber(parts[1])) {
+					parts[0] = parseInt(parts[0]);
+					parts[1] = parseInt(parts[1]);
+					if (parts[0] <= 5 || (parts[0] == 6 && parts[1] == 0)) {
+						element.value = parts[0] + ':' + pad(parts[1], 2, 0);
+						return true;
+					}
+				} else {
+					return false;
+				}
+			}
+		}
+
 		function timeFieldChanged(element) {
-			if (isValidValueForTimeField(element.value)) {
+			if (processTimeField(element)) {
 				element.style.background = goodBackColor;
 			} else {
 				element.style.background = badBackColor;
@@ -165,7 +197,7 @@ $(function () {
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "text") {
 							timeFieldChanged(document.forms["myform"][required_vars[idx]][inner_idx]);
-							if (!isValidValueForTimeField(document.forms['myform'][required_vars[idx]][inner_idx].value)) {
+							if (!processTimeField(document.forms['myform'][required_vars[idx]][inner_idx])) {
 								answered = false;
 								break;
 							}

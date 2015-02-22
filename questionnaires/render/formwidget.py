@@ -809,7 +809,7 @@ class TimeSubquestion(SubQuestion):
 			resp += 'class="input-small time"';
 			resp += 'type="text" '
 			resp += 'isTime="true" '
-			resp += 'placeholder="TT:MM" '
+			resp += 'placeholder="T:MM" '
 			resp += 'value="' + str(response) + '" '
 			resp += 'onblur="timeFieldChanged(this)" '
 			resp += '/></td>\n'
