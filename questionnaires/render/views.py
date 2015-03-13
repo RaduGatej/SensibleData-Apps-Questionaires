@@ -22,6 +22,7 @@ def home_refreshed(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def home(request):
+	request.GET.get("child_type")
 	if settings.DO_AUTH:
 		try:
 			sessions = Session.objects.filter(expire_date__gte=datetime.now())
@@ -57,7 +58,7 @@ def form(request):
 	survey_version = ''
 	if request.POST: survey_version = request.POST.get('__survey_version','')
 	try:
-		Response.objects.get(user = request.user,form_version=survey_version,variable_name='_submitted')
+		Response.objects.get(user = request.user, type_id = request.session.get('type_id'), form_version=survey_version, variable_name='_submitted')
 		return HttpResponseRedirect(settings.ROOT_URL+'nochanges/');
 	except Exception:
 		pass
@@ -89,13 +90,13 @@ def form(request):
 					if not ans.startswith('_'):
 						answers[ans] = {'answer':request.POST[ans]}
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
-		set_answers(answers, request.user, survey_version)
+		set_answers(answers, request.user, request.session.get('type_id'), survey_version)
 		if '_prev' in request.POST:
-			next_question = form_provider.get_previous_question(request.user,survey_version,request.POST['__question_name']);
+			next_question = form_provider.get_previous_question(request.user,request.session.get('type_id'), survey_version,request.POST['__question_name']);
 		elif '_from_top' in request.POST:
-			next_question = form_provider.get_first_question(request.user,survey_version);
+			next_question = form_provider.get_first_question(request.user,request.session.get('type_id'), survey_version);
 		elif '_quit' in request.POST:
-			r = Response(user = request.user,form_version=survey_version,variable_name='_submitted',response='true');
+			r = Response(user = request.user,type_id = request.session.get('type_id'), form_version=survey_version,variable_name='_submitted',response='true');
 			r.save()
 			return nochanges(request)
 			#return HttpResponseRedirect(settings.SENSIBLE_URL+'quit/');
@@ -107,18 +108,18 @@ def form(request):
 						break
 				
 			if '_next' in request.POST:
-				next_question = form_provider.get_next_question(request.user,survey_version,request.POST['__question_name']);
+				next_question = form_provider.get_next_question(request.user,request.session.get('type_id'),survey_version,request.POST['__question_name']);
 			elif '_next_new' in request.POST:
-				next_question = form_provider.get_next_unanswered_question(request.user,survey_version);	
+				next_question = form_provider.get_next_unanswered_question(request.user,request.session.get('type_id'),survey_version);	
 	else:
-		survey_version = form_provider.get_survey_version(request.user)
+		survey_version = form_provider.get_survey_version(request.user,request.session.get('type_id'))
 		if survey_version is not None:
-			next_question = form_provider.get_next_unanswered_question(request.user,survey_version)
+			next_question = form_provider.get_next_unanswered_question(request.user,request.session.get('type_id'),survey_version)
 		else:
 			return HttpResponseRedirect(settings.ROOT_URL+'nochanges/')		
 
 	di = {}
-	progress = form_provider.get_user_progress(request.user,survey_version);
+	progress = form_provider.get_user_progress(request.user,request.session.get('type_id'),survey_version);
 	di['progress'] = str(progress);
 	di['survey_version'] = survey_version
 	progress = int(math.ceil(progress));
@@ -196,11 +197,11 @@ def get_human_values(answers_dict, survey_version):
 			break
 	return answers_dict
 
-def set_answers(answer_dict, user, survey_version):
+def set_answers(answer_dict, user, type_id, survey_version):
 	answer_dict = get_human_values(answer_dict, survey_version)
 	for var in answer_dict.keys():
 		o = answer_dict[var]
-		form_provider.set_answer(user, survey_version, var, o['answer'], o['human_question'], o['human_answer'])
+		form_provider.set_answer(user, type_id, survey_version, var, o['answer'], o['human_question'], o['human_answer'])
 
 def nochanges(request):
 	return render_to_response('nochanges.html', {'BASE_URL':settings.BASE_URL}, context_instance=RequestContext(request))
