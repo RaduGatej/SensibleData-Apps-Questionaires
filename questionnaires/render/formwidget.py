@@ -114,7 +114,7 @@ def parse_txt(filename):
 		#	print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
 			continue
 		idx +=1;
-		pdb.set_trace()
+		#pdb.set_trace()
 		if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion) | isinstance(widget, RadioSubquestion) | isinstance(widget, TextSubquestion):
 			widgets[-1].add_subquestion(widget)
 		else:
@@ -375,8 +375,14 @@ class Formwidget(object):
 		#return '<div class="formwidget">\n' + self.render() + '\n</div>';
 		resp = '<input type="hidden" name="__question_name" value="' + self.variable_name + '" />\n';
 		resp += self.render()
+		#pdb.set_trace()
 		for k in self.dynamic_content:
 			if self.dynamic_content[k]: resp = resp.replace(k, self.dynamic_content[k])
+		try:
+			for sub in self.data:
+				for k in sub.dynamic_content:
+					if sub.dynamic_content[k]: resp = resp.replace(k, sub.dynamic_content[k])
+		except AttributeError: pass # header doesn't have data 
 		return resp
 	
 	def to_dict(self):
@@ -883,11 +889,11 @@ class NumberSubquestion(NumberQuestion):
 class MultiNumberQuestion(GridQuestion):
 	def render(self):
 		resp = self.prerender()
-		resp += '<div class="row">\n'
+		#resp += '<div class="row">\n'
 		for sub in self.data:
 			resp += sub.render() + '\n'
 		
-		resp += '</div>\n'
+		#resp += '</div>\n'
 			
 		
 		return resp
