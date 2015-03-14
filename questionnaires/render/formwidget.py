@@ -571,6 +571,11 @@ class NumberQuestion(Question):
 			
 		resp += '<input name="' + self.variable_name + '" '
 		resp += 'class="input-small ';
+		extra_parts = str(self.extra_param).split(';')
+		try:
+			if extra_parts[2].strip() == 'sum':
+				resp += ' sum_to_100 '
+		except: pass
 		if self.extra_param == 'time':
 			resp += 'time" ';
 			resp += 'type="text" '
@@ -579,7 +584,7 @@ class NumberQuestion(Question):
 		else:
 			mmin = '0'
 			mmax = '0'
-			extra_parts = str(self.extra_param).split(';')
+			
 			if len(extra_parts) > 1:
 				mmin = extra_parts[0].strip()
 				mmax = extra_parts[1].strip()
@@ -593,7 +598,12 @@ class NumberQuestion(Question):
 			resp += 'placeholder="' + mmin + '-' + mmax + '" '
 		if (self.answer != []):
 			resp += 'value="' + str(self.answer) + '" '
-			
+
+
+		try:
+			if extra_parts[2].strip() == 'sum':
+				resp += ' onkeyup="sumto100()" '
+		except: pass			
 		if len(parts) > 1:
 			resp += 'id="'
 			if parts[0] != '':

@@ -347,6 +347,8 @@ def intersect(a, b):
      return list(set(a) & set(b))
 
 def get_conditioned_question(user_id, type_id, survey_version, question):
+	
+	#pdb.set_trace()
 	if check_condition(user_id, type_id, survey_version, question.inclusion_condition):
 		if isinstance(question, fw.GridQuestion):
 			for ii in range(len(question.data)-1, -1, -1):
@@ -382,6 +384,7 @@ def check_condition(user_id, type_id, survey_version, mcondition):
 	
 	# left hand side is the var name, right hand side is the value
 	answer = get_response(user_id, type_id, survey_version, parts[0])
+	if answer == None: answer = ''
 	for part in parts[1]:
 		if answer == fw.htmlize(part):
 			return equal

@@ -77,6 +77,31 @@ $(function () {
 			}	
 		}
 
+		function sumto100() {
+			var fields = document.getElementsByClassName('sum_to_100');
+			if (fields.length == 0) return true;
+			var sum = 0;
+			for (var i=0; i < fields.length; i++) {
+				var temp = parseInt(fields[i].value)
+				if (temp > 0) {sum += parseInt(temp);}
+				
+			}
+			var wrapper = document.getElementById('field_sum');
+			wrapper.style.display="block";
+			var counter = document.getElementById('field_sum_value');
+			counter.innerHTML = sum;
+			if (sum == 100) {
+				wrapper.className = "alert alert-success";
+				return true;
+			} else if (sum < 100) {
+				wrapper.className = "alert alert-info";
+				return false;
+			} else {
+				wrapper.className = "alert alert-error";
+				return false;
+			}
+		}
+
 		function isValidValueForTimeField(val) {
 			if ((val.length > 3)  && (val.length < 6)) {
 				parts = val.split(':');
@@ -147,6 +172,7 @@ $(function () {
 			if (actor == 'prev') {
 				return true;
 			}
+			if (!sumto100()) {return false;}
 			var required_vars;
 			try{
 				required_vars = document.forms["myform"]["__required_vars"].value;
@@ -288,7 +314,7 @@ $(function () {
 				{% else %}
 					{{ question|safe }} 
 				{% endif %}
-
+				<div id="field_sum" class="alert alert-info" style="display:none">Total: <span id="field_sum_value"></span>%</div>
 				<div class="form-actions">
 				
 					<!-- Which buttons to display? -->
