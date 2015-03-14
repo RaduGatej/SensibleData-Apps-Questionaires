@@ -82,7 +82,7 @@ def get_next_question(user_id, type_id, survey_version, current_name):
 		raise NameError(current_name + ' is not a valid question name');
 			
 
-def get_next_unanswered_question(user_id,survey_version):
+def get_next_unanswered_question(user_id,type_id,survey_version):
 	for question in get_questions_list(survey_version):
 		if needs_answer(user_id, type_id, survey_version, question):
 			return return_question(user_id, type_id, survey_version, get_conditioned_question(user_id, type_id, survey_version, question))
@@ -315,10 +315,14 @@ def needs_answer(user_id, type_id, survey_version, question):
 	question = get_conditioned_question(user_id, type_id, survey_version, question)
 	if question != None:
 		if isinstance(question, fw.GridQuestion):
+			resp_count = len(question.get_subquestion_variables())
+			if isinstance(question, fw.MultiTextQuestion):
+				try: resp_count = int(float(question.extra_param))
+				except: pass	
 			entries = Response.objects.filter(user = user_id, type_id = type_id, form_version=survey_version, \
                 variable_name__in = question.get_subquestion_variables())
 			responses = [x.variable_name for x in entries]
-			if len(intersect(question.get_subquestion_variables(), responses)) < len(question.get_subquestion_variables()):
+			if len(intersect(question.get_subquestion_variables(), responses)) < resp_count:
 				return True
 			else:
 				return False  

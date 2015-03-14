@@ -4,7 +4,7 @@ import pdb
 import csv
 import json
 import xlrd
-from utils import htmlize
+from utils import htmlize, escape
 #indices of columns in the Excel file
 ELEMENT_TYPE = 0;
 PRIMARY_CONTENT = 1;
@@ -65,7 +65,7 @@ def parse_csv(filename):
 				print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
 				continue
 			idx +=1
-			if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion) | isinstance(widget, RadioSubquestion):
+			if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion) | isinstance(widget, RadioSubquestion) | isinstance(widget, TextSubquestion):
 				widgets[-1].add_subquestion(widget)
 			else:
 				widgets.append(widget)
@@ -114,7 +114,8 @@ def parse_txt(filename):
 		#	print ' ^^^^^^^^^^^^^^^^^^^^^^ Error in line: ' + str(line_idx)
 			continue
 		idx +=1;
-		if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion) | isinstance(widget, RadioSubquestion):
+		pdb.set_trace()
+		if isinstance(widget, SubQuestion) | isinstance(widget, NumberSubquestion) | isinstance(widget, RadioSubquestion) | isinstance(widget, TextSubquestion):
 			widgets[-1].add_subquestion(widget)
 		else:
 			widgets.append(widget);
@@ -143,6 +144,8 @@ def makewidget_fromdict(mdict):
 			return RadioSubquestion.fromdict(mdict)
 		elif mdict['answer_type'] == 'number':
 			return NumberSubquestion.fromdict(mdict)
+		elif mdict['answer_type'] == 'string':
+			return TextSubquestion.fromdict(mdict)
 	else:
 		return None	
 				
@@ -180,6 +183,11 @@ def parserow(row):
 							parts[ADDITIONAL_CONTENT], \
                             parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
                             parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
+		elif parts[ANSWER_TYPE] == 'string':
+			return TextSubquestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], 
+							parts[ADDITIONAL_CONTENT], \
+                            parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
+                            parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
 	else:
 		#raise Exception('',parts[ELEMENT_TYPE] + ' is not a valid element type!');
 		return None
@@ -196,10 +204,10 @@ def validate_row(parts):
 		print 'ERROR: ' + parts[ELEMENT_TYPE] + ' is not a valid element type!';
 		error = True;
 	if parts[ELEMENT_TYPE] in ['question','subquestion']:
-		if parts[ANSWER_TYPE] not in ['radio','number','time','checklist','grid','multi_radio','multi_number','scale','textarea', 'autocomplete_item_list', 'number;radio','time']:
+		if parts[ANSWER_TYPE] not in ['radio','number','time','checklist','grid','string','multi_text','multi_radio','multi_number','scale','textarea', 'autocomplete_item_list', 'number;radio','time']:
 			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
 			error = True;
-		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea', 'autocomplete_item_list']:
+		if parts[ANSWER_TYPE] not in ['multi_number', 'multi_text','string','textarea', 'autocomplete_item_list']:
 			if parts[ANSWERS] == '':
 				print 'ERROR: missing list of answers'
 				error = True;
@@ -230,7 +238,8 @@ def validate(string):
 		print 'ERROR: ' + parts[ELEMENT_TYPE] + ' is not a valid element type!';
 		error = True;
 	if parts[ELEMENT_TYPE] in ['question','subquestion']:
-		if parts[ANSWER_TYPE] not in ['radio','number','time','checklist','grid','multi_radio','multi_number','scale','textarea', 'number;radio']:
+		if parts[ANSWER_TYPE] not in ['radio','number','time','checklist','grid','multi_text','string',\
+										'multi_radio','multi_number','scale','textarea', 'number;radio']:
 			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
 			error = True;
 		if parts[ANSWER_TYPE] not in ['multi_number', 'textarea']:
@@ -278,6 +287,9 @@ def makequestion(primary_content, secondary_content, additional_content,\
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
+	elif answer_type == 'multi_text':
+		return MultiTextQuestion(primary_content, secondary_content, additional_content,\
+                inclusion_condition, answer_type, variable_name, answers, extra_param);
 	elif answer_type == 'checklist':
 		return ChecklistQuestion(primary_content, secondary_content, additional_content,\
                 inclusion_condition, answer_type, variable_name, answers, extra_param);
@@ -309,6 +321,8 @@ def makequestion_fromdict(mdict):
 		return AutocompleteItemsQuestion.fromdict(mdict)
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion.fromdict(mdict);
+	elif answer_type == 'multi_text':
+		return MultiTextQuestion.fromdict(mdict);
 	elif answer_type == 'multi_radio':
 		return MultiRadioQuestion.fromdict(mdict);
 	elif answer_type == 'checklist':
@@ -867,6 +881,47 @@ class MultiNumberQuestion(GridQuestion):
 			
 		
 		return resp
+
+class TextSubquestion(SubQuestion):
+	def prerender(self):
+		return ''
+
+	def render(self):
+		#resp = '<div class="control-group">'
+		#resp += '<label class="control-label" for="' + self.variable_name + '">' + self.secondary_content + '</label>'
+		#resp += '<div class="controls">'
+		resp =  '<div class="row">'
+		resp += '<div class="span1" style="text-align:right;padding-right:10px">' + self.secondary_content + '</div>'
+		resp += '<input type="text" style="input-big" name="' + self.variable_name + '"'
+		if self.answer: 
+			resp += 'value="' + escape(str(self.answer)) + '"'
+		resp += '>'
+		resp += '</div>'
+		# resp = '<div class="span1" style="text-align:right">' + self.secondary_content + '</div>'
+		# resp += '<input type="text" style="input-medium" name="' + self.variable_name + '" value="'
+		# if self.answer: 
+		# 	resp += escape(str(self.answer)) 
+		# resp += '">'
+		return resp
+
+
+class MultiTextQuestion(GridQuestion):
+	def render(self):
+		resp = self.prerender()
+		
+		for sub in self.data:
+			resp += sub.render() + '\n'
+		return resp
+
+	def list_required_vars(self):
+		resp = '<input type="hidden" name="__required_vars" value="';
+		resp_count = len(self.get_subquestion_variables())
+		try: resp_count = int(float(self.extra_param))
+		except: pass
+		resp += ','.join(self.get_subquestion_variables()[0:resp_count]);
+		resp +='" />\n';
+		return resp
+
 
 class RadioSubquestion(Question):
 	def to_dict(self):
