@@ -146,8 +146,13 @@ def return_question(user_id, type_id, survey_version, question):
 			var_name = sub.variable_name
 			response = get_response(user_id, type_id, survey_version, var_name)
 			if response != None:
-				sub.set_answer(response)	
+				sub.set_answer(response)
+			for dynamic in sub.dynamic_content:
+				sub.dynamic_content[dynamic] = get_response(user_id, type_id, survey_version, dynamic.replace('%',''))
+
 	elif isinstance(question, fw.Header):
+		for dynamic in question.dynamic_content:
+				question.dynamic_content[dynamic] = get_response(user_id, type_id, survey_version, dynamic.replace('%',''))
 		pass
 	elif isinstance(question, fw.AutocompleteItemsQuestion):
 		data_source_type, data_source_link = question.get_data_source_link()
@@ -161,6 +166,8 @@ def return_question(user_id, type_id, survey_version, question):
 		response = get_response(user_id, type_id, survey_version, question.variable_name)
 		if response != None:
 			question.set_answer(response)
+		for dynamic in question.dynamic_content:
+			question.dynamic_content[dynamic] = get_response(user_id, type_id, survey_version, dynamic.replace('%',''))	
 	return question
 
 def get_user_progress(user_id, type_id, survey_version):

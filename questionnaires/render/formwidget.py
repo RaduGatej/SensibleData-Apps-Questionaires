@@ -354,6 +354,8 @@ class Formwidget(object):
 		self.extra_param = extra_param;
 		self.data = [];
 
+		self.dynamic_content = {k:'' for k in re.findall('%%[^%]+%%', primary_content + ' ' + secondary_content)}
+
 	@classmethod
 	def fromdict(cls, mdict):
 		o = cls(mdict['primary_content'],mdict['secondary_content'],mdict['additional_content'],\
@@ -363,13 +365,19 @@ class Formwidget(object):
 			o.data.append(makewidget_fromdict(d))
 		return o
 
+	def set_dynamic_content(self, content):
+		self.dynamic_content = content
+
 	def render(self):
 		return "<p></p>";
 
 	def to_html(self):
 		#return '<div class="formwidget">\n' + self.render() + '\n</div>';
 		resp = '<input type="hidden" name="__question_name" value="' + self.variable_name + '" />\n';
-		return resp + self.render();
+		resp += self.render()
+		for k in self.dynamic_content:
+			if self.dynamic_content[k]: resp = resp.replace(k, self.dynamic_content[k])
+		return resp
 	
 	def to_dict(self):
 		resp = {}
@@ -427,6 +435,8 @@ class Header(Formwidget):
 		self.additional_content = additional_content;
 		self.variable_name = variable_name;
 		self.inclusion_condition = inclusion_condition;
+
+		self.dynamic_content = {k:'' for k in re.findall('%%[^%]+%%', primary_content + ' ' + secondary_content)}
 
 	@classmethod
 	def fromdict(cls, mdict):
