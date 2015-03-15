@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Response(models.Model):
 	user = models.ForeignKey(User)
-	type_id = models.CharField(max_length=64)
+	type_id = models.CharField(max_length=64, default="")
 	form_version = models.CharField(max_length=64)
 	variable_name = models.CharField(max_length=1024)
 	response = models.CharField(max_length=1024)
