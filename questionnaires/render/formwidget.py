@@ -16,8 +16,9 @@ VARIABLE_NAME = 6;
 VARIABLE_LABEL = 7;
 ANSWERS = 8;
 EXTRA_PARAM = 9;
+REQUIRED = 10;
 
-NUMBER_OF_COLUMNS = 10;
+NUMBER_OF_COLUMNS = 11;
 
 
 #### Utility methods
@@ -161,7 +162,7 @@ def parserow(row):
 		return makequestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], \
 							parts[ADDITIONAL_CONTENT], \
 							parts[INCLUSION_CONDITION], parts[ANSWER_TYPE], \
-							parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM])
+							parts[VARIABLE_LABEL], parts[ANSWERS], parts[EXTRA_PARAM], parts[REQUIRED])
 	elif parts[ELEMENT_TYPE] == 'subquestion':
 		if parts[ANSWER_TYPE] == 'radio':
 			return SubQuestion(parts[PRIMARY_CONTENT], parts[SECONDARY_CONTENT], 
@@ -218,6 +219,10 @@ def validate_row(parts):
 		elif parts[VARIABLE_NAME] == '':
 		#	print 'WARNING: variable name is missing, making it the same as label';
 			parts[VARIABLE_NAME] = parts[VARIABLE_LABEL]
+	if parts[REQUIRED] == '0.0': 
+		parts[REQUIRED] = False
+	else: 
+		parts[REQUIRED] = True
 		
 	
 	if error:
@@ -261,44 +266,44 @@ def validate(string):
 		return parts
 	
 def makequestion(primary_content, secondary_content, additional_content,\
-				inclusion_condition, answer_type, variable_name, answers, extra_param):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required=True):
 	#print 'Inclusion condition: ' + inclusion_condition
 	if answer_type == 'radio':
 		return RadioQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'number':
 		return NumberQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'dropdown':
 		return ListQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'scale':
 		return ScaleQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'number;radio':
 		return NumberCheckQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'textarea':
 		return FreeTextQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'autocomplete_item_list':
 		return AutocompleteItemsQuestion(primary_content, secondary_content, additional_content,\
-		 		inclusion_condition, answer_type, variable_name, answers, extra_param)
+		 		inclusion_condition, answer_type, variable_name, answers, extra_param, required)
 	elif answer_type == 'multi_number':
 		return MultiNumberQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'multi_text':
 		return MultiTextQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'checklist':
 		return ChecklistQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	elif answer_type == 'multi_radio':
 		return MultiRadioQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);		
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);		
 	elif answer_type == 'grid':
 		return GridQuestion(primary_content, secondary_content, additional_content,\
-                inclusion_condition, answer_type, variable_name, answers, extra_param);
+                inclusion_condition, answer_type, variable_name, answers, extra_param, required);
 	else:
 		raise Exception('',answer_type + ' is not a valid answer type!');
 		return None
@@ -337,7 +342,7 @@ def makequestion_fromdict(mdict):
 #### Class definitions
 class Formwidget(object):
 	def __init__(self, primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required=True):
 		self.primary_content = primary_content;
 		self.secondary_content = secondary_content;
 		self.additional_content = additional_content;
@@ -345,6 +350,7 @@ class Formwidget(object):
 		self.answer_type = answer_type;
 		self.answer = [];
 		self.variable_name = variable_name;
+		self.required = required
 		answers = answers.split(";");
 		self.answers = [];
 		for answer in answers:
@@ -359,7 +365,7 @@ class Formwidget(object):
 	@classmethod
 	def fromdict(cls, mdict):
 		o = cls(mdict['primary_content'],mdict['secondary_content'],mdict['additional_content'],\
-			mdict['inclusion_condition'],mdict['answer_type'],mdict['variable_name'],'',mdict['extra_param'])
+			mdict['inclusion_condition'],mdict['answer_type'],mdict['variable_name'],'',mdict['extra_param'],mdict['required'])
 		o.answers = mdict['answers']
 		for d in mdict['data']:
 			o.data.append(makewidget_fromdict(d))
@@ -398,7 +404,7 @@ class Formwidget(object):
 		for answer in self.answers:
 			resp['answers'].append(answer)
 		resp['extra_param'] = self.extra_param
-		
+		resp['required'] = self.required
 		resp['data'] = []
 		for d in self.data:
 			resp['data'].append(d.to_dict())
@@ -502,9 +508,9 @@ class ListQuestion(Question):
 		
 class ChecklistQuestion(Question):
 	def __init__(self, primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required = True):
 		super( ChecklistQuestion, self).__init__(primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param)
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required)
 		if not self.variable_name.endswith('[]'):
 			self.variable_name = self.variable_name + '[]'
 		if len(self.extra_param) == 0: self.extra_param = '1'
@@ -829,9 +835,9 @@ class SubQuestion(Formwidget):
 
 class TimeSubquestion(SubQuestion):
 	def __init__(self, primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required=True):
 		super( TimeSubquestion, self).__init__(primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param)
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required)
 		if not self.variable_name.endswith('[]'):
 			self.variable_name = self.variable_name + '[]'
 

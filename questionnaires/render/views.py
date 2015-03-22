@@ -50,7 +50,10 @@ def home(request):
 	if 'child_id' in request.GET.keys():
 		postpone = '?child_id=' + request.GET.get('child_id')
 	else: # redirected from login
-		postpone = '?child_id=' + request.META['HTTP_REFERER'].split('child_id%3D')[1]
+		try: 
+			postpone = '?child_id=' + request.META['HTTP_REFERER'].split('child_id%3D')[1]
+		except:
+			return HttpResponseRedirect(settings.ROOT_URL+'uselink/');
 	# if 'type_id' not in request.session:
 	# 	request.session['type_id'] = request.GET.get("child_id")
 	# 	request.session.modified = True
@@ -149,6 +152,10 @@ def form(request):
 	# 	di['int_progress'] = str(int(progress)) + '%';
 	# else: 
 	# 	di['int_progress'] = 'ca. ' + str(int(progress)) + '%';
+	try:
+		di['required'] = next_question.required
+	except: 
+		di['required'] = True
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;
@@ -225,6 +232,9 @@ def set_answers(answer_dict, user, type_id, survey_version):
 
 def nochanges(request):
 	return render_to_response('nochanges.html', {'BASE_URL':settings.BASE_URL}, context_instance=RequestContext(request))
+
+def uselink(request):
+	return render_to_response('uselink.html', {'BASE_URL':settings.BASE_URL}, context_instance=RequestContext(request))
 	
 def about(request):
 	return render_to_response('about.html', {}, context_instance=RequestContext(request))
