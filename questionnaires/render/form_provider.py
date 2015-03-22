@@ -52,7 +52,7 @@ def get_previous_question(user_id, type_id, survey_version, current_name):
 				previous = question
 	raise NameError(current_name + ' is not a valid question name');
 
-def get_next_question(user_id, type_id, survey_version, current_name):
+def get_next_question(user_id, type_id, survey_version, current_name, skipping=False):
 	
 	questions = get_questions_list(survey_version);
 	now_is_the_time = False;
@@ -71,7 +71,7 @@ def get_next_question(user_id, type_id, survey_version, current_name):
 			else:
 				pass
 		elif question.variable_name == current_name:
-			if needs_answer(user_id, type_id, survey_version, question):
+			if skipping == False and needs_answer(user_id, type_id, survey_version, question):
 				return return_question(user_id, type_id, survey_version, get_conditioned_question(user_id, type_id, survey_version, question))
 			now_is_the_time = True
 		else:

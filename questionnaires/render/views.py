@@ -105,27 +105,30 @@ def form(request):
 					if not ans.startswith('_'):
 						answers[ans] = {'answer':request.POST[ans]}
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
-		set_answers(answers, request.user, request.session.get('type_id'), survey_version)
-		if '_prev' in request.POST:
-			next_question = form_provider.get_previous_question(request.user,request.session.get('type_id'), survey_version,request.POST['__question_name']);
-		elif '_from_top' in request.POST:
-			next_question = form_provider.get_first_question(request.user,request.session.get('type_id'), survey_version);
-		elif '_quit' in request.POST:
-			r = Response(user = request.user,type_id = request.session.get('type_id'), form_version=survey_version,variable_name='_submitted',response='true');
-			r.save()
-			return nochanges(request)
-			#return HttpResponseRedirect(settings.SENSIBLE_URL+'quit/');
+		if '_skip' in request.POST:
+			next_question = form_provider.get_next_question(request.user,request.session.get('type_id'),survey_version,request.POST['__question_name'],skipping=True);
 		else:
-			if len(required_vars) > 0:
-				for v in required_vars:
-					if v not in answers.keys():
-						unanswered = True;
-						break
-				
-			if '_next' in request.POST:
-				next_question = form_provider.get_next_question(request.user,request.session.get('type_id'),survey_version,request.POST['__question_name']);
-			elif '_next_new' in request.POST:
-				next_question = form_provider.get_next_unanswered_question(request.user,request.session.get('type_id'),survey_version);	
+			set_answers(answers, request.user, request.session.get('type_id'), survey_version)
+			if '_prev' in request.POST:
+				next_question = form_provider.get_previous_question(request.user,request.session.get('type_id'), survey_version,request.POST['__question_name']);
+			elif '_from_top' in request.POST:
+				next_question = form_provider.get_first_question(request.user,request.session.get('type_id'), survey_version);
+			elif '_quit' in request.POST:
+				r = Response(user = request.user,type_id = request.session.get('type_id'), form_version=survey_version,variable_name='_submitted',response='true');
+				r.save()
+				return nochanges(request)
+				#return HttpResponseRedirect(settings.SENSIBLE_URL+'quit/');
+			else:
+				if len(required_vars) > 0:
+					for v in required_vars:
+						if v not in answers.keys():
+							unanswered = True;
+							break
+					
+				if '_next' in request.POST:
+					next_question = form_provider.get_next_question(request.user,request.session.get('type_id'),survey_version,request.POST['__question_name']);
+				elif '_next_new' in request.POST:
+					next_question = form_provider.get_next_unanswered_question(request.user,request.session.get('type_id'),survey_version);	
 	else:
 		survey_version = form_provider.get_survey_version(request.user,request.session.get('type_id'))
 		if survey_version is not None:
@@ -138,12 +141,14 @@ def form(request):
 	di['progress'] = str(progress);
 	di['survey_version'] = survey_version
 	progress = int(math.ceil(progress));
-	if progress < 3:
-		di['int_progress'] = '';
-	elif progress < 7:
-		di['int_progress'] = str(int(progress)) + '%';
-	else: 
-		di['int_progress'] = 'ca. ' + str(int(progress)) + '%';
+	
+	di['int_progress'] = '' # accomodating Patrick's request to not show the percentage
+	# if progress < 3:
+	# 	di['int_progress'] = '';
+	# elif progress < 7:
+	# 	di['int_progress'] = str(int(progress)) + '%';
+	# else: 
+	# 	di['int_progress'] = 'ca. ' + str(int(progress)) + '%';
 	if next_question is None:
 		di['unanswered'] = False;
 		di['last_page'] = True;
