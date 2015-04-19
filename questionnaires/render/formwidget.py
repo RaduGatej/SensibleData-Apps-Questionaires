@@ -207,11 +207,12 @@ def validate_row(parts):
 	if parts[ELEMENT_TYPE] in ['question','subquestion']:
 		if parts[ANSWER_TYPE] not in ['radio','number','time','checklist','grid','string','multi_text','multi_radio','multi_number','scale','textarea', 'autocomplete_item_list', 'number;radio','time']:
 			print 'ERROR: ' + parts[ANSWER_TYPE] + ' is not a valid answer type'
-			error = True;
+			error = True;	
 		if parts[ANSWER_TYPE] not in ['multi_number', 'multi_text','string','textarea', 'autocomplete_item_list']:
 			if parts[ANSWERS] == '':
-				print 'ERROR: missing list of answers'
-				error = True;
+				if (parts[ANSWER_TYPE] != 'multi_radio') or (parts[ELEMENT_TYPE] != 'question'):
+					print 'ERROR: missing list of answers'
+					error = True;
 	if parts[ANSWER_TYPE] != 'grid':
 		if parts[VARIABLE_LABEL] == '':
 			print 'ERROR: variable label is missing';
@@ -790,7 +791,7 @@ class SubQuestion(Formwidget):
 					answered = True;
 				resp += ' onclick="markRowSuccess(this)" '
 				resp += '></td>\n'
-			pre = '\n<tr id="' + htmlize(self.variable_name) + '"'
+			pre = '\n<tr id="' + self.variable_name + '"'
 			if answered:
 				pre += ' class="success"'
 			pre += '>\n\t<td>' + self.secondary_content + '</td>\n'	
@@ -984,6 +985,7 @@ class RadioSubquestion(Question):
 			if self.answer != []:
 				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
+
 			resp += '/>' + answer['raw'] + '\n'
 			resp += '</label>\n';
 		return resp + '</div>'
