@@ -26,7 +26,7 @@ $(function () {
                 return result[1].trim();
             return '';
         }
-
+        sumto100();
         var items =  $("#autocomplete").data().source;
 
        $("#autocomplete").typeahead({
@@ -169,7 +169,7 @@ $(function () {
 
 		function validateForm()
 		{
-			if (actor == 'prev') {
+			if ((actor == 'prev') || (actor == 'skip')) {
 				return true;
 			}
 			if (!sumto100()) {return false;}
@@ -323,9 +323,13 @@ $(function () {
 						<button type="submit" name="_from_top" class="btn"><i class="icon-refresh"></i> Begynd igen</button>
 						<button type="submit" name="_quit" class="btn btn-primary"><i class="icon-ok-sign icon-white"></i> Indsend besvarelse</button>
 					{% else %}
-						<button type="submit" onclick="actor='next_new'" name="_next_new" class="btn btn-primary">Næste ubesvarede <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></button> 	
+						<button type="submit" onclick="actor='next'" name="_next" class="btn btn-primary" id="next_button">Næste <i class="icon-chevron-right"></i> </button>
+						{% if not required %}
+							<button type="submit" onclick="actor='skip'" name="_skip" class="btn"><i class="icon-remove-circle"></i> Jeg vil hellere ikke svare</button> 
+						{% endif %}
+						<button type="submit" onclick="actor='next_new'" name="_next_new" class="btn">Næste ubesvarede <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></button> 	
 						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Forrige</button>
-						<button type="submit" onclick="actor='next'" name="_next" class="btn" id="next_button">Næste <i class="icon-chevron-right"></i> </button>
+						
 					{% endif %}
 			</fieldset>
 		</form>
