@@ -73,9 +73,7 @@
 		    <span class="caret"></span>
 		  </a>
 		  <ul class="dropdown-menu">
-			  {% if not user.first_name %}
-			  <li><a href="{% url 'request_attributes' %}"><i class="icon-user"></i> Set my name</a></li>
-			{% endif %}
+
 			  <li><a href="{% url 'logout' %}"><i class="icon-road"></i> Logout</a></li>
 		  </ul>
 	{% else %}
