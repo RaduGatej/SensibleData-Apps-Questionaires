@@ -609,7 +609,7 @@ class NumberQuestion(Question):
 
 		try:
 			if extra_parts[2].strip() == 'sum':
-				resp += ' onkeyup="sumto100()" '
+				resp += ' onkeyup="sumto100()" onchange="sumto100()" '
 		except: pass			
 		if len(parts) > 1:
 			resp += 'id="'
