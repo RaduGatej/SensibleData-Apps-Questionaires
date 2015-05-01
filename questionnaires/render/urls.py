@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 	url(r'^uselink','render.views.uselink',name='uselink'),
 	url(r'^form', 'render.views.form', name='form'),
 	url(r'^about', 'render.views.about', name='about'),
+	url(r'home_platform', 'render.views.home_platform', name='home_platform'),
 	url(r'home_refreshed', 'render.views.home_refreshed', name='home_refreshed'),
 	url(r'^', 'render.views.home', name='home'),
 )

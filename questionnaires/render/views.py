@@ -21,6 +21,9 @@ import re
 def home_refreshed(request):
 	return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
+def home_platform(request):
+	return HttpResponseRedirect(settings.IDP_URL)
+
 def home(request):
 	#request.GET.get("child_id")
 
