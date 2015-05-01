@@ -111,10 +111,11 @@ def form(request):
 					if not ans.startswith('_'):
 						answers[ans] = {'answer':request.POST[ans]}
 				#form_provider.set_answer(request.user, '1.0', ans, request.POST[ans]);
+		set_answers(answers, request.user, request.session.get('type_id'), survey_version)
 		if '_skip' in request.POST:
 			next_question = form_provider.get_next_question(request.user,request.session.get('type_id'),survey_version,request.POST['__question_name'],skipping=True);
 		else:
-			set_answers(answers, request.user, request.session.get('type_id'), survey_version)
+			
 			if '_prev' in request.POST:
 				next_question = form_provider.get_previous_question(request.user,request.session.get('type_id'), survey_version,request.POST['__question_name']);
 			elif '_from_top' in request.POST:

@@ -297,14 +297,16 @@ $(function () {
 		{% endif %}
 		
 		<!-- display the error message -->
+		<form action="" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
 		{% if unanswered %}
 			<div class="alert alert-error" id="answer_alert">
 		{% else %}
 			<div class="alert alert-error" id="answer_alert" style="display:none">
 		{% endif %}
 				Besvar spørgsmålet, før du fortsætter.
+				<button type="submit" onclick="actor='skip'" name="_skip" class="btn"><i class="icon-remove-circle"></i> Fortsæt alligevel</button> 
 			</div>
-    	<form action="" method="post" name="myform" onsubmit="return validateForm()" autofocus="autofocus">
+    	
 			<fieldset>
 				{% csrf_token %}
 				<input type="hidden" name="__survey_version" value="{{ survey_version }}" />
