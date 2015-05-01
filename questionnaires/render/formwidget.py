@@ -883,7 +883,17 @@ class GridQuestion(Question):
 			resp +='\n\t<th style="width:8%;vertical-align:bottom;text-align:center;">' + answer['raw'] + '</th>';
 		resp += '\n</tr>\n'
 		for sub in self.data:
-			resp += sub.render();
+			if sub.secondary_content.startswith('[SPLIT]'):
+				resp += '\n</table>';
+				resp += '<p style="width:80%"><strong>' + sub.secondary_content.replace('[SPLIT]','') + '</strong></p>\n';
+				resp += '<input type="hidden" name="' + sub.variable_name + '" value="1"/>'
+				resp += '\n<table class="table table-bordered table-hover">\n';
+				resp += '<tr>\n\t<th></th>';
+				for answer in self.answers:
+					resp +='\n\t<th style="width:8%;vertical-align:bottom;text-align:center;">' + answer['raw'] + '</th>';
+				resp += '\n</tr>\n'
+			else:
+				resp += sub.render();
 
 		resp += '\n</table>';
 
@@ -970,7 +980,7 @@ class RadioSubquestion(Question):
 		resp += '<div class="row">'
 		
 		if len(self.secondary_content) > 0:
-			resp += '<div class=span8">' + self.secondary_content + '</div><br/>\n';
+			resp += '<label style="margin-left:30px">' + self.secondary_content + '</label>\n';
 		
 		if len(self.additional_content) > 0:
 			resp += '<div class="alert alert-info">' + self.additional_content + '</div><br/>';
