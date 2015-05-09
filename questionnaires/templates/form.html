@@ -202,7 +202,9 @@ $(function () {
 							} 
 							// if it went to the end of the question and it is still not answered, return false
 							if ((inner_idx == document.forms["myform"][required_vars[idx]].length - 1) && (!answered)) {
-								document.getElementById("answer_alert").style.display = "block";
+								var alert_div = document.getElementById("answer_alert");
+								alert_div.style.display = "block";
+								alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
 								return false;
 							}
 						}
@@ -279,7 +281,9 @@ $(function () {
 				}
 			}
 			if (!answered) {
-				document.getElementById("answer_alert").style.display = "block";
+				var alert_div = document.getElementById("answer_alert");
+				alert_div.style.display = "block";
+				alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
 				return false;
 			}
 
@@ -304,7 +308,7 @@ $(function () {
 			<div class="alert alert-error" id="answer_alert" style="display:none">
 		{% endif %}
 				Besvar spørgsmålet, før du fortsætter.
-				<button type="submit" onclick="actor='skip'" name="_skip" class="btn"><i class="icon-remove-circle"></i> Fortsæt alligevel</button> 
+				
 			</div>
     	
 			<fieldset>
