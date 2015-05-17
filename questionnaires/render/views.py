@@ -25,9 +25,6 @@ def home_platform(request):
 	return HttpResponseRedirect(settings.IDP_URL)
 
 def home(request):
-	#request.GET.get("child_id")
-
-	#pdb.set_trace()
 	if settings.DO_AUTH:
 		try:
 			sessions = Session.objects.filter(expire_date__gte=datetime.now())
@@ -48,27 +45,22 @@ def home(request):
 			#return redirect('request_attributes')
 		identity.getAttributes(request.user, ['first_name'])
 
-	#pdb.set_trace()
-
-	if 'child_id' in request.GET.keys():
-		postpone = '?child_id=' + request.GET.get('child_id')
+	
+	if 'type_id' in request.GET.keys():
+		postpone = '?type_id=' + request.GET.get('type_id')
 	else: # redirected from login
 		try: 
-			postpone = '?child_id=' + request.META['HTTP_REFERER'].split('child_id%3D')[1]
+			postpone = '?type_id=' + request.META['HTTP_REFERER'].split('type_id%3D')[1]
 		except:
 			return HttpResponseRedirect(settings.ROOT_URL+'uselink/');
-	# if 'type_id' not in request.session:
-	# 	request.session['type_id'] = request.GET.get("child_id")
-	# 	request.session.modified = True
-
 	return redirect(settings.ROOT_URL+'form/' + postpone)
 
 
 @login_required
 def form(request):
 	#pdb.set_trace()
-	if 'child_id' in request.GET.keys():
-		request.session['type_id'] = request.GET.get('child_id')
+	if 'type_id' in request.GET.keys():
+		request.session['type_id'] = request.GET.get('type_id')
 	if settings.DO_AUTH:
 		auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
 		if auth == None:
