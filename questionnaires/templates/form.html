@@ -202,12 +202,14 @@ $(function () {
 							} 
 							// if it went to the end of the question and it is still not answered, return false
 							if ((inner_idx == document.forms["myform"][required_vars[idx]].length - 1) && (!answered)) {
+								row = document.getElementById(required_vars[idx]);
+								row.className = 'error';
 								var alert_div = document.getElementById("answer_alert");
 								alert_div.style.display = "block";
 								if (document.getElementById("skip_button") == null) {
 									alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
 								}
-								return false;
+								//return false;
 							}
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
@@ -285,7 +287,9 @@ $(function () {
 			if (!answered) {
 				var alert_div = document.getElementById("answer_alert");
 				alert_div.style.display = "block";
-				alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
+				if (document.getElementById("skip_button") == null) {
+					alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
+				}
 				return false;
 			}
 
