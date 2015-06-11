@@ -982,7 +982,7 @@ class RadioSubquestion(Question):
 			resp = '<h2>' + self.primary_content + '</h2>\n';
 		else:
 			resp = '';
-		resp += '<div class="row">'
+		resp += '<div class="row" id="' + self.variable_name + '">'
 		
 		if len(self.secondary_content) > 0:
 			resp += '<label style="margin-left:30px">' + self.secondary_content + '</label>\n';
@@ -1000,7 +1000,7 @@ class RadioSubquestion(Question):
 			if self.answer != []:
 				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
-
+			resp += ' onclick="markDivSuccess(this)" '
 			resp += '/>' + answer['raw'] + '\n'
 			resp += '</label>\n';
 		return resp + '</div>'

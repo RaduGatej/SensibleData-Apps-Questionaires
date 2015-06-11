@@ -133,6 +133,11 @@ $(function () {
 			row.className = 'success';
 		}
 
+		function markDivSuccess(event) {
+			row = document.getElementById(event.name);
+			row.style.backgroundColor = goodBackColor;			
+		}
+
 		function processTimeField(element) {
 			if (element.value == "") {return false;}
 			element.value = element.value.replace('.',':').replace(',',':')
@@ -213,7 +218,7 @@ $(function () {
 							} else {
 								// maybe it's a grid question
 								try {  
-									if (document.getElementById(required_vars[idx]).className == 'warning') {
+									if ((document.getElementById(required_vars[idx]).className == 'warning') || (document.getElementById(required_vars[idx]).style.backgroundColor == warningBackColor)) {
 										var_counter += 1;
 										sub_answered = true;
 										break;
@@ -241,9 +246,18 @@ $(function () {
 										skipping = false;
 										var_counter += 1;
 										break;
-									} 
+									} else if (row.style.backgroundColor == badBackColor) {
+										row.style.backgroundColor = warningBackColor;
+										skipping = false;
+										var_counter +=1;
+										break;
+									}
 								} else {
-									row.className = 'error';
+									if (row.className == 'row') {
+										row.style.backgroundColor = badBackColor;
+									} else {
+										row.className = 'error';
+									}
 									var alert_div = document.getElementById("answer_alert");
 									alert_div.style.display = "block";
 									if (document.getElementById("skip_button") == null) {
