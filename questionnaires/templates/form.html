@@ -2,8 +2,9 @@
 
 {% block content %}
 	<script>
-	var goodBackColor = "#DFF0D8";
-	var badBackColor = "#F2DEDE";
+	var goodBackColor = "rgb(223, 240, 216)";
+	var badBackColor = "rgb(242, 222, 222)";
+	var warningBackColor = "rgb(252, 248, 227)";
 		var actor;
 
 		function isNumber(n) {
@@ -169,8 +170,12 @@ $(function () {
 
 		function validateForm()
 		{
-			if ((actor == 'prev') || (actor == 'skip')) {
+			if (actor == 'prev') {
 				return true;
+			}
+			var skipping = false;
+			if (actor == 'skip') {
+				skipping = true;
 			}
 			if (!sumto100()) {return false;}
 			var required_vars;
@@ -181,9 +186,14 @@ $(function () {
 				return true;
 			}
 			required_vars = required_vars.split(',');
+			if ((required_vars.length == 1) && (skipping)) {
+				// there is only one question and we're skipping it, so we're done
+				return true;
+			}
 			var var_counter = 0;
 			for (var idx=0; idx<required_vars.length; idx++) {
 				// check if radio group:
+				var inner_var_counter = 0;
 				var nodelist = false;
 				if (document.forms["myform"][required_vars[idx]] instanceof NodeList) {
 					nodelist = true;
@@ -192,25 +202,57 @@ $(function () {
 				}
 				if (nodelist) {
 					var answered = false;
-					
+					var counter = 0;
 					for (var inner_idx=0; inner_idx < document.forms["myform"][required_vars[idx]].length; inner_idx++) {
-						var counter = 0;
+						var sub_answered = false;
 						if (document.forms["myform"][required_vars[idx]][inner_idx].type == "radio") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
-								answered = true;
+								var_counter +=1;
+								sub_answered = true;
 								break;
-							} 
+							} else {
+								// maybe it's a grid question
+								try {  
+									if (document.getElementById(required_vars[idx]).className == 'warning') {
+										var_counter += 1;
+										sub_answered = true;
+										break;
+									}
+								} catch(err) {
+									// it wasn't.
+								}
+							}
 							// if it went to the end of the question and it is still not answered, return false
-							if ((inner_idx == document.forms["myform"][required_vars[idx]].length - 1) && (!answered)) {
+							if ((inner_idx == document.forms["myform"][required_vars[idx]].length - 1) && (!sub_answered)) {
+								if (required_vars.length == 1) {
+									answered = false;
+									var alert_div = document.getElementById("answer_alert");
+									alert_div.style.display = "block";
+									if (document.getElementById("skip_button") == null) {
+										alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
+									}
+									return false;
+								}
 								row = document.getElementById(required_vars[idx]);
-								row.className = 'error';
-								var alert_div = document.getElementById("answer_alert");
-								alert_div.style.display = "block";
-								if (document.getElementById("skip_button") == null) {
-									alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
+								if (skipping) {
+
+									if (row.className == 'error') {
+										row.className = 'warning';
+										skipping = false;
+										var_counter += 1;
+										break;
+									} 
+								} else {
+									row.className = 'error';
+									var alert_div = document.getElementById("answer_alert");
+									alert_div.style.display = "block";
+									if (document.getElementById("skip_button") == null) {
+										alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
+									}
 								}
 								//return false;
 							}
+
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "checkbox") {
 							if (document.forms["myform"][required_vars[idx]][inner_idx].checked) {
@@ -228,13 +270,22 @@ $(function () {
 					
 						}
 						else if (document.forms["myform"][required_vars[idx]][inner_idx].type == "text") {
+							var was_skipped = (document.forms["myform"][required_vars[idx]][inner_idx].style.backgroundColor == warningBackColor);
 							timeFieldChanged(document.forms["myform"][required_vars[idx]][inner_idx]);
-							if (!processTimeField(document.forms['myform'][required_vars[idx]][inner_idx])) {
-								answered = false;
-								break;
+							if (processTimeField(document.forms['myform'][required_vars[idx]][inner_idx])) {
+								inner_var_counter += 1;
+							} else {
+								if (skipping) {
+									if ((!was_skipped) && (document.forms["myform"][required_vars[idx]][inner_idx].style.backgroundColor == badBackColor)) {
+										skipping = false;
+									}
+									document.forms["myform"][required_vars[idx]][inner_idx].style.backgroundColor = warningBackColor;
+									inner_var_counter += 1;									
+								}
 							}
-							// if we reached till the end and it still did not break, it means we're golden
-							if (inner_idx == document.forms["myform"][required_vars[idx]].length-1) {
+
+							
+							if (inner_var_counter == document.forms["myform"][required_vars[idx]].length) {
 								var_counter +=1
 
 								if (var_counter == required_vars.length) {
@@ -254,35 +305,52 @@ $(function () {
 					try {
 						if ((document.forms["myform"][required_vars[idx]].max !== undefined) && (document.forms["myform"][required_vars[idx]].max != "")) { // if this is a number field
 							if (isValidInputForNumberField(document.forms["myform"][required_vars[idx]])) {
-								answered = true;
-								continue;
+								document.forms["myform"][required_vars[idx]].style.backgroundColor = goodBackColor;
+								var_counter += 1;
+								
 							} else {
+								if (skipping) throw true;
 								answered = false;
 								document.forms["myform"][required_vars[idx]].value = "";
-								break;
+								document.forms["myform"][required_vars[idx]].style.backgroundColor = badBackColor;
 							}
+							continue;
 						} 
 						if (document.forms["myform"][required_vars[idx]].className.indexOf('time') > -1) { // if this is a time field
 							if (isValidValueForTimeField(document.forms["myform"][required_vars[idx]].value)) {
-								answered = true;
+								document.forms["myform"][required_vars[idx]].style.backgroundColor = goodBackColor;
+								var_counter += 1;
 								continue;
 							} else {
 								answered = false;
 								document.forms["myform"][required_vars[idx]].value = "";
-								break;
+								document.forms["myform"][required_vars[idx]].style.backgroundColor = badBackColor;
 							}
 						}
 						throw true;
 					} catch (err) {
 						if (document.forms["myform"][required_vars[idx]].value == null || document.forms["myform"][required_vars[idx]].value == "") {
 							//document.forms["myform"][required_vars[idx]].className = 'control-group error';
-							answered = false;
-							break;
-						} else {
-							answered = true;
+							if (document.forms["myform"][required_vars[idx]].style.backgroundColor == warningBackColor) {
+								var_counter +=1;
+								sub_answered = true;
+								continue;
+							}
+							if ((skipping) && (document.forms["myform"][required_vars[idx]].style.backgroundColor == badBackColor)) {
+								var_counter += 1;
+								skipping = false;	
+								document.forms["myform"][required_vars[idx]].style.backgroundColor = warningBackColor;
+							} else {
+								sub_answered = false;
+								document.forms["myform"][required_vars[idx]].style.backgroundColor = badBackColor;
+							}
 						}
 					}
 				}
+			}
+			if (var_counter == required_vars.length) {
+				answered = true;
+				return true;
 			}
 			if (!answered) {
 				var alert_div = document.getElementById("answer_alert");

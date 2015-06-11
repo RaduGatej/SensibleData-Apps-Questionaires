@@ -913,6 +913,11 @@ class NumberSubquestion(NumberQuestion):
 		
 		return resp
 
+	def to_dict(self):
+		o = super(NumberSubquestion, self).to_dict()
+		o['type'] = 'subquestion'
+		return o
+
 class MultiNumberQuestion(GridQuestion):
 	def render(self):
 		resp = self.prerender()
