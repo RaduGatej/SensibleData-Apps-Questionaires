@@ -588,6 +588,7 @@ class NumberQuestion(Question):
 			resp += 'type="text" '
 			resp += 'isTime="true" '
 			resp += 'placeholder="TT:MM" '
+			resp += 'onblur="timeFieldChanged(this,24)" '
 		else:
 			mmin = '0'
 			mmax = '0'
@@ -858,7 +859,7 @@ class TimeSubquestion(SubQuestion):
 			resp += 'isTime="true" '
 			resp += 'placeholder="T:MM" '
 			resp += 'value="' + str(response) + '" '
-			resp += 'onblur="timeFieldChanged(this)" '
+			resp += 'onblur="timeFieldChanged(this,6)" '
 			resp += '/></td>\n'
 		pre = '\n<tr><td>' + self.secondary_content + '</td>\n'
 		resp = pre + resp + '</tr>\n'
