@@ -220,10 +220,10 @@ def validate_row(parts):
 		elif parts[VARIABLE_NAME] == '':
 		#	print 'WARNING: variable name is missing, making it the same as label';
 			parts[VARIABLE_NAME] = parts[VARIABLE_LABEL]
-	if parts[REQUIRED] == '0.0': 
-		parts[REQUIRED] = False
-	else: 
-		parts[REQUIRED] = True
+	if parts[REQUIRED] == '' or int(float(parts[REQUIRED])) != 1: 
+		parts[REQUIRED] = 0
+	else:
+		parts[REQUIRED] = 1
 		
 	
 	if error:
@@ -267,7 +267,7 @@ def validate(string):
 		return parts
 	
 def makequestion(primary_content, secondary_content, additional_content,\
-				inclusion_condition, answer_type, variable_name, answers, extra_param, required=True):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required=False):
 	#print 'Inclusion condition: ' + inclusion_condition
 	if answer_type == 'radio':
 		return RadioQuestion(primary_content, secondary_content, additional_content,\
@@ -343,7 +343,7 @@ def makequestion_fromdict(mdict):
 #### Class definitions
 class Formwidget(object):
 	def __init__(self, primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param, required=True):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required=0):
 		self.primary_content = primary_content;
 		self.secondary_content = secondary_content;
 		self.additional_content = additional_content;
@@ -381,6 +381,9 @@ class Formwidget(object):
 	def to_html(self):
 		#return '<div class="formwidget">\n' + self.render() + '\n</div>';
 		resp = '<input type="hidden" name="__question_name" value="' + self.variable_name + '" />\n';
+		try:
+			resp += '<input type="hidden" name="__required" value="' + str(int(self.required)) + '" />\n';
+		except: pass
 		resp += self.render()
 		#pdb.set_trace()
 		for k in self.dynamic_content:
@@ -509,7 +512,7 @@ class ListQuestion(Question):
 		
 class ChecklistQuestion(Question):
 	def __init__(self, primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param, required = True):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required = 0):
 		super( ChecklistQuestion, self).__init__(primary_content, secondary_content, additional_content, \
 				inclusion_condition, answer_type, variable_name, answers, extra_param, required)
 		if not self.variable_name.endswith('[]'):

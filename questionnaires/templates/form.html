@@ -147,6 +147,7 @@ $(function () {
 					element.value = val + ':00';
 					return true;
 				} else {
+					element.value = "";
 					return false;
 				}
 			} else { // there is a separator
@@ -160,6 +161,7 @@ $(function () {
 						return true;
 					}
 				} else {
+					element.value = "";
 					return false;
 				}
 			}
@@ -233,7 +235,7 @@ $(function () {
 									answered = false;
 									var alert_div = document.getElementById("answer_alert");
 									alert_div.style.display = "block";
-									if (document.getElementById("skip_button") == null) {
+									if ((document.getElementById("skip_button") == null) && (parseInt(document.forms["myform"]['__required'].value) == 0)) {
 										alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
 									}
 									return false;
@@ -260,7 +262,7 @@ $(function () {
 									}
 									var alert_div = document.getElementById("answer_alert");
 									alert_div.style.display = "block";
-									if (document.getElementById("skip_button") == null) {
+									if ((document.getElementById("skip_button") == null) && (parseInt(document.forms["myform"]['__required'].value) == 0)) {
 										alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
 									}
 								}
@@ -374,7 +376,8 @@ $(function () {
 			if (!answered) {
 				var alert_div = document.getElementById("answer_alert");
 				alert_div.style.display = "block";
-				if (document.getElementById("skip_button") == null) {
+				if ((document.getElementById("skip_button") == null) && (parseInt(document.forms["myform"]['__required'].value) == 0))
+				 {
 					alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
 				}
 				return false;
