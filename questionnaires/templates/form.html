@@ -184,7 +184,6 @@ $(function () {
 			if (actor == 'skip') {
 				skipping = true;
 			}
-			if (!sumto100()) {return false;}
 			var required_vars;
 			try{
 				required_vars = document.forms["myform"]["__required_vars"].value;
@@ -371,7 +370,11 @@ $(function () {
 			}
 			if (var_counter == required_vars.length) {
 				answered = true;
-				return true;
+				if (skipping) {
+					return true;
+				} else {
+					return sumto100();
+				}
 			}
 			if (!answered) {
 				var alert_div = document.getElementById("answer_alert");

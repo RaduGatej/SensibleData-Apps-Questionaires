@@ -196,6 +196,7 @@ def parserow(row):
 def validate_row(parts):
 	#pdb.set_trace()
 	#print (parts)
+	parts = [part.strip() for part in parts]
 	if len(parts) < NUMBER_OF_COLUMNS:
 		parts += ['' for e in xrange(NUMBER_OF_COLUMNS-len(parts))]
 	
