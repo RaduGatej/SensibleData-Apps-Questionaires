@@ -62,12 +62,21 @@
 					          </button>
 
 			<div class="nav"><img src="{% static "img/red_logo5_40px.png" %}"></div>
-            <a class="brand" href="{% url 'home_platform' %}">Youth Gaming Project: Questionnaires</a>
+            {% if "child" not in request.session.type_id  %}
+                <a class="brand" href="{% url 'home_platform' %}">Youth Gaming Project: Questionnaires</a>
+            {% else %}
+                <a class="brand" href="{% url 'form' %}">Youth Gaming Project: Questionnaires</a>
+            {% endif %}
+
 	{% if user.is_authenticated %}
 	<div class="nav-collapse collapse">
 	<ul class="nav">
 		<li class="divider-vertical"></li>
-		<li><a href="{% url 'home_platform' %}" class=""><i class="icon-home"></i> Home</a></li>
+         {% if "child" not in request.session.type_id  %}
+		    <li><a href="{% url 'home_platform' %}" class=""><i class="icon-home"></i> Home</a></li>
+         {% else %}
+             <li><a href="{% url 'form' %}" class=""><i class="icon-home"></i> Home</a></li>
+         {% endif %}
 		<li class="divider-vertical"></li>
 	</ul>
 	</div>
