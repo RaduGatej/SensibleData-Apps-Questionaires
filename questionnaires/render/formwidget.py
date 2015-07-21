@@ -196,6 +196,7 @@ def parserow(row):
 def validate_row(parts):
 	#pdb.set_trace()
 	#print (parts)
+	parts = [part.strip() for part in parts]
 	if len(parts) < NUMBER_OF_COLUMNS:
 		parts += ['' for e in xrange(NUMBER_OF_COLUMNS-len(parts))]
 	
@@ -220,10 +221,10 @@ def validate_row(parts):
 		elif parts[VARIABLE_NAME] == '':
 		#	print 'WARNING: variable name is missing, making it the same as label';
 			parts[VARIABLE_NAME] = parts[VARIABLE_LABEL]
-	if parts[REQUIRED] == '0.0': 
-		parts[REQUIRED] = False
-	else: 
-		parts[REQUIRED] = True
+	if parts[REQUIRED] == '' or int(float(parts[REQUIRED])) != 1: 
+		parts[REQUIRED] = 0
+	else:
+		parts[REQUIRED] = 1
 		
 	
 	if error:
@@ -267,7 +268,7 @@ def validate(string):
 		return parts
 	
 def makequestion(primary_content, secondary_content, additional_content,\
-				inclusion_condition, answer_type, variable_name, answers, extra_param, required=True):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required=False):
 	#print 'Inclusion condition: ' + inclusion_condition
 	if answer_type == 'radio':
 		return RadioQuestion(primary_content, secondary_content, additional_content,\
@@ -343,7 +344,7 @@ def makequestion_fromdict(mdict):
 #### Class definitions
 class Formwidget(object):
 	def __init__(self, primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param, required=True):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required=0):
 		self.primary_content = primary_content;
 		self.secondary_content = secondary_content;
 		self.additional_content = additional_content;
@@ -381,6 +382,9 @@ class Formwidget(object):
 	def to_html(self):
 		#return '<div class="formwidget">\n' + self.render() + '\n</div>';
 		resp = '<input type="hidden" name="__question_name" value="' + self.variable_name + '" />\n';
+		try:
+			resp += '<input type="hidden" name="__required" value="' + str(int(self.required)) + '" />\n';
+		except: pass
 		resp += self.render()
 		#pdb.set_trace()
 		for k in self.dynamic_content:
@@ -509,7 +513,7 @@ class ListQuestion(Question):
 		
 class ChecklistQuestion(Question):
 	def __init__(self, primary_content, secondary_content, additional_content, \
-				inclusion_condition, answer_type, variable_name, answers, extra_param, required = True):
+				inclusion_condition, answer_type, variable_name, answers, extra_param, required = 0):
 		super( ChecklistQuestion, self).__init__(primary_content, secondary_content, additional_content, \
 				inclusion_condition, answer_type, variable_name, answers, extra_param, required)
 		if not self.variable_name.endswith('[]'):
@@ -588,6 +592,7 @@ class NumberQuestion(Question):
 			resp += 'type="text" '
 			resp += 'isTime="true" '
 			resp += 'placeholder="TT:MM" '
+			resp += 'onblur="timeFieldChanged(this,24)" '
 		else:
 			mmin = '0'
 			mmax = '0'
@@ -858,7 +863,7 @@ class TimeSubquestion(SubQuestion):
 			resp += 'isTime="true" '
 			resp += 'placeholder="T:MM" '
 			resp += 'value="' + str(response) + '" '
-			resp += 'onblur="timeFieldChanged(this)" '
+			resp += 'onblur="timeFieldChanged(this,6)" '
 			resp += '/></td>\n'
 		pre = '\n<tr><td>' + self.secondary_content + '</td>\n'
 		resp = pre + resp + '</tr>\n'
@@ -912,6 +917,11 @@ class NumberSubquestion(NumberQuestion):
 			resp += '<div class="span8">' + self.secondary_content + '</div>';
 		
 		return resp
+
+	def to_dict(self):
+		o = super(NumberSubquestion, self).to_dict()
+		o['type'] = 'subquestion'
+		return o
 
 class MultiNumberQuestion(GridQuestion):
 	def render(self):
@@ -977,7 +987,7 @@ class RadioSubquestion(Question):
 			resp = '<h2>' + self.primary_content + '</h2>\n';
 		else:
 			resp = '';
-		resp += '<div class="row">'
+		resp += '<div class="row" id="' + self.variable_name + '">'
 		
 		if len(self.secondary_content) > 0:
 			resp += '<label style="margin-left:30px">' + self.secondary_content + '</label>\n';
@@ -995,7 +1005,7 @@ class RadioSubquestion(Question):
 			if self.answer != []:
 				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
-
+			resp += ' onclick="markDivSuccess(this)" '
 			resp += '/>' + answer['raw'] + '\n'
 			resp += '</label>\n';
 		return resp + '</div>'

@@ -55,6 +55,7 @@ def get_previous_question(user_id, type_id, survey_version, current_name):
 def get_next_question(user_id, type_id, survey_version, current_name, skipping=False):
 	
 	questions = get_questions_list(survey_version);
+
 	now_is_the_time = False;
 	for question in questions:	
 		if now_is_the_time:
@@ -80,7 +81,60 @@ def get_next_question(user_id, type_id, survey_version, current_name, skipping=F
 		return None;
 	else:
 		raise NameError(current_name + ' is not a valid question name');
-			
+
+def get_next_question_from_timestamp(user_id, type_id, survey_version, skipping=False):
+	
+	questions = get_questions_list(survey_version);
+	try:
+		last_answer = Response.objects.filter(user = user_id, type_id = type_id, form_version=survey_version).order_by('-last_answered')[0]
+		name = last_answer.variable_name
+		found = False
+		for question in questions:
+			#pdb.set_trace()
+			if question.variable_name == name: 
+				current_name = last_answer.variable_name
+				break
+			else:
+				try:
+					for sub in question.data:
+						if sub.variable_name == last_answer.variable_name:
+							current_name = question.variable_name
+							found = True
+							break
+				except Exception as e: 
+					pass
+					#pdb.set_trace()
+			if found: 
+				break
+
+	except:
+		# no answers yet, return the first question
+		return return_question(user_id, type_id, survey_version, get_conditioned_question(user_id, type_id, survey_version, questions[0]))
+	now_is_the_time = False;
+	for question in questions:	
+		if now_is_the_time:
+			#pdb.set_trace()
+			#if check_condition(user_id, survey_version, question.inclusion_condition):
+			#	if isinstance(question, fw.GridQuestion):
+			#		for ii in range(len(question.data)-1, -1, -1):
+			#			sub = question.data[ii]
+			#			if not check_condition(user_id, survey_version, sub.inclusion_condition):
+			#				question.data.remove(sub)
+			conditioned_question = get_conditioned_question(user_id, type_id, survey_version, question)
+			if conditioned_question != None:
+				return return_question(user_id, type_id, survey_version, conditioned_question)
+			else:
+				pass
+		elif question.variable_name == current_name:
+			if skipping == False and needs_answer(user_id, type_id, survey_version, question):
+				return return_question(user_id, type_id, survey_version, get_conditioned_question(user_id, type_id, survey_version, question))
+			now_is_the_time = True
+		else:
+			pass
+	if now_is_the_time:
+		return None;
+	else:
+		raise NameError(current_name + ' is not a valid question name');			
 
 def get_next_unanswered_question(user_id,type_id,survey_version):
 	for question in get_questions_list(survey_version):

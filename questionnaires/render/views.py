@@ -131,7 +131,7 @@ def form(request):
 	else:
 		survey_version = form_provider.get_survey_version(request.user,request.session.get('type_id'))
 		if survey_version is not None:
-			next_question = form_provider.get_next_unanswered_question(request.user,request.session.get('type_id'),survey_version)
+			next_question = form_provider.get_next_question_from_timestamp(request.user,request.session.get('type_id'),survey_version)
 		else:
 			return HttpResponseRedirect(settings.ROOT_URL+'nochanges/')		
 
