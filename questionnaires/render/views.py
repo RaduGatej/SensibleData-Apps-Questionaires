@@ -136,6 +136,7 @@ def form(request):
 			return HttpResponseRedirect(settings.ROOT_URL+'nochanges/')		
 
 	di = {}
+	di["type_id"] = request.session.get('type_id')
 	progress = form_provider.get_user_progress(request.user,request.session.get('type_id'),survey_version);
 	di['progress'] = str(progress);
 	di['survey_version'] = survey_version
