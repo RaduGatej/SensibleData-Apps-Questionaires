@@ -385,6 +385,7 @@ class Formwidget(object):
 		try:
 			resp += '<input type="hidden" name="__required" value="' + str(int(self.required)) + '" />\n';
 		except: pass
+		resp = resp.encode('utf8')
 		resp += self.render()
 		#pdb.set_trace()
 		for k in self.dynamic_content:
@@ -689,12 +690,15 @@ class ScaleQuestion(Question):
 		
 		return resp
 
+import cgi
 class FreeTextQuestion(Question):
 	def render(self):
 		resp = self.prerender();
 		resp += '<textarea name="' + self.variable_name + '" rows="4">'
 		if self.answer != []:
-			resp += str(self.answer)
+			resp = resp.encode('utf8')
+			temp = cgi.escape(self.answer).encode('utf8','xmlcharrefreplace')
+			resp += temp
 		else:
 			resp += ' '
 		resp += '</textarea>\n'
