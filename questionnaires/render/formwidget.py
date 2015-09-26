@@ -21,6 +21,10 @@ REQUIRED = 10;
 NUMBER_OF_COLUMNS = 11;
 
 
+
+AUTO_FORWARD = False # set to True if the app should go forward after the user chooses the answer without the need to click next
+
+
 #### Utility methods
 def debug(widgets):
 	f = open('dummy.html','w')
@@ -489,7 +493,7 @@ class RadioQuestion(Question):
 			if self.answer != []:
 				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
-			resp += 'onclick="document.getElementById(\'next_button\').click();" '
+			if AUTO_FORWARD: resp += 'onclick="document.getElementById(\'next_button\').click();" '
 			resp += '/>' + answer['raw'] + '\n'
 			resp += '</label>\n';
 		return resp;
@@ -498,7 +502,7 @@ class ListQuestion(Question):
 	def render(self):
 		resp = self.prerender() 
 		resp += '\n<select name="' + self.variable_name + '" ' 
-		resp += 'onchange="document.getElementById(\'next_button\').click();"' 
+		if AUTO_FORWARD: resp += 'onchange="document.getElementById(\'next_button\').click();"' 
 		resp += '>\n';
 		# add empty answer as default
 		resp += '\t<option value=""></option>\n';
@@ -683,7 +687,7 @@ class ScaleQuestion(Question):
 			resp += '<input type="radio" name="' + self.variable_name + '" value="' + answer['htmlized'] + '" '
 			if self.answer == answer['htmlized']:
 				resp += ' checked '
-			resp += 'onclick="document.getElementById(\'next_button\').click();" '
+			if AUTO_FORWARD: resp += 'onclick="document.getElementById(\'next_button\').click();" '
 			resp += '/></td>'
 			
 		resp += '\n\t</tr>\n</table>\n'
