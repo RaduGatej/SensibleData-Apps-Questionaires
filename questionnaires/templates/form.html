@@ -379,9 +379,8 @@ $(function () {
 			if (!answered) {
 				var alert_div = document.getElementById("answer_alert");
 				alert_div.style.display = "block";
-				if ((document.getElementById("skip_button") == null) && (parseInt(document.forms["myform"]['__required'].value) == 0))
-				 {
-					alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
+				if ((document.getElementById("skip_button") == null) && (parseInt(document.forms["myform"]['__required'].value) == 0)) {
+					alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Jeg ønsker ikke at besvare dette spørgsmål</button>";
 				}
 				return false;
 			}
