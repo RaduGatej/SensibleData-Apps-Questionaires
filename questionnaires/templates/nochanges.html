@@ -4,6 +4,11 @@
 <h1>Tak for din deltagelse!</h1>
 <div class="alert alert-success">
 	<strong>Du har nu indsendt dine svar!</strong> Tak fordi du udfyldte spørgeskemaet.
+	{% if request.session.is_child %}
+		you child
+	{% else %}
+		<a class="btn btn-primary" href="{% url 'home_platform' %}">Hjem <i class="icon-chevron-right icon-white"></i></a>
+	{% endif %}
 </div>
 </form>
 
