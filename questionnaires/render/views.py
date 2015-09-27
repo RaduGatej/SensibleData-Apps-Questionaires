@@ -61,10 +61,8 @@ def form(request):
 	#pdb.set_trace()
 	if 'type_id' in request.GET.keys():
 		request.session['type_id'] = request.GET.get('type_id')
-		try:
-			ischild = request.esssion['type_id'].startswith('child')
-		except:
-			pass
+		is_child = request.session['type_id'].startswith('child')
+		request.session['is_child'] = is_child
 	if settings.DO_AUTH:
 		auth = oauth2.getToken(request.user, 'connector_questionnaire.input_form_data')
 		if auth == None:
