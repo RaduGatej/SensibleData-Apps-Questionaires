@@ -21,6 +21,9 @@ REQUIRED = 10;
 NUMBER_OF_COLUMNS = 11;
 
 
+# set to True to allow one-click advance on simple questions
+AUTO_ADVANCE = False 
+
 #### Utility methods
 def debug(widgets):
 	f = open('dummy.html','w')
@@ -385,6 +388,7 @@ class Formwidget(object):
 		try:
 			resp += '<input type="hidden" name="__required" value="' + str(int(self.required)) + '" />\n';
 		except: pass
+		resp = resp.encode('utf8')
 		resp += self.render()
 		#pdb.set_trace()
 		for k in self.dynamic_content:
@@ -488,7 +492,7 @@ class RadioQuestion(Question):
 			if self.answer != []:
 				if self.answer == answer['htmlized']:
 					resp += ' checked="checked" '
-			resp += 'onclick="document.getElementById(\'next_button\').click();" '
+			if AUTO_ADVANCE: resp += 'onclick="document.getElementById(\'next_button\').click();" '
 			resp += '/>' + answer['raw'] + '\n'
 			resp += '</label>\n';
 		return resp;
@@ -497,7 +501,7 @@ class ListQuestion(Question):
 	def render(self):
 		resp = self.prerender() 
 		resp += '\n<select name="' + self.variable_name + '" ' 
-		resp += 'onchange="document.getElementById(\'next_button\').click();"' 
+		if AUTO_ADVANCE: resp += 'onchange="document.getElementById(\'next_button\').click();"' 
 		resp += '>\n';
 		# add empty answer as default
 		resp += '\t<option value=""></option>\n';
@@ -682,19 +686,22 @@ class ScaleQuestion(Question):
 			resp += '<input type="radio" name="' + self.variable_name + '" value="' + answer['htmlized'] + '" '
 			if self.answer == answer['htmlized']:
 				resp += ' checked '
-			resp += 'onclick="document.getElementById(\'next_button\').click();" '
+			if AUTO_ADVANCE: resp += 'onclick="document.getElementById(\'next_button\').click();" '
 			resp += '/></td>'
 			
 		resp += '\n\t</tr>\n</table>\n'
 		
 		return resp
 
+import cgi
 class FreeTextQuestion(Question):
 	def render(self):
 		resp = self.prerender();
 		resp += '<textarea name="' + self.variable_name + '" rows="4">'
 		if self.answer != []:
-			resp += str(self.answer)
+			resp = resp.encode('utf8')
+			temp = cgi.escape(self.answer).encode('utf8','xmlcharrefreplace')
+			resp += temp
 		else:
 			resp += ' '
 		resp += '</textarea>\n'

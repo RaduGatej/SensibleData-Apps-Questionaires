@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>The end!</h1>
+<h1>Tak for din deltagelse!</h1>
 <div class="alert alert-success">
 	<strong>Du har nu indsendt dine svar!</strong> Tak fordi du udfyldte spørgeskemaet.
+	{% if not request.session.is_child %}
+		<a class="btn btn-primary" href="{% url 'home_platform' %}">Hjem <i class="icon-chevron-right icon-white"></i></a>		
+	{% endif %}
 </div>
 </form>
 

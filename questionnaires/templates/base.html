@@ -10,7 +10,7 @@
 	type="image/png"
 	href="{% static "img/favicon.png" %}">
     <meta charset="utf-8">
-    <title>Youth Gaming Project: Questionnaires</title>
+    <title>Youth Gaming Project: Spørgeskemaer</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE-edge" />
@@ -61,11 +61,11 @@
 				    <i class="icon-tasks"></i> Menu
 					          </button>
 
-			<div class="nav"><img src="{% static "img/red_logo5_40px.png" %}"></div>
+			<div class="nav"><img src="{% static "img/red_logo5_40px.png" %}" style="padding:2px"></div>
             {% if "child" not in type_id  %}
-                <a class="brand" href="{% url 'home_platform' %}">Youth Gaming Project: Questionnaires</a>
+                <a class="brand" href="{% url 'home_platform' %}">Youth Gaming Project: Spørgeskemaer</a>
             {% else %}
-                <a class="brand" href="#">Youth Gaming Project: Questionnaires</a>
+                <a class="brand" href="#">Youth Gaming Project: Spørgeskemaer</a>
             {% endif %}
 
 	{% if user.is_authenticated %}
@@ -74,8 +74,9 @@
 		{% if "child" not in type_id  %}
         <li class="divider-vertical"></li>
 
-		    <li><a href="{% url 'home_platform' %}" class=""><i class="icon-home"></i> Home</a></li>
-            <li class="divider-vertical"></li>
+		    <li><a href="{% url 'home_platform' %}" class=""><i class="icon-home"></i> Hjem</a></li>
+
+		<li class="divider-vertical"></li>
             {% endif %}
             <li><a href="{% url 'about' %}" class=""><i class="icon-question-sign icon-black"></i>FAQ</a></li>
 			<li class="divider-vertical"></li>
@@ -90,23 +91,23 @@
 			{% if user.first_name != '' %}
 		    {{ user.first_name }}
 			{% else %}
-			My Profile
+			Min Profil
 			{% endif %}
 		    <span class="caret"></span>
 		  </a>
 		  <ul class="dropdown-menu">
 
-			  <li><a href="{% url 'logout' %}"><i class="icon-road"></i> Logout</a></li>
+			  <li><a href="{% url 'logout' %}"><i class="icon-road"></i> Log ud</a></li>
 		  </ul>
 	{% else %}
-	<div class="nav-collapse collapse">
+	<!--<<div class="nav-collapse collapse">
 		            <ul class="nav">
-		<li class="divider-vertical"></li>
-	<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> About</a></li>
+	li class="divider-vertical"></li>
+	<li><a href="{% url 'about' %}" class=""><i class="icon-question-sign"></i> Om</a></li>
 	<li class="divider-vertical"></li>
-	<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Quit</a></li>
+	<li><a href="{% url 'quit' %}" class=""><i class="icon-remove"></i> Afslut</a></li>
 	<li class="divider-vertical"></li>
-	</ul>
+	</ul>-->
 	</div>
 	<ul class="nav pull-right action">
 	{% endif %}
@@ -135,7 +136,7 @@
 
 		 <div class="span6" style="text-align:left">
 			         <p>
-					         Youth Gaming Project: Questionnaires
+					         Youth Gaming Project: Spørgeskemaer
 							         |
 									         <a href="https://raw.github.com/MIT-Model-Open-Data-and-Identity-System/SensibleData-Platform/master/LICENSE">software license</a>
 									 |

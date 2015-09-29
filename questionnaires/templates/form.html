@@ -379,9 +379,8 @@ $(function () {
 			if (!answered) {
 				var alert_div = document.getElementById("answer_alert");
 				alert_div.style.display = "block";
-				if ((document.getElementById("skip_button") == null) && (parseInt(document.forms["myform"]['__required'].value) == 0))
-				 {
-					alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Fortsæt alligevel</button>";
+				if ((document.getElementById("skip_button") == null) && (parseInt(document.forms["myform"]['__required'].value) == 0)) {
+					alert_div.innerHTML += "<button type=\"submit\" onclick=\"actor='skip'\" name=\"_skip\" class=\"btn\" id=\"skip_button\"><i class=\"icon-remove-circle\"></i> Jeg ønsker ikke at besvare dette spørgsmål</button>";
 				}
 				return false;
 			}
@@ -425,7 +424,7 @@ $(function () {
 					<!-- Which buttons to display? -->
 					{% if last_page %}
 						<button type="submit" onclick="actor='prev'" name="_prev" class="btn"><i class="icon-chevron-left"></i> Forrige</button>
-						<button type="submit" name="_from_top" class="btn"><i class="icon-refresh"></i> Begynd igen</button>
+						<button type="submit" name="_from_top" class="btn"><i class="icon-refresh"></i> Start forfra</button>
 						<button type="submit" name="_quit" class="btn btn-primary"><i class="icon-ok-sign icon-white"></i> Indsend besvarelse</button>
 					{% else %}
 						<button type="submit" onclick="actor='next'" name="_next" class="btn btn-primary" id="next_button">Næste <i class="icon-chevron-right"></i> </button>
