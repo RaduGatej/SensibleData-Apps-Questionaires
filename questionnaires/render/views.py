@@ -25,6 +25,7 @@ def home_platform(request):
 	return HttpResponseRedirect(settings.IDP_URL)
 
 def home(request):
+	#pdb.set_trace()
 	if settings.DO_AUTH:
 		try:
 			sessions = Session.objects.filter(expire_date__gte=datetime.now())
@@ -58,7 +59,7 @@ def home(request):
 
 @login_required
 def form(request):
-	#pdb.set_trace()
+	
 	if 'type_id' in request.GET.keys():
 		request.session['type_id'] = request.GET.get('type_id')
 		is_child = request.session['type_id'].startswith('child')
@@ -69,11 +70,13 @@ def form(request):
 			#show user site to authorize the form
 			status = request.GET.get('status', '')
 			message = request.GET.get('message', '')
-			return render_to_response('sensible/start_auth.html', {'status': status, 'message': message}, context_instance=RequestContext(request))
+			return render_to_response('sensible/start_auth.html', 
+				{'status': status, 'message': message}, context_instance=RequestContext(request))
 	survey_version = ''
 	if request.POST: survey_version = request.POST.get('__survey_version','')
 	try:
-		Response.objects.get(user = request.user, type_id = request.session.get('type_id'), form_version=survey_version, variable_name='_submitted')
+		Response.objects.get(user = request.user, 
+			type_id = request.session.get('type_id'), form_version=survey_version, variable_name='_submitted')
 		return HttpResponseRedirect(settings.ROOT_URL+'nochanges/');
 	except Exception:
 		pass
@@ -131,6 +134,7 @@ def form(request):
 				elif '_next_new' in request.POST:
 					next_question = form_provider.get_next_unanswered_question(request.user,request.session.get('type_id'),survey_version);	
 	else:
+
 		survey_version = form_provider.get_survey_version(request.user,request.session.get('type_id'))
 		if survey_version is not None:
 			next_question = form_provider.get_next_question_from_timestamp(request.user,request.session.get('type_id'),survey_version)
