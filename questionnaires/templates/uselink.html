@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Access denied</h1>
+<h1>Ups...der skete en fejl</h1>
 <div class="alert alert-success">
-	Brug venligst den medfølgende link for at få adgang til spørgeskemaet.
+	
+	{% if not request.session.is_child %}
+		Klik venligst på "Hjem" knappen til højre for at vende tilbage til din side.
+		<a class="btn btn-primary" href="{% url 'home_platform' %}">Hjem <i class="icon-chevron-right icon-white"></i></a>		
+	{% else %}
+		Brug venligst den medfølgende link for at få adgang til spørgeskemaet.
+
+	{% endif %}
 </div>
 </form>
 

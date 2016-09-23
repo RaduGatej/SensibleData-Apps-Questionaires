@@ -83,7 +83,7 @@ def get_next_question(user_id, type_id, survey_version, current_name, skipping=F
 		raise NameError(current_name + ' is not a valid question name');
 
 def get_next_question_from_timestamp(user_id, type_id, survey_version, skipping=False):
-	
+	#pdb.set_trace()
 	questions = get_questions_list(survey_version);
 	try:
 		last_answer = Response.objects.filter(user = user_id, type_id = type_id, form_version=survey_version).order_by('-last_answered')[0]
@@ -448,12 +448,20 @@ def check_condition(user_id, type_id, survey_version, mcondition):
 # to be implemented correctly
 def get_survey_version(user, type_id):
 	submit_responses = Response.objects.filter(user=user, type_id = type_id, variable_name='_submitted')
-	response_dates = {}
+	started_responses = Response.objects.filter(user=user, type_id = type_id, variable_name='introduction')
+	finished_dates = {}
+	started_dates = {}
 	for response in submit_responses:
-		response_dates[response.form_version] = response.last_answered
+		finished_dates[response.form_version] = response.last_answered
+	for response in started_responses:
+		started_dates[response.form_version] = response.last_answered
 	role = type_id.split('_')[0]
-	if SURVEYS[role][0] not in response_dates.keys(): return SURVEYS[role][0]
-	return None
+	if SURVEYS[role][0] not in started_dates.keys(): # if they didn't start yet, return the new version of the questionnaire
+		return SURVEYS[role][1]
+	elif SURVEYS[role][0] not in finished_dates.keys(): 
+		return SURVEYS[role][0] # if they had already started but not finished, return the first version
+	else:
+		return None
 
 	# if they already answered the second questionnaire, return none
 #	return SURVEYS[3]
