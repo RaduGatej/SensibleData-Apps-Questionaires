@@ -1,16 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-   <!-- HTML meta refresh URL redirection -->
-   {% if not request.session.is_child %}
-   		<meta http-equiv="refresh"
-   			content="0; url=http://youthgamingproject.dk/tak-for-din-deltagelse">
-   {% else %}
-   		<meta http-equiv="refresh"
-   			content="0; url=http://youthgamingproject.dk/tak-for-at-vaere-med/">
-   	{% endif %}
-</head>
-<body>
-   <p>Vent venligst...</a></p>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<p>Kære deltager i Youth Gaming Project,</p>
+
+<p>Mange tak for din deltagelse! Du har nu afsluttet din besvarelse, og vi er meget taknemmelige for din hjælp.</p>
+
+<p>Alle forældre-unge par, der har udfyldt og indsendt begge deres spørgeskemaer her i 2. runde, vil som tak modtage et gavekort til 2 biografbilletter samt deltage i en lodtrækning om 5 iPads.*</p>
+
+<p>Hvis dit barn eller din forælder endnu ikke har indsendt sin besvarelse, kan dette nås frem til d. 20. december 2017.</p>
+
+<p>Hvis du har spørgsmål, er du meget velkommen til at henvende dig til os.</p>
+
+<p>Mange tak for din hjælp med projektet!</p>
+
+<p>Youth Gaming Project</p>
+
+<p>
+Hjemmeside: <a href="http://www.psy.ku.dk/ygp">www.psy.ku.dk/ygp</a><br/>
+E-mail: <a href="mailto:ygp.info@psy.ku.dk">ygp.info@psy.ku.dk</a><br/>
+Facebook: <a href="https://www.facebook.com/youthgamingproject">www.facebook.com/youthgamingproject</a><br/>
+</p>
+<br/><br/>
+<p>* Bemærk venligst at alle vores præmier er skattepligtige, og at Københavns Universitet kan indberette gevinsten til Skat. Som udgangspunkt er det den unge, der bliver angivet som modtager af præmien. Præmierne uddeles efter afsluttet dataindsamling; senest i februar 2017.</p>
+
+{% endblock %}
